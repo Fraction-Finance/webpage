@@ -1,4 +1,5 @@
-import React from 'react';
+
+    import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -80,22 +81,24 @@ const Home = () => {
             duration: 0.8
           }} className="text-center mb-16 pt-16">
               <h2 className="text-3xl md:text-5xl font-bold mb-6">
-                <span className="gradient-text">🌐 Activos del Mundo Real Tokenizados</span>
+                <span className="gradient-text">🌐 Activos Tokenizados</span>
               </h2>
               <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">En Fraction Finance, abrimos el acceso a los mercados de capitales a través de activos digitales regulados, seguros y fraccionados. Nuestro enfoque combina lo mejor de las finanzas tradicionales con el potencial de la blockchain.</p>
             </motion.div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              <motion.div initial={{
-              opacity: 0,
-              x: -50
-            }} whileInView={{
-              opacity: 1,
-              x: 0
-            }} transition={{
-              duration: 0.8,
-              delay: 0.2
-            }} className="glass-effect p-8 rounded-2xl shadow-lg">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="glass-effect p-8 rounded-2xl shadow-lg">
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">Activos DeFi</h3>
+                <ul className="space-y-4 text-lg text-gray-700">
+                  <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Earn</span></li>
+                  <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>LSTs</span></li>
+                  <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>LP tokens</span></li>
+                  <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Yield-bearing tokens</span></li>
+                  <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Derivados DeFi</span></li>
+                </ul>
+              </motion.div>
+              
+              <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="glass-effect p-8 rounded-2xl shadow-lg">
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">Finanzas Tradicionales</h3>
                 <ul className="space-y-4 text-lg text-gray-700">
                   <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Acciones y ETFs</span></li>
@@ -104,16 +107,7 @@ const Home = () => {
                 </ul>
               </motion.div>
 
-              <motion.div initial={{
-              opacity: 0,
-              x: 50
-            }} whileInView={{
-              opacity: 1,
-              x: 0
-            }} transition={{
-              duration: 0.8,
-              delay: 0.4
-            }} className="glass-effect p-8 rounded-2xl shadow-lg">
+              <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="glass-effect p-8 rounded-2xl shadow-lg">
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">Activos Reales</h3>
                 <ul className="space-y-4 text-lg text-gray-700">
                   <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Bienes Raíces</span></li>
@@ -131,7 +125,7 @@ const Home = () => {
             y: 0
           }} transition={{
             duration: 0.8,
-            delay: 0.6
+            delay: 0.8
           }} className="mt-16 text-center glass-effect p-8 rounded-2xl shadow-lg">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">📌 Nuestra Ventaja</h3>
               <p className="text-lg text-gray-700 leading-relaxed">Cada producto tokenizado de Fraction Finance está diseñado para ser fraccionable, globalmente accesible y cumplir con los marcos regulatorios, conectando el capital tradicional con las oportunidades digitales.</p>
@@ -215,3 +209,4 @@ Emite activos, registra transacciones y gestiona tu cartera en una única plataf
     </>;
 };
 export default Home;
+  

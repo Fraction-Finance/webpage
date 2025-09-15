@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
     import { Link, useLocation, NavLink } from 'react-router-dom';
     import { motion } from 'framer-motion';
-    import { Menu, X, User as UserIcon, LogOut, Info, LayoutDashboard, Wallet, Network, Package, BookOpen, TrendingUp, Landmark, Users, Target, Rss, MailQuestion, Check, Briefcase } from 'lucide-react';
+    import { Menu, X, User as UserIcon, LogOut, Info, LayoutDashboard, Wallet, Network, Package, BookOpen, TrendingUp, Landmark, Users, Target, Rss, MailQuestion, Check, Briefcase, Zap } from 'lucide-react';
     import { Button } from '@/components/ui/button';
     import AuthModal from '@/components/AuthModal';
     import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -180,6 +180,7 @@ import React, { useState, useEffect } from 'react';
           children: [
             { title: "Mercado de Capitales", href: "/producto/mercados-globales", description: "Accede a mercados de capitales en todo el mundo.", icon: TrendingUp },
             { title: "RWA (Activos Reales)", href: "/producto/invertir-rwa", description: "Invierte en activos del mundo real tokenizados.", icon: Landmark },
+            { title: "Activos DeFi", href: "/producto/activos-defi", description: "Explora el mundo de las finanzas descentralizadas.", icon: Zap },
           ]
         },
         { name: "Ecosistema", path: '/ecosistema', icon: Network },

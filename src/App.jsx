@@ -9,6 +9,8 @@ import React, { Suspense, lazy } from 'react';
     import { Loader2 } from 'lucide-react';
     import GlobalMarkets from '@/pages/product/GlobalMarkets';
     import RWAInvest from '@/pages/product/RWAInvest';
+    import DeFiAssets from '@/pages/product/DeFiAssets';
+    import DeFiPlatform from '@/pages/DeFiPlatform'; // Import the new DeFiPlatform
 
     const Home = lazy(() => import('@/pages/Home'));
     const Ecosystem = lazy(() => import('@/pages/Ecosystem'));
@@ -42,6 +44,7 @@ import React, { Suspense, lazy } from 'react';
     const PlatformSettings = lazy(() => import('@/pages/admin/components/PlatformSettings'));
     const Product = lazy(() => import('@/pages/Product'));
     const ManageEcosystemPartners = lazy(() => import('@/pages/admin/components/ManageEcosystemPartners'));
+    const AuthCallback = lazy(() => import('@/pages/AuthCallback'));
 
     function App() {
       return (
@@ -100,6 +103,7 @@ import React, { Suspense, lazy } from 'react';
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/mercado-rwa" element={<RWAPlatform />} />
               <Route path="/mercado-rwa/:stoId" element={<RWAAssetDetail />} />
               <Route path="/ecosistema" element={<Ecosystem />} />
@@ -115,6 +119,8 @@ import React, { Suspense, lazy } from 'react';
               <Route path="/inversiones" element={<ProtectedRoute><Investment /></ProtectedRoute>} />
               <Route path="/producto/mercados-globales" element={<GlobalMarkets />} />
               <Route path="/producto/invertir-rwa" element={<RWAInvest />} />
+              <Route path="/producto/activos-defi" element={<DeFiAssets />} />
+              <Route path="/plataforma-defi" element={<ProtectedRoute><DeFiPlatform /></ProtectedRoute>} /> {/* New route for DeFi Platform */}
               <Route path="/producto" element={<Product />} />
               <Route path="/perfil" element={
                   <ProtectedRoute>

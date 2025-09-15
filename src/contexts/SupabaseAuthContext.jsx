@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { supabase } from '@/lib/customSupabaseClient';
 import { useToast } from '@/components/ui/use-toast';
@@ -62,7 +61,7 @@ export const AuthProvider = ({ children }) => {
         if (_event === 'SIGNED_IN') {
           toast({
             title: '¡Has iniciado sesión correctamente!',
-            description: `¡Bienvenido de nuevo, ${session.user.email}!`,
+            description: `¡Bienvenido de nuevo, ${session.user.user_metadata.full_name || session.user.email}!`,
           });
         }
         if (_event === 'SIGNED_OUT') {
@@ -124,6 +123,9 @@ export const AuthProvider = ({ children }) => {
   const signInWithGoogle = useCallback(async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
     });
 
     if (error) {

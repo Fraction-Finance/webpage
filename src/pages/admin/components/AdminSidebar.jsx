@@ -1,5 +1,4 @@
-
-    import React from 'react';
+import React from 'react';
     import { NavLink, useLocation } from 'react-router-dom';
     import { LayoutDashboard, DollarSign, Landmark, Shield, FileText, Users, Briefcase, Settings, Globe, HeartHandshake as Handshake } from 'lucide-react';
     import Logo from '@/components/Logo';
@@ -49,4 +48,3 @@
     };
 
     export default AdminSidebar;
-  

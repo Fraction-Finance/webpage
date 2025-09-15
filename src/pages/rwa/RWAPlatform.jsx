@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
@@ -81,7 +82,7 @@ const RWAPlatform = () => {
         <>
             <Helmet>
                 <title>Mercado RWA | Fraction Finance</title>
-                <meta name="description" content="Descubra oportunidades de inversión seleccionadas en activos del mundo real tokenizados." />
+                <meta name="description" content="Descubra oportunidades de inversión seleccionadas en activos tokenizados." />
             </Helmet>
             <div className="pt-24 pb-12">
                 <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -95,7 +96,7 @@ const RWAPlatform = () => {
                             Mercado RWA
                         </h1>
                         <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-                            Descubra oportunidades de inversión seleccionadas en activos del mundo real tokenizados.
+                            Descubra oportunidades de inversión seleccionadas en activos tokenizados.
                         </p>
                     </motion.div>
 
