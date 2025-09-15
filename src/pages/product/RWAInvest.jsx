@@ -48,9 +48,7 @@ const RWAInvest = () => {
                                 <h1 className="text-4xl md:text-6xl font-bold mb-6">
                                     <span className="text-gray-900">RWA<br />(Activos Reales)</span>
                                 </h1>
-                                <p className="text-xl text-gray-700 max-w-3xl mx-auto mb-8">
-                                    Cerramos la brecha entre los activos tradicionales y el mundo digital, permitiéndote invertir en Activos del Mundo Real (RWA) tokenizados con facilidad y seguridad.
-                                </p>
+                                <p className="text-xl text-gray-700 max-w-3xl mx-auto mb-8">Conectamos activos tradicionales con blockchain, permitiéndote invertir en Activos del Mundo Real (RWA) tokenizados de manera fácil, segura y transparente.</p>
                                 <Button asChild size="lg" className="bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700 text-white px-8 py-4 rounded-full font-semibold text-lg glow-effect">
                                     <Link to="/mercado-rwa">
                                         Explora Oportunidades RWA
@@ -72,9 +70,7 @@ const RWAInvest = () => {
             duration: 0.8
           }} className="text-center mb-16 pt-10">
                                 <h2 className="text-3xl md:text-5xl font-bold mb-6">La Ventaja de los Activos Reales</h2>
-                                <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-                                    Tokenizar activos del mundo real desbloquea beneficios sin precedentes para los inversores.
-                                </p>
+                                <p className="text-xl text-gray-700 max-w-3xl mx-auto">Tokenizar activos del mundo real y desbloquea beneficios para los inversores.</p>
                             </motion.div>
     
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
