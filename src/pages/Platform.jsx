@@ -148,7 +148,7 @@ const Platform = () => {
             className="pt-10 mb-10 text-center"
           >
             <h1 className="text-4xl md:text-5xl font-bold mb-2">
-              <span className="gradient-text">Fondos y Mercado de Capitales</span>
+              <span className="text-gray-900">Fondos y Mercado de Capitales</span>
             </h1>
             <p className="text-lg text-gray-600">
               Descubre, analiza e invierte en activos tokenizados del mercado chileno.

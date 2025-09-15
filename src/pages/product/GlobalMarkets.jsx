@@ -22,7 +22,7 @@ import React from 'react';
         }, {
             icon: ShieldCheck,
             title: 'Cumplimiento Regulatorio',
-            description: 'Navega por los marcos regulatorios globales con nuestras herramientas de cumplimiento integradas.'
+            description: 'Navega por los marcos regulatorios global es con nuestras herramientas de cumplimiento integradas.'
         }, {
             icon: Shuffle,
             title: 'Interoperabilidad de Activos',
@@ -35,9 +35,9 @@ import React from 'react';
 
         return <>
             <Helmet>
-                <title>Mercado de Capitales para Activos Digitales | Fraction Finance</title>
+                <title>Mercado de Activos Digitales | Fraction Finance</title>
                 <meta name="description" content="Nuestra plataforma transforma activos financieros tradicionales en oportunidades digitales, seguras y accesibles. Brindamos acceso a liquidez e inversión en mercados globales." />
-                <meta property="og:title" content="Mercado de Capitales para Activos Digitales" />
+                <meta property="og:title" content="Mercado de Activos Digitales" />
                 <meta property="og:description" content="Nuestra plataforma transforma activos financieros tradicionales en oportunidades digitales, seguras y accesibles. Brindamos acceso a liquidez e inversión en mercados globales." />
             </Helmet>
 
@@ -49,7 +49,7 @@ import React from 'react';
                                 🌐 Conectando Capital
                             </div>
                             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                                <span className="text-gray-900">Mercado de Capitales para Activos Digitales</span>
+                                <span className="text-gray-900">Mercado de Activos Digitales</span>
                             </h1>
                             <p className="text-xl text-gray-700 max-w-3xl mx-auto mb-8">Nuestra plataforma transforma activos financieros tradicionales en oportunidades digitales, seguras y accesibles. Brindamos acceso a liquidez e inversión en mercados globales.</p>
                             <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-full font-semibold text-lg glow-effect">

@@ -1,50 +1,52 @@
+
 import React from 'react';
-    import { NavLink, useLocation } from 'react-router-dom';
-    import { LayoutDashboard, DollarSign, Landmark, Shield, FileText, Users, Briefcase, Settings, Globe, HeartHandshake as Handshake } from 'lucide-react';
-    import Logo from '@/components/Logo';
+import { NavLink, useLocation } from 'react-router-dom';
+import { LayoutDashboard, Package, Landmark, FileText, Rss, Users, Briefcase, Settings, Network, Shield } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import Logo from '@/components/Logo';
+
+const AdminSidebar = () => {
+    const location = useLocation();
 
     const navLinks = [
-      { to: 'panel', icon: LayoutDashboard, label: 'Panel' },
-      { to: 'activos', icon: DollarSign, label: 'Activos Digitales' },
-      { to: 'fondos', icon: Landmark, label: 'Fondos Tokenizados' },
-      { to: 'stos', icon: Shield, label: 'STOs' },
-      { to: 'blog', icon: FileText, label: 'Blog' },
-      { to: 'usuarios', icon: Users, label: 'Usuarios' },
-      { to: 'empleos', icon: Briefcase, label: 'Empleos' },
-      { to: 'socios', icon: Handshake, label: 'Socios del Ecosistema' },
-      { to: 'explorador', icon: Globe, label: 'Explorador de Red' },
-      { to: 'configuracion', icon: Settings, label: 'Configuración' },
+        { to: 'panel', icon: LayoutDashboard, text: 'Panel' },
+        { to: 'activos', icon: Package, text: 'Activos Digitales' },
+        { to: 'fondos', icon: Landmark, text: 'Fondos Tokenizados' },
+        { to: 'stos', icon: FileText, text: 'STOs' },
+        { to: 'blog', icon: Rss, text: 'Blog' },
+        { to: 'usuarios', icon: Users, text: 'Usuarios' },
+        { to: 'empleos', icon: Briefcase, text: 'Empleos' },
+        { to: 'socios', icon: Network, text: 'Socios del Ecosistema' },
+        { to: 'politicas', icon: Shield, text: 'Políticas' },
+        { to: 'configuracion', icon: Settings, text: 'Configuración' },
     ];
 
-    const AdminSidebar = () => {
-      const location = useLocation();
-      const basePath = '/administracion/';
-
-      return (
-        <aside className="w-64 bg-gray-900 text-white flex flex-col border-r border-gray-700">
-          <div className="h-20 flex items-center justify-center border-b border-gray-700">
-            <Logo className="h-8" />
-          </div>
-          <nav className="flex-1 px-4 py-6 space-y-2">
-            {navLinks.map(({ to, icon: Icon, label }) => (
-              <NavLink
-                key={to}
-                to={`${basePath}${to}`}
-                className={({ isActive }) =>
-                  `flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 ${
-                    isActive || (to === 'blog' && location.pathname.includes('/blog/')) || (to === 'panel' && location.pathname.endsWith('/administracion')) || (to === 'panel' && location.pathname.endsWith('/administracion/'))
-                      ? 'bg-primary text-white'
-                      : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-                  }`
-                }
-              >
-                <Icon className="h-5 w-5 mr-3" />
-                {label}
-              </NavLink>
-            ))}
-          </nav>
+    return (
+        <aside className="w-64 bg-gray-900 text-white flex flex-col">
+            <div className="h-20 flex items-center justify-center border-b border-gray-800">
+                <Logo className="h-12 w-auto" variant="white" />
+            </div>
+            <nav className="flex-1 px-4 py-6 space-y-2">
+                {navLinks.map(({ to, icon: Icon, text }) => (
+                    <NavLink
+                        key={to}
+                        to={to}
+                        className={({ isActive }) =>
+                            cn(
+                                'flex items-center px-4 py-3 rounded-lg transition-colors duration-200',
+                                isActive
+                                    ? 'bg-primary text-white'
+                                    : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                            )
+                        }
+                    >
+                        <Icon className="h-5 w-5 mr-3" />
+                        <span>{text}</span>
+                    </NavLink>
+                ))}
+            </nav>
         </aside>
-      );
-    };
+    );
+};
 
-    export default AdminSidebar;
+export default AdminSidebar;

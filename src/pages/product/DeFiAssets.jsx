@@ -32,9 +32,9 @@ const DeFiAssets = () => {
   return (
     <>
       <Helmet>
-        <title>Activos DeFi - Plataforma de Finanzas Descentralizadas | Fraction Finance</title>
+        <title>Mercado de Activos DeFi - Plataforma de Finanzas Descentralizadas | Fraction Finance</title>
         <meta name="description" content="Explora el mundo de las finanzas descentralizadas con Fraction Finance. Accede a LSTs, LP tokens, derivados DeFi y estrategias de yield." />
-        <meta property="og:title" content="Activos DeFi - Plataforma de Finanzas Descentralizadas | Fraction Finance" />
+        <meta property="og:title" content="Mercado de Activos DeFi - Plataforma de Finanzas Descentralizadas | Fraction Finance" />
         <meta property="og:description" content="Explora el mundo de las finanzas descentralizadas con Fraction Finance. Accede a LSTs, LP tokens, derivados DeFi y estrategias de yield." />
       </Helmet>
 
@@ -46,13 +46,13 @@ const DeFiAssets = () => {
                 ⚡ Finanzas Descentralizadas
               </div>
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                <span className="text-gray-900">Activos DeFi</span>
+                <span className="text-gray-900">Mercado de Activos DeFi</span>
               </h1>
               <p className="text-xl text-gray-700 max-w-3xl mx-auto mb-8">
                 Sumérgete en el innovador mundo de las Finanzas Descentralizadas. Tokeniza y gestiona una amplia gama de activos DeFi con seguridad y eficiencia.
               </p>
               <Button asChild size="lg" className="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white px-8 py-4 rounded-full font-semibold text-lg glow-effect">
-                <Link to="/plataforma-defi">Explorar Activos DeFi</Link>
+                <Link to="/plataforma-defi">Explorar Mercado de Activos DeFi</Link>
               </Button>
             </motion.div>
           </div>
@@ -60,9 +60,9 @@ const DeFiAssets = () => {
 
         <section className="py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center mb-16">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center mb-16 pt-16">
               <h2 className="text-3xl md:text-5xl font-bold mb-6">
-                Ventajas de los Activos DeFi
+                Ventajas de Activos Descentralizados
               </h2>
               <p className="text-xl text-gray-700 max-w-3xl mx-auto">
                 Descubre cómo los activos DeFi pueden transformar tu estrategia de inversión.

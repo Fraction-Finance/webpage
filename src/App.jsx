@@ -1,3 +1,4 @@
+
 import React, { Suspense, lazy } from 'react';
     import { Routes, Route, Navigate } from 'react-router-dom';
     import { Helmet } from 'react-helmet';
@@ -7,10 +8,6 @@ import React, { Suspense, lazy } from 'react';
     import ProtectedRoute from '@/components/ProtectedRoute';
     import { useSettings } from '@/contexts/SettingsContext';
     import { Loader2 } from 'lucide-react';
-    import GlobalMarkets from '@/pages/product/GlobalMarkets';
-    import RWAInvest from '@/pages/product/RWAInvest';
-    import DeFiAssets from '@/pages/product/DeFiAssets';
-    import DeFiPlatform from '@/pages/DeFiPlatform'; // Import the new DeFiPlatform
 
     const Home = lazy(() => import('@/pages/Home'));
     const Ecosystem = lazy(() => import('@/pages/Ecosystem'));
@@ -42,9 +39,16 @@ import React, { Suspense, lazy } from 'react';
     const UsersManager = lazy(() => import('@/pages/admin/components/UsersManager'));
     const ManageJobs = lazy(() => import('@/pages/admin/components/ManageJobs'));
     const PlatformSettings = lazy(() => import('@/pages/admin/components/PlatformSettings'));
-    const Product = lazy(() => import('@/pages/Product'));
     const ManageEcosystemPartners = lazy(() => import('@/pages/admin/components/ManageEcosystemPartners'));
+    const ManagePolicies = lazy(() => import('@/pages/admin/components/ManagePolicies'));
     const AuthCallback = lazy(() => import('@/pages/AuthCallback'));
+    const GlobalMarkets = lazy(() => import('@/pages/product/GlobalMarkets'));
+    const RWAInvest = lazy(() => import('@/pages/product/RWAInvest'));
+    const DeFiAssets = lazy(() => import('@/pages/product/DeFiAssets'));
+    const DeFiPlatform = lazy(() => import('@/pages/DeFiPlatform'));
+    const PrivacyPolicy = lazy(() => import('@/pages/legal/PrivacyPolicy'));
+    const TermsOfService = lazy(() => import('@/pages/legal/TermsOfService'));
+    const CookiePolicy = lazy(() => import('@/pages/legal/CookiePolicy'));
 
     function App() {
       return (
@@ -79,6 +83,7 @@ import React, { Suspense, lazy } from 'react';
                         <Route path="empleos" element={<ManageJobs />} />
                         <Route path="socios" element={<ManageEcosystemPartners />} />
                         <Route path="configuracion" element={<PlatformSettings />} />
+                        <Route path="politicas" element={<ManagePolicies />} />
                       </Routes>
                     </Administration>
                   </ProtectedRoute>
@@ -117,11 +122,13 @@ import React, { Suspense, lazy } from 'react';
               <Route path="/plataforma" element={<ProtectedRoute><Platform /></ProtectedRoute>} />
               <Route path="/plataforma/invertir/:stoId" element={<ProtectedRoute><InvestDetail /></ProtectedRoute>} />
               <Route path="/inversiones" element={<ProtectedRoute><Investment /></ProtectedRoute>} />
-              <Route path="/producto/mercados-globales" element={<GlobalMarkets />} />
-              <Route path="/producto/invertir-rwa" element={<RWAInvest />} />
-              <Route path="/producto/activos-defi" element={<DeFiAssets />} />
-              <Route path="/plataforma-defi" element={<ProtectedRoute><DeFiPlatform /></ProtectedRoute>} /> {/* New route for DeFi Platform */}
-              <Route path="/producto" element={<Product />} />
+              {settings.show_global_markets && <Route path="/producto/mercados-globales" element={<GlobalMarkets />} />}
+              {settings.show_rwa_invest && <Route path="/producto/invertir-rwa" element={<RWAInvest />} />}
+              {settings.show_defi_assets && <Route path="/producto/mercado-activos-descentralizados" element={<DeFiAssets />} />}
+              <Route path="/plataforma-defi" element={<ProtectedRoute><DeFiPlatform /></ProtectedRoute>} />
+              <Route path="/legal/politica-de-privacidad" element={<PrivacyPolicy />} />
+              <Route path="/legal/terminos-de-servicio" element={<TermsOfService />} />
+              <Route path="/legal/politica-de-cookies" element={<CookiePolicy />} />
               <Route path="/perfil" element={
                   <ProtectedRoute>
                       <ProfileLayout />

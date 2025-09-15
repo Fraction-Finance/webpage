@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
@@ -7,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, MapPin } from 'lucide-react';
 const Contact = () => {
   const {
     toast
@@ -143,10 +144,6 @@ const Contact = () => {
                                         <div className="flex items-center">
                                             <Mail className="h-6 w-6 text-primary mr-4" />
                                             <a href="mailto:contacto@fractionfinance.cl" className="hover:text-primary transition-colors">contacto@fractionfinance.cl</a>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <Phone className="h-6 w-6 text-primary mr-4" />
-                                            <span></span>
                                         </div>
                                         <div className="flex items-start">
                                             <MapPin className="h-6 w-6 text-primary mr-4 mt-1" />
