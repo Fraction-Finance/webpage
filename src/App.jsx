@@ -1,5 +1,4 @@
-
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useState, useEffect } from 'react';
     import { Routes, Route, Navigate } from 'react-router-dom';
     import { Helmet } from 'react-helmet';
     import Navbar from '@/components/Navbar';
@@ -7,7 +6,9 @@ import React, { Suspense, lazy } from 'react';
     import Background from '@/components/Background';
     import ProtectedRoute from '@/components/ProtectedRoute';
     import { useSettings } from '@/contexts/SettingsContext';
-    import { Loader2 } from 'lucide-react';
+    import { Loader2, X } from 'lucide-react';
+    import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+    import { Button } from '@/components/ui/button';
 
     const Home = lazy(() => import('@/pages/Home'));
     const Ecosystem = lazy(() => import('@/pages/Ecosystem'));
@@ -31,6 +32,7 @@ import React, { Suspense, lazy } from 'react';
     const Administration = lazy(() => import('@/pages/admin/Administration'));
     const AdminDashboard = lazy(() => import('@/pages/admin/components/AdminDashboard'));
     const ManageDigitalAssets = lazy(() => import('@/pages/admin/components/ManageDigitalAssets'));
+    const ManageDeFiAssets = lazy(() => import('@/pages/admin/components/ManageDeFiAssets'));
     const ManageTokenizedVaults = lazy(() => import('@/pages/admin/components/ManageTokenizedVaults'));
     const VaultDetail = lazy(() => import('@/pages/admin/components/VaultDetail'));
     const ManageSTOs = lazy(() => import('@/pages/admin/components/ManageSTOs'));
@@ -41,6 +43,8 @@ import React, { Suspense, lazy } from 'react';
     const PlatformSettings = lazy(() => import('@/pages/admin/components/PlatformSettings'));
     const ManageEcosystemPartners = lazy(() => import('@/pages/admin/components/ManageEcosystemPartners'));
     const ManagePolicies = lazy(() => import('@/pages/admin/components/ManagePolicies'));
+    const ManageReports = lazy(() => import('@/pages/admin/components/ManageReports'));
+    const ManageTeam = lazy(() => import('@/pages/admin/components/ManageTeam'));
     const AuthCallback = lazy(() => import('@/pages/AuthCallback'));
     const GlobalMarkets = lazy(() => import('@/pages/product/GlobalMarkets'));
     const RWAInvest = lazy(() => import('@/pages/product/RWAInvest'));
@@ -49,6 +53,40 @@ import React, { Suspense, lazy } from 'react';
     const PrivacyPolicy = lazy(() => import('@/pages/legal/PrivacyPolicy'));
     const TermsOfService = lazy(() => import('@/pages/legal/TermsOfService'));
     const CookiePolicy = lazy(() => import('@/pages/legal/CookiePolicy'));
+    const ComplaintChannel = lazy(() => import('@/pages/legal/ComplaintChannel'));
+    const WhistleblowerChannel = lazy(() => import('@/pages/legal/WhistleblowerChannel'));
+
+    const DevelopmentNotice = () => {
+      const [visible, setVisible] = useState(false);
+
+      useEffect(() => {
+        const noticeDismissed = sessionStorage.getItem('devNoticeDismissed');
+        if (!noticeDismissed) {
+          setVisible(true);
+        }
+      }, []);
+
+      const handleDismiss = () => {
+        sessionStorage.setItem('devNoticeDismissed', 'true');
+        setVisible(false);
+      };
+
+      if (!visible) return null;
+
+      return (
+        <div className="fixed bottom-4 right-4 z-50 max-w-sm">
+          <Alert>
+            <AlertTitle>Aviso de Desarrollo</AlertTitle>
+            <AlertDescription>
+              El sitio se encuentra en desarrollo. La información publicada es referencial y no corresponde a la versión final de la plataforma.
+            </AlertDescription>
+            <Button variant="ghost" size="sm" className="absolute top-2 right-2" onClick={handleDismiss}>
+              <X className="h-4 w-4" />
+            </Button>
+          </Alert>
+        </div>
+      );
+    };
 
     function App() {
       return (
@@ -61,6 +99,7 @@ import React, { Suspense, lazy } from 'react';
           </Helmet>
           
           <Background />
+          <DevelopmentNotice />
 
           <div className="relative z-10 flex flex-col min-h-screen">
             <Suspense fallback={<div className="flex h-screen w-full items-center justify-center"><Loader2 className="h-16 w-16 animate-spin text-primary" /></div>}>
@@ -73,6 +112,7 @@ import React, { Suspense, lazy } from 'react';
                         <Route path="/" element={<Navigate to="panel" replace />} />
                         <Route path="panel" element={<AdminDashboard />} />
                         <Route path="activos" element={<ManageDigitalAssets />} />
+                        <Route path="activos-defi" element={<ManageDeFiAssets />} />
                         <Route path="fondos" element={<ManageTokenizedVaults />} />
                         <Route path="fondos/:vaultId" element={<VaultDetail />} />
                         <Route path="stos" element={<ManageSTOs />} />
@@ -81,9 +121,11 @@ import React, { Suspense, lazy } from 'react';
                         <Route path="blog/editar/:postId" element={<BlogEditor />} />
                         <Route path="usuarios" element={<UsersManager />} />
                         <Route path="empleos" element={<ManageJobs />} />
+                        <Route path="equipo" element={<ManageTeam />} />
                         <Route path="socios" element={<ManageEcosystemPartners />} />
                         <Route path="configuracion" element={<PlatformSettings />} />
                         <Route path="politicas" element={<ManagePolicies />} />
+                        <Route path="reportes" element={<ManageReports />} />
                       </Routes>
                     </Administration>
                   </ProtectedRoute>
@@ -109,8 +151,8 @@ import React, { Suspense, lazy } from 'react';
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
-              <Route path="/mercado-rwa" element={<RWAPlatform />} />
-              <Route path="/mercado-rwa/:stoId" element={<RWAAssetDetail />} />
+              <Route path="/mercado-rwa" element={<ProtectedRoute><RWAPlatform /></ProtectedRoute>} />
+              <Route path="/mercado-rwa/:stoId" element={<ProtectedRoute><RWAAssetDetail /></ProtectedRoute>} />
               <Route path="/ecosistema" element={<Ecosystem />} />
               <Route path="/nosotros" element={<About />} />
               <Route path="/nosotros/modelo-de-negocio" element={<BusinessModel />} />
@@ -129,6 +171,8 @@ import React, { Suspense, lazy } from 'react';
               <Route path="/legal/politica-de-privacidad" element={<PrivacyPolicy />} />
               <Route path="/legal/terminos-de-servicio" element={<TermsOfService />} />
               <Route path="/legal/politica-de-cookies" element={<CookiePolicy />} />
+              <Route path="/legal/canal-de-denuncias" element={<WhistleblowerChannel />} />
+              <Route path="/legal/canal-de-reclamos" element={<ComplaintChannel />} />
               <Route path="/perfil" element={
                   <ProtectedRoute>
                       <ProfileLayout />

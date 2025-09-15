@@ -1,23 +1,23 @@
-
 import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, Landmark, FileText, Rss, Users, Briefcase, Settings, Network, Shield } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
+import { LayoutDashboard, Package, Landmark, FileText, Rss, Users, Briefcase, Settings, Network, Shield, MessageSquare as MessageSquareWarning, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Logo from '@/components/Logo';
 
 const AdminSidebar = () => {
-    const location = useLocation();
-
     const navLinks = [
         { to: 'panel', icon: LayoutDashboard, text: 'Panel' },
         { to: 'activos', icon: Package, text: 'Activos Digitales' },
+        { to: 'activos-defi', icon: Zap, text: 'Activos DeFi' },
         { to: 'fondos', icon: Landmark, text: 'Fondos Tokenizados' },
         { to: 'stos', icon: FileText, text: 'STOs' },
         { to: 'blog', icon: Rss, text: 'Blog' },
         { to: 'usuarios', icon: Users, text: 'Usuarios' },
         { to: 'empleos', icon: Briefcase, text: 'Empleos' },
+        { to: 'equipo', icon: Users, text: 'Equipo' },
         { to: 'socios', icon: Network, text: 'Socios del Ecosistema' },
         { to: 'politicas', icon: Shield, text: 'Políticas' },
+        { to: 'reportes', icon: MessageSquareWarning, text: 'Denuncias y Reclamos' },
         { to: 'configuracion', icon: Settings, text: 'Configuración' },
     ];
 

@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Linkedin, Twitter, Facebook } from 'lucide-react';
+import { Linkedin, X } from 'lucide-react';
 import Logo from '@/components/Logo';
 
 const Footer = () => {
@@ -40,14 +39,15 @@ const Footer = () => {
         { name: 'Política de Privacidad', path: '/legal/politica-de-privacidad' },
         { name: 'Términos de Servicio', path: '/legal/terminos-de-servicio' },
         { name: 'Política de Cookies', path: '/legal/politica-de-cookies' },
+        { name: 'Canal de Denuncias', path: '/legal/canal-de-denuncias' },
+        { name: 'Canal de Reclamos', path: '/legal/canal-de-reclamos' },
       ],
     },
   ];
 
   const socialLinks = [
     { icon: Linkedin, href: 'https://www.linkedin.com/company/fractioncl' },
-    { icon: Twitter, href: 'https://x.com/Fractioncl' },
-    { icon: Facebook, href: '#' },
+    { icon: X, href: 'https://x.com/Fractioncl' },
   ];
 
   return (

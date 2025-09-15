@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/customSupabaseClient';
 import { useToast } from '@/components/ui/use-toast';
@@ -8,6 +7,16 @@ import { Loader2, Save } from 'lucide-react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { motion } from 'framer-motion';
+
+const Quill = ReactQuill.Quill;
+const Align = Quill.import('formats/align');
+Align.whitelist = ['left', 'center', 'right', 'justify'];
+Quill.register(Align, true);
+
+const Color = Quill.import('formats/color');
+const newColors = ['#0046ff', '#000000', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc', '#9933ff', '#ffffff', '#facccc', '#ffebcc', '#ffffcc', '#cce8cc', '#cce0f5', '#ebd6ff', '#bbbbbb', '#888888', '#555555'];
+Color.whitelist = newColors;
+Quill.register(Color, true);
 
 const PolicyEditor = ({ policyType, title }) => {
     const [content, setContent] = useState('');
@@ -24,7 +33,7 @@ const PolicyEditor = ({ policyType, title }) => {
             .eq('policy_type', policyType)
             .single();
 
-        if (error) {
+        if (error && error.code !== 'PGRST116') { // Ignore 'not found' error
             toast({ title: 'Error al cargar la política', description: error.message, variant: 'destructive' });
         } else if (data) {
             setContent(data.content || '');
@@ -41,8 +50,7 @@ const PolicyEditor = ({ policyType, title }) => {
         setSaving(true);
         const { error } = await supabase
             .from('legal_policies')
-            .update({ content, updated_at: new Date().toISOString() })
-            .eq('policy_type', policyType);
+            .upsert({ policy_type: policyType, content, title, updated_at: new Date().toISOString() }, { onConflict: 'policy_type' });
 
         if (error) {
             toast({ title: 'Error al guardar la política', description: error.message, variant: 'destructive' });
@@ -54,6 +62,18 @@ const PolicyEditor = ({ policyType, title }) => {
     };
 
     const hasChanged = content !== initialContent;
+
+    const modules = {
+        toolbar: [
+          [{ 'header': [1, 2, 3, false] }],
+          ['bold', 'italic', 'underline', 'strike'],
+          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+          [{ 'align': [] }],
+          ['link', 'blockquote'],
+          [{ 'color': newColors }, { 'background': [] }],
+          ['clean'],
+        ],
+    };
 
     return (
         <Card>
@@ -71,15 +91,7 @@ const PolicyEditor = ({ policyType, title }) => {
                         theme="snow"
                         value={content}
                         onChange={setContent}
-                        modules={{
-                            toolbar: [
-                                [{ 'header': [1, 2, 3, false] }],
-                                ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                                ['link'],
-                                ['clean']
-                            ],
-                        }}
+                        modules={modules}
                         className="bg-white"
                     />
                 )}
