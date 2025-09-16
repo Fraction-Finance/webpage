@@ -58,7 +58,7 @@ const GlobalMarkets = () => {
                             </h1>
                             <p className="text-xl text-gray-700 max-w-3xl mx-auto mb-8">Nuestra plataforma convierte activos financieros tradicionales en oportunidades digitales seguras y accesibles.</p>
                             <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-full font-semibold text-lg glow-effect">
-                                <Link to="/plataforma">Acceder a la Plataforma de Trading</Link>
+                                <Link to="/plataforma">Explorar Mercado de Activos</Link>
                             </Button>
                         </motion.div>
                     </div>

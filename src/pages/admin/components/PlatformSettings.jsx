@@ -1,13 +1,13 @@
-
-    import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
     import { supabase } from '@/lib/customSupabaseClient';
     import { useToast } from '@/components/ui/use-toast';
     import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
     import { Label } from '@/components/ui/label';
     import { Switch } from '@/components/ui/switch';
-    import { Loader2, Save } from 'lucide-react';
+    import { Loader2, Upload, Save } from 'lucide-react';
     import { motion } from 'framer-motion';
     import { Button } from '@/components/ui/button';
+    import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
     import { isEqual } from 'lodash';
     import { useSettings } from '@/contexts/SettingsContext';
 
@@ -175,10 +175,8 @@
                 </Button>
             </CardFooter>
           </Card>
-
         </motion.div>
       );
     };
 
     export default PlatformSettings;
-  

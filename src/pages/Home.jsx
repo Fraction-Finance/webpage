@@ -28,7 +28,7 @@ const Home = () => {
     description: 'Fracciona activos tradicionales y más. Crea oportunidades de inversión accesibles para cualquier inversor.'
   }, {
     icon: Users,
-    title: 'Red de Inversores Internacional',
+    title: 'Red de Inversores',
     description: 'Conecta con inversores institucionales y minoristas de todo el mundo. Aumenta la visibilidad y demanda de tus activos tokenizados.'
   }, {
     icon: Lock,
@@ -86,7 +86,7 @@ const Home = () => {
             duration: 0.8
           }} className="text-center mb-16 pt-16">
                 <h2 className="text-3xl md:text-5xl font-bold mb-6">
-                  <span className="gradient-text">🌐 Activos Tokenizados</span>
+                  <span className="gradient-text">Invierte en Activos Tokenizados</span>
                 </h2>
                 <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">En Fraction Finance unimos las finanzas tradicionales, DeFi y activos del mundo real, facilitando en inversiones digitales seguras y al alcance de todos.</p>
               </motion.div>
@@ -101,8 +101,8 @@ const Home = () => {
             }} transition={{
               duration: 0.8,
               delay: 0.2
-            }} className="glass-effect p-8 rounded-2xl shadow-lg text-center">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-6">Activos DeFi</h3>
+            }} className="glass-effect p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Activos DeFi</h3>
                     <ul className="space-y-4 text-lg text-gray-700">
                       <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Earn</span></li>
                       <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>LSTs</span></li>
@@ -121,8 +121,8 @@ const Home = () => {
             }} transition={{
               duration: 0.8,
               delay: 0.4
-            }} className="glass-effect p-8 rounded-2xl shadow-lg text-center">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-6">Finanzas Tradicionales</h3>
+            }} className="glass-effect p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Finanzas Tradicionales</h3>
                     <ul className="space-y-4 text-lg text-gray-700">
                       <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Acciones y ETFs</span></li>
                       <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Bonos y Renta Fija</span></li>
@@ -139,8 +139,8 @@ const Home = () => {
             }} transition={{
               duration: 0.8,
               delay: 0.6
-            }} className="glass-effect p-8 rounded-2xl shadow-lg text-center">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-6">Activos Reales</h3>
+            }} className="glass-effect p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Activos Reales</h3>
                     <ul className="space-y-4 text-lg text-gray-700">
                       <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Bienes Raíces</span></li>
                       <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Infraestructura</span></li>
