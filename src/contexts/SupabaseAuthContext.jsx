@@ -145,14 +145,13 @@ export const AuthProvider = ({ children }) => {
   const signOut = useCallback(async () => {
     const { error } = await supabase.auth.signOut();
 
-    if (error && error.code !== 'session_not_found') {
+    if (error) {
       toast({
         variant: "destructive",
         title: "Falló el cierre de sesión",
         description: error.message || "Algo salió mal",
       });
     }
-
     return { error };
   }, [toast]);
 
