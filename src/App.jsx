@@ -1,4 +1,3 @@
-
 import React, { Suspense, lazy, useState, useEffect } from 'react';
     import { Routes, Route, Navigate } from 'react-router-dom';
     import { Helmet } from 'react-helmet';
@@ -9,7 +8,6 @@ import React, { Suspense, lazy, useState, useEffect } from 'react';
     import { useSettings } from '@/contexts/SettingsContext';
     import { Loader2 } from 'lucide-react';
     import { Button } from '@/components/ui/button';
-    import { WalletProvider } from '@/contexts/WalletContext';
     import {
       AlertDialog,
       AlertDialogAction,
@@ -19,6 +17,7 @@ import React, { Suspense, lazy, useState, useEffect } from 'react';
       AlertDialogHeader,
       AlertDialogTitle,
     } from "@/components/ui/alert-dialog";
+    import { useWallet } from '@/contexts/WalletContext';
 
     const Home = lazy(() => import('@/pages/Home'));
     const Ecosystem = lazy(() => import('@/pages/Ecosystem'));
@@ -100,6 +99,17 @@ import React, { Suspense, lazy, useState, useEffect } from 'react';
       );
     };
 
+    const WalletProtectedRoute = ({ children }) => {
+      const { isConnected } = useWallet();
+      if (!isConnected) {
+        // You can render a "please connect wallet" component here
+        // or redirect. For now, we just won't render the children.
+        // A better UX would be a prompt.
+        return <Navigate to="/" replace />; 
+      }
+      return children;
+    };
+
     function App() {
       return (
         <div className="min-h-screen relative">
@@ -115,7 +125,6 @@ import React, { Suspense, lazy, useState, useEffect } from 'react';
 
           <div className="relative z-10 flex flex-col min-h-screen">
             <Suspense fallback={<div className="flex h-screen w-full items-center justify-center"><Loader2 className="h-16 w-16 animate-spin text-primary" /></div>}>
-              <WalletProvider>
                 <Routes>
                   <Route path="/*" element={<MainLayout />} />
                   <Route path="/administracion/*" element={
@@ -145,7 +154,6 @@ import React, { Suspense, lazy, useState, useEffect } from 'react';
                     </ProtectedRoute>
                   } />
                 </Routes>
-              </WalletProvider>
             </Suspense>
           </div>
         </div>
@@ -178,7 +186,7 @@ import React, { Suspense, lazy, useState, useEffect } from 'react';
               <Route path="/tokenizar" element={<Tokenize />} />
               <Route path="/plataforma" element={<ProtectedRoute><Platform /></ProtectedRoute>} />
               <Route path="/plataforma/invertir/:stoId" element={<ProtectedRoute><InvestDetail /></ProtectedRoute>} />
-              <Route path="/inversiones" element={<ProtectedRoute><Investment /></ProtectedRoute>} />
+              <Route path="/inversiones" element={<WalletProtectedRoute><Investment /></WalletProtectedRoute>} />
               {settings.show_global_markets && <Route path="/producto/mercados-globales" element={<GlobalMarkets />} />}
               {settings.show_rwa_invest && <Route path="/producto/invertir-rwa" element={<RWAInvest />} />}
               {settings.show_defi_assets && <Route path="/producto/mercado-activos-descentralizados" element={<DeFiAssets />} />}

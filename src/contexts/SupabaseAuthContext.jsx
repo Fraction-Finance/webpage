@@ -14,16 +14,21 @@ export const AuthProvider = ({ children }) => {
 
   const fetchProfile = useCallback(async (userId) => {
     if (!userId) return null;
-    const { data, error } = await supabase
-      .from('profiles')
-      .select(`*`)
-      .eq('id', userId)
-      .single();
+    try {
+      const { data, error, status } = await supabase
+        .from('profiles')
+        .select(`*`)
+        .eq('id', userId)
+        .single();
 
-    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
+      if (error && status !== 406) { // 406 is when no rows are found
+        throw error;
+      }
+      return data;
+    } catch (error) {
       console.error('Error al obtener el perfil:', error);
+      return null;
     }
-    return data;
   }, []);
 
   const refreshProfile = useCallback(async () => {
@@ -34,9 +39,8 @@ export const AuthProvider = ({ children }) => {
   }, [user, fetchProfile]);
 
   const handleAuthStateChange = useCallback(async (event, session) => {
-    const currentUser = session?.user ?? null;
-    
     setSession(session);
+    const currentUser = session?.user ?? null;
     setUser(currentUser);
 
     if (currentUser) {
@@ -64,18 +68,22 @@ export const AuthProvider = ({ children }) => {
   
   useEffect(() => {
     setLoading(true);
-    const getSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      handleAuthStateChange('INITIAL_SESSION', session);
-    };
-
-    getSession();
-
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        handleAuthStateChange(event, session);
+      (event, session) => {
+        if (event === 'TOKEN_REFRESHED' && session === null) {
+          // This can happen if the refresh token is invalid.
+          // We sign out to clear any remaining local state.
+          supabase.auth.signOut();
+        } else {
+          handleAuthStateChange(event, session);
+        }
       }
     );
+
+    // Initial session fetch
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      handleAuthStateChange('INITIAL_SESSION', session);
+    });
 
     return () => subscription.unsubscribe();
   }, [handleAuthStateChange]);
@@ -145,13 +153,14 @@ export const AuthProvider = ({ children }) => {
   const signOut = useCallback(async () => {
     const { error } = await supabase.auth.signOut();
 
-    if (error) {
+    if (error && error.code !== 'session_not_found') {
       toast({
         variant: "destructive",
         title: "Falló el cierre de sesión",
         description: error.message || "Algo salió mal",
       });
     }
+
     return { error };
   }, [toast]);
 

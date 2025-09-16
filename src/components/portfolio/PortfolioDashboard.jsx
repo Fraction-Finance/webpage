@@ -27,7 +27,15 @@ const itemVariants = {
   },
 };
 
-const PortfolioDashboard = () => {
+const PortfolioDashboard = ({ portfolioData }) => {
+  if (!portfolioData) {
+    return (
+      <div className="text-center p-8 glass-effect rounded-xl">
+        <h3 className="text-xl font-semibold">Cargando datos del portafolio...</h3>
+      </div>
+    );
+  }
+
   return (
     <motion.div
       variants={containerVariants}
@@ -36,12 +44,12 @@ const PortfolioDashboard = () => {
       className="space-y-8"
     >
       <motion.div variants={itemVariants}>
-        <PortfolioSummary />
+        <PortfolioSummary summary={portfolioData} />
       </motion.div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <motion.div variants={itemVariants} className="lg:col-span-2">
-          <PortfolioChart />
+          <PortfolioChart holdings={portfolioData.holdings} />
         </motion.div>
         <motion.div variants={itemVariants}>
           <QuickActions />
@@ -49,7 +57,7 @@ const PortfolioDashboard = () => {
       </div>
 
       <motion.div variants={itemVariants}>
-        <HoldingsList />
+        <HoldingsList holdings={portfolioData.holdings} />
       </motion.div>
     </motion.div>
   );

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useContext, createContext, useCallback, useMemo } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { ethers } from 'ethers';
@@ -58,10 +59,14 @@ const getNetworkByChainId = (chainId) => {
     return supportedChains.find(chain => chain.chainId === chainId);
 };
 
-export const WalletContext = createContext();
+export const WalletContext = createContext(null);
 
 export const useWallet = () => {
-    return useContext(WalletContext);
+    const context = useContext(WalletContext);
+    if (!context) {
+        throw new Error('useWallet must be used within a WalletProvider');
+    }
+    return context;
 };
 
 export const WalletProvider = ({ children }) => {
@@ -70,7 +75,7 @@ export const WalletProvider = ({ children }) => {
     const [balance, setBalance] = useState(null);
     const [provider, setProvider] = useState(null);
     const { toast } = useToast();
-    const { getProvider: getAlchemyProvider } = useAlchemy();
+    const alchemy = useAlchemy();
     
     const [alchemyProvider, setAlchemyProvider] = useState(null);
 
@@ -97,7 +102,7 @@ export const WalletProvider = ({ children }) => {
             setNetwork(null);
             setBalance(null);
             setProvider(null);
-            setAlchemyProvider(null); // Clear alchemy provider on disconnect
+            setAlchemyProvider(null);
             toast({
                 title: 'Billetera Desconectada',
                 description: 'Tu billetera ha sido desconectada.',
@@ -106,11 +111,11 @@ export const WalletProvider = ({ children }) => {
     }, [toast]);
     
     useEffect(() => {
-        if(network && getAlchemyProvider) {
-           const newAlchemyProvider = getAlchemyProvider(network);
+        if(network && alchemy?.getProvider) {
+           const newAlchemyProvider = alchemy.getProvider(network);
            setAlchemyProvider(newAlchemyProvider);
         }
-    }, [network, getAlchemyProvider]);
+    }, [network, alchemy]);
 
     const connectWallet = async () => {
         try {
