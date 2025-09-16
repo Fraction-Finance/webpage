@@ -139,16 +139,36 @@ export const AuthProvider = ({ children }) => {
   }, [toast]);
 
   const signOut = useCallback(async () => {
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
+    let error = null;
+    try {
+      const result = await supabase.auth.signOut();
+      error = result.error;
+      // Limpiar estado local
+      setUser(null);
+      setProfile(null);
+      setSession(null);
+      setLoading(false);
+      // Redirigir al home
+      window.location.replace('/');
+      if (error) {
+        toast({
+          variant: "destructive",
+          title: "Falló el cierre de sesión",
+          description: error.message || "Algo salió mal",
+        });
+      } else {
+        toast({
+          title: '¡Sesión cerrada!',
+          description: 'Has cerrado sesión correctamente.',
+        });
+      }
+    } catch (e) {
       toast({
         variant: "destructive",
-        title: "Falló el cierre de sesión",
-        description: error.message || "Algo salió mal",
+        title: "Error inesperado al cerrar sesión",
+        description: e.message || "Algo salió mal",
       });
     }
-
     return { error };
   }, [toast]);
 
