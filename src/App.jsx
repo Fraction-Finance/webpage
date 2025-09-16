@@ -1,4 +1,5 @@
-import React, { Suspense, lazy, useState, useEffect } from 'react';
+
+    import React, { Suspense, lazy } from 'react';
     import { Routes, Route, Navigate } from 'react-router-dom';
     import { Helmet } from 'react-helmet';
     import Navbar from '@/components/Navbar';
@@ -7,16 +8,7 @@ import React, { Suspense, lazy, useState, useEffect } from 'react';
     import ProtectedRoute from '@/components/ProtectedRoute';
     import { useSettings } from '@/contexts/SettingsContext';
     import { Loader2 } from 'lucide-react';
-    import { Button } from '@/components/ui/button';
-    import {
-      AlertDialog,
-      AlertDialogAction,
-      AlertDialogContent,
-      AlertDialogDescription,
-      AlertDialogFooter,
-      AlertDialogHeader,
-      AlertDialogTitle,
-    } from "@/components/ui/alert-dialog";
+    import DevelopmentNotice from '@/components/DevelopmentNotice';
     import { useWallet } from '@/contexts/WalletContext';
 
     const Home = lazy(() => import('@/pages/Home'));
@@ -66,45 +58,14 @@ import React, { Suspense, lazy, useState, useEffect } from 'react';
     const ComplaintChannel = lazy(() => import('@/pages/legal/ComplaintChannel'));
     const WhistleblowerChannel = lazy(() => import('@/pages/legal/WhistleblowerChannel'));
     const Sitemap = lazy(() => import('@/pages/Sitemap'));
+    const Docs = lazy(() => import('@/pages/Docs'));
+    const Product = lazy(() => import('@/pages/Product'));
+    const Profile = lazy(() => import('@/pages/Profile'));
 
-    const DevelopmentNotice = () => {
-      const [visible, setVisible] = useState(false);
-
-      useEffect(() => {
-        const noticeDismissed = sessionStorage.getItem('devNoticeDismissed');
-        if (!noticeDismissed) {
-          setVisible(true);
-        }
-      }, []);
-
-      const handleDismiss = () => {
-        sessionStorage.setItem('devNoticeDismissed', 'true');
-        setVisible(false);
-      };
-
-      return (
-        <AlertDialog open={visible} onOpenChange={setVisible}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Aviso de Contenido Referencial</AlertDialogTitle>
-              <AlertDialogDescription className="text-justify">
-                Este sitio web se encuentra en fase de desarrollo. La información publicada tiene carácter meramente informativo y no constituye una oferta, recomendación ni representación definitiva de los productos o servicios de Fraction Finance. Fraction Finance se encuentra actualmente en proceso de aprobación y regulación ante la Comisión para el Mercado Financiero (CMF). El contenido está sujeto a cambios sin previo aviso y no corresponde a la versión final de la plataforma.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogAction onClick={handleDismiss}>Entendido</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      );
-    };
 
     const WalletProtectedRoute = ({ children }) => {
       const { isConnected } = useWallet();
       if (!isConnected) {
-        // You can render a "please connect wallet" component here
-        // or redirect. For now, we just won't render the children.
-        // A better UX would be a prompt.
         return <Navigate to="/" replace />; 
       }
       return children;
@@ -197,6 +158,8 @@ import React, { Suspense, lazy, useState, useEffect } from 'react';
               <Route path="/legal/canal-de-denuncias" element={<WhistleblowerChannel />} />
               <Route path="/legal/canal-de-reclamos" element={<ComplaintChannel />} />
               <Route path="/mapa-del-sitio" element={<Sitemap />} />
+              <Route path="/documentacion" element={<Docs />} />
+              <Route path="/producto" element={<Product />} />
               <Route path="/perfil" element={
                   <ProtectedRoute>
                       <ProfileLayout />
@@ -217,3 +180,4 @@ import React, { Suspense, lazy, useState, useEffect } from 'react';
     };
 
     export default App;
+  
