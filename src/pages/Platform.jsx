@@ -10,6 +10,8 @@ import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/lib/customSupabaseClient';
 import { useNavigate } from 'react-router-dom';
 import PlatformSummary from '@/components/platform/PlatformSummary';
+import { useWallet } from '@/contexts/WalletContext';
+import ConnectWalletPrompt from '@/components/ConnectWalletPrompt';
 
 const AssetCard = ({ sto }) => {
   const navigate = useNavigate();
@@ -84,6 +86,7 @@ const Platform = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
+  const { isConnected } = useWallet();
 
   useEffect(() => {
     const fetchStos = async () => {
@@ -155,62 +158,70 @@ const Platform = () => {
             </p>
           </motion.div>
 
-          <PlatformSummary stos={stos} />
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex flex-col md:flex-row gap-4 justify-between items-center mb-10"
-          >
-            <div className="flex flex-wrap gap-2 bg-gray-100 p-1.5 rounded-full">
-              {categoryFilters.map(cat => (
-                <Button
-                  key={cat.name}
-                  variant={activeCategory === cat.category ? 'default' : 'ghost'}
-                  onClick={() => setActiveCategory(cat.category)}
-                  className={`rounded-full transition-all duration-300 ${activeCategory === cat.category ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md' : 'text-gray-600'}`}
-                >
-                  {cat.icon && <cat.icon className="mr-2 h-4 w-4" />}
-                  {cat.name}
-                </Button>
-              ))}
-            </div>
-            <div className="relative w-full md:w-auto">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <Input
-                placeholder="Buscar activo o ticker"
-                className="pl-10 w-full md:w-64"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-          </motion.div>
-
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
-            </div>
-          ) : error ? (
-             <div className="text-center py-20 text-red-500">
-                <p className="text-xl font-semibold">¡Oops! Algo salió mal.</p>
-                <p>{error}</p>
-              </div>
-          ) : filteredStos.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredStos.map((sto) => (
-                <AssetCard key={sto.id} sto={sto} />
-              ))}
+          {!isConnected ? (
+            <div className="py-10">
+              <ConnectWalletPrompt />
             </div>
           ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-20 text-gray-500"
-            >
-              <p className="text-xl">No hay oportunidades que coincidan con tus criterios.</p>
-              <p>Intenta ajustar tu búsqueda o filtros de categoría.</p>
-            </motion.div>
+            <>
+              <PlatformSummary stos={stos} />
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="flex flex-col md:flex-row gap-4 justify-between items-center mb-10"
+              >
+                <div className="flex flex-wrap gap-2 bg-gray-100 p-1.5 rounded-full">
+                  {categoryFilters.map(cat => (
+                    <Button
+                      key={cat.name}
+                      variant={activeCategory === cat.category ? 'default' : 'ghost'}
+                      onClick={() => setActiveCategory(cat.category)}
+                      className={`rounded-full transition-all duration-300 ${activeCategory === cat.category ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md' : 'text-gray-600'}`}
+                    >
+                      {cat.icon && <cat.icon className="mr-2 h-4 w-4" />}
+                      {cat.name}
+                    </Button>
+                  ))}
+                </div>
+                <div className="relative w-full md:w-auto">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Input
+                    placeholder="Buscar activo o ticker"
+                    className="pl-10 w-full md:w-64"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+              </motion.div>
+
+              {loading ? (
+                <div className="flex justify-center items-center h-64">
+                  <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
+                </div>
+              ) : error ? (
+                 <div className="text-center py-20 text-red-500">
+                    <p className="text-xl font-semibold">¡Oops! Algo salió mal.</p>
+                    <p>{error}</p>
+                  </div>
+              ) : filteredStos.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {filteredStos.map((sto) => (
+                    <AssetCard key={sto.id} sto={sto} />
+                  ))}
+                </div>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-center py-20 text-gray-500"
+                >
+                  <p className="text-xl">No hay oportunidades que coincidan con tus criterios.</p>
+                  <p>Intenta ajustar tu búsqueda o filtros de categoría.</p>
+                </motion.div>
+              )}
+            </>
           )}
         </main>
       </div>

@@ -101,7 +101,7 @@ const Home = () => {
             }} transition={{
               duration: 0.8,
               delay: 0.2
-            }} className="glass-effect p-8 rounded-2xl shadow-lg">
+            }} className="glass-effect p-8 rounded-2xl shadow-lg text-center">
                     <h3 className="text-2xl font-bold text-gray-900 mb-6">Activos DeFi</h3>
                     <ul className="space-y-4 text-lg text-gray-700">
                       <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Earn</span></li>
@@ -121,7 +121,7 @@ const Home = () => {
             }} transition={{
               duration: 0.8,
               delay: 0.4
-            }} className="glass-effect p-8 rounded-2xl shadow-lg">
+            }} className="glass-effect p-8 rounded-2xl shadow-lg text-center">
                     <h3 className="text-2xl font-bold text-gray-900 mb-6">Finanzas Tradicionales</h3>
                     <ul className="space-y-4 text-lg text-gray-700">
                       <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Acciones y ETFs</span></li>
@@ -139,7 +139,7 @@ const Home = () => {
             }} transition={{
               duration: 0.8,
               delay: 0.6
-            }} className="glass-effect p-8 rounded-2xl shadow-lg">
+            }} className="glass-effect p-8 rounded-2xl shadow-lg text-center">
                     <h3 className="text-2xl font-bold text-gray-900 mb-6">Activos Reales</h3>
                     <ul className="space-y-4 text-lg text-gray-700">
                       <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Bienes Raíces</span></li>

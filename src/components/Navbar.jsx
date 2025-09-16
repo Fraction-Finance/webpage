@@ -172,87 +172,27 @@ import React, { useState, useEffect } from 'react';
       }, []);
 
       const navItems = [
-        {
-          name: "Mercado de Activos Digitales",
-          path: "/producto/mercados-globales",
-          icon: TrendingUp
+        { 
+          name: "Producto",
+          path: '/producto',
+          icon: Package,
+          children: [
+            { title: "Mercado de Activos Digitales", href: "/producto/mercados-globales", description: "Accede a mercados de capitales en todo el mundo.", icon: TrendingUp },
+            { title: "Mercado RWA (Activos Reales)", href: "/producto/invertir-rwa", description: "Invierte en activos del mundo real tokenizados.", icon: Landmark },
+            { title: "Mercado de Activos DeFi", href: "/producto/mercado-activos-descentralizados", description: "Explora el mundo de las finanzas descentralizadas.", icon: Zap },
+          ]
         },
-        {
-          name: "RWA (Activos Reales)",
-          path: "/producto/invertir-rwa",
-          icon: Landmark
+        { name: "Ecosistema", path: '/ecosistema', icon: Network },
+        { name: "Nosotros", path: '/nosotros', 
+          icon: Info,
+          children: [
+            { title: "Nuestra Empresa", href: "/nosotros", description: "Conoce nuestra misión y equipo.", icon: Users },
+            { title: "Modelo de Negocio", href: "/nosotros/modelo-de-negocio", description: "Descubre cómo creamos valor.", icon: Target },
+            { title: "Blog", href: "/nosotros/blog", description: "Mantente actualizado con nuestras últimas ideas.", icon: Rss },
+            { title: "Trabaja con Nosotros", href: "/nosotros/empleos", description: "Únete a nuestro equipo.", icon: Briefcase },
+            { title: "Contáctanos", href: "/nosotros/contacto", description: "Ponte en contacto para soporte o consultas.", icon: MailQuestion },
+          ]
         },
-        {
-          name: "Mercado de Activos DeFi",
-          path: "/producto/mercado-activos-descentralizados",
-          icon: Zap
-        },
-        {
-          name: "Tokenizar",
-          path: "/tokenizar",
-          icon: Package
-        },
-        {
-          name: "Nuestra Empresa",
-          path: "/nosotros",
-          icon: Users
-        },
-        {
-          name: "Modelo de Negocio",
-          path: "/nosotros/modelo-de-negocio",
-          icon: Target
-        },
-        {
-          name: "Ecosistema",
-          path: "/ecosistema",
-          icon: Network
-        },
-        {
-          name: "Blog",
-          path: "/blog",
-          icon: Rss
-        },
-        {
-          name: "Contacto",
-          path: "/contacto",
-          icon: MailQuestion
-        },
-        {
-          name: "Documentación",
-          path: "https://docs.fractionfinance.cl/",
-          icon: BookOpen,
-          external: true
-        },
-        {
-          name: "Trabaja con Nosotros",
-          path: "/empleos",
-          icon: Briefcase
-        },
-        {
-          name: "Política de Privacidad",
-          path: "/legal/politica-de-privacidad",
-          icon: Shield
-        },
-        {
-          name: "Términos de Servicio",
-          path: "/legal/terminos-de-servicio",
-          icon: FileText
-        },
-        {
-          name: "Política de Cookies",
-          path: "/legal/politica-de-cookies",
-          icon: Zap
-        },
-        {
-          name: "Canal de Denuncias",
-          path: "/legal/canal-de-denuncias",
-          icon: AlertCircle
-        },
-        {
-          name: "Canal de Reclamos",
-          path: "/legal/canal-de-reclamos",
-          icon: MailQuestion
-        }
       ];
 
       const NavLinkItem = ({ to, children, isDropdown, isExternal = false }) => {
@@ -298,91 +238,132 @@ import React, { useState, useEffect } from 'react';
                   <NavigationMenuList className="flex space-x-1">
                     {navItems.map((item) => (
                       <NavigationMenuItem key={item.name}>
-                        {item.external ? (
-                          <NavigationMenuLink asChild>
-                            <a href={item.path} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 text-base font-semibold text-gray-600 hover:text-primary hover:bg-gray-100/50 rounded-md">
-                              {item.icon && <item.icon className="h-5 w-5" />}
-                              {item.name}
-                            </a>
-                          </NavigationMenuLink>
+                        {item.children ? (
+                          <>
+                            <NavigationMenuTrigger className="!bg-transparent hover:!bg-gray-100/50 p-0">
+                              <NavLinkItem to={item.path} isDropdown>{item.name}</NavLinkItem>
+                            </NavigationMenuTrigger>
+                            <NavigationMenuContent className="p-2 border border-gray-200 rounded-lg shadow-xl glass-effect-custom">
+                              <ul className="grid gap-3 p-4 w-[300px] md:w-[400px] lg:w-[500px] lg:grid-cols-1">
+                                {item.children.map((component) => (
+                                  <ListItem
+                                    key={component.title}
+                                    title={component.title}
+                                    href={component.href}
+                                    icon={component.icon}
+                                  >
+                                    {component.description}
+                                  </ListItem>
+                                ))}
+                              </ul>
+                            </NavigationMenuContent>
+                          </>
                         ) : (
-                          <NavigationMenuLink asChild>
-                            <Link to={item.path} className="flex items-center gap-2 px-4 py-2 text-base font-semibold text-gray-600 hover:text-primary hover:bg-gray-100/50 rounded-md">
-                              {item.icon && <item.icon className="h-5 w-5" />}
-                              {item.name}
-                            </Link>
-                          </NavigationMenuLink>
+                           <NavigationMenuLink asChild>
+                             <NavLinkItem to={item.path}>{item.name}</NavLinkItem>
+                           </NavigationMenuLink>
                         )}
                       </NavigationMenuItem>
                     ))}
+                    <NavigationMenuItem>
+                        <NavLinkItem to="https://docs.fractionfinance.cl/" isExternal>
+                            Documentación
+                        </NavLinkItem>
+                    </NavigationMenuItem>
                   </NavigationMenuList>
-                </NavigationMenu>
+                  </NavigationMenu>
+                </div>
+                
+                <div className="hidden md:flex flex-1 justify-end items-center space-x-4">
+                  {!loading && (user ? <UserMenu /> : <AuthModal />)}
+                </div>
+      
+                <div className="md:hidden flex items-center">
+                   {!loading && !user && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setIsOpen(!isOpen)}
+                      className="text-gray-800 ml-4"
+                    >
+                      {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                    </Button>
+                   )}
+                   {user && (
+                      <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setIsOpen(!isOpen)}
+                          className="text-gray-800 ml-4"
+                      >
+                          {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                      </Button>
+                   )}
+                </div>
               </div>
-
-              <div className="hidden md:flex flex-1 justify-end items-center space-x-4">
-                {!loading && (user ? <UserMenu /> : <AuthModal />)}
-              </div>
-
-              <div className="md:hidden flex items-center">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsOpen(!isOpen)}
-                  className="text-gray-800 ml-4"
+      
+              {isOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="md:hidden glass-effect-custom rounded-lg mt-2 p-4"
                 >
-                  {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-                </Button>
-              </div>
-            </div>
-
-            {isOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="md:hidden glass-effect-custom rounded-lg mt-2 p-4"
-              >
-                <div className="flex flex-col space-y-4">
-                  {navItems.map((item) => (
-                    item.external ? (
-                      <a
-                        key={item.name}
-                        href={item.path}
+                  <div className="flex flex-col space-y-4">
+                    {navItems.map((item) => (
+                      <div key={item.name}>
+                          <Link
+                            to={item.children ? item.children[0].href : item.path}
+                            onClick={() => setIsOpen(false)}
+                            className={`block px-3 py-2 text-base font-medium transition-colors duration-200 ${
+                              location.pathname.startsWith(item.path)
+                                ? 'text-primary'
+                                : 'text-gray-600 hover:text-gray-900'
+                            }`}
+                          >
+                            {item.name}
+                          </Link>
+                          {item.children && (
+                              <div className="pl-4">
+                                  {item.children.map(child => (
+                                      <Link
+                                          key={child.title}
+                                          to={child.href}
+                                          onClick={() => setIsOpen(false)}
+                                          className={`flex items-center gap-2 px-3 py-2 text-base font-medium transition-colors duration-200 ${
+                                              location.pathname === child.href
+                                              ? 'text-primary'
+                                              : 'text-gray-600 hover:text-gray-900'
+                                          }`}
+                                      >
+                                          <child.icon className="h-4 w-4" />
+                                          {child.title}
+                                      </Link>
+                                  ))}
+                              </div>
+                          )}
+                      </div>
+                    ))}
+                    <a
+                        href="https://docs.fractionfinance.cl/"
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => setIsOpen(false)}
-                        className="flex items-center gap-2 px-3 py-2 text-base font-medium text-gray-600 hover:text-primary hover:bg-gray-100/50 rounded-md"
-                      >
-                        {item.icon && <item.icon className="h-4 w-4" />}
-                        {item.name}
-                      </a>
-                    ) : (
-                      <Link
-                        key={item.name}
-                        to={item.path}
-                        onClick={() => setIsOpen(false)}
-                        className={`flex items-center gap-2 px-3 py-2 text-base font-medium transition-colors duration-200 ${
-                          location.pathname.startsWith(item.path)
-                            ? 'text-primary bg-primary/5'
-                            : 'text-gray-600 hover:text-primary hover:bg-gray-100/50'
-                        } rounded-md`}
-                      >
-                        {item.icon && <item.icon className="h-4 w-4" />}
-                        {item.name}
-                      </Link>
-                    )
-                  ))}
-                  {!user && (
-                    <div className="pt-4 border-t border-gray-200">
-                      <AuthModal />
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            )}
-          </div>
-        </motion.nav>
-      );
+                        className="block px-3 py-2 text-base font-medium transition-colors duration-200 text-gray-600 hover:text-gray-900"
+                    >
+                        Documentación
+                    </a>
+                    {!user && (
+                      <div className="pt-4 border-t border-gray-200">
+                        <AuthModal />
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </div>
+          </motion.nav>
+        );
       };
       
       export default Navbar;

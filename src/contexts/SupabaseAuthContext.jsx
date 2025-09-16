@@ -33,9 +33,10 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user, fetchProfile]);
 
-  const handleAuthStateChange = useCallback(async (session) => {
-    setSession(session);
+  const handleAuthStateChange = useCallback(async (event, session) => {
     const currentUser = session?.user ?? null;
+    
+    setSession(session);
     setUser(currentUser);
 
     if (currentUser) {
@@ -44,37 +45,40 @@ export const AuthProvider = ({ children }) => {
     } else {
       setProfile(null);
     }
+
+    if (event === 'SIGNED_IN' && session) {
+      toast({
+        title: '¡Has iniciado sesión correctamente!',
+        description: `¡Bienvenido de nuevo, ${session.user.user_metadata.full_name || session.user.email}!`,
+      });
+    }
+    if (event === 'SIGNED_OUT') {
+       toast({
+        title: '¡Sesión cerrada!',
+        description: 'Has cerrado sesión correctamente.',
+      });
+    }
+    
     setLoading(false);
-  }, [fetchProfile]);
+  }, [fetchProfile, toast]);
   
   useEffect(() => {
+    setLoading(true);
     const getSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      handleAuthStateChange(session);
+      handleAuthStateChange('INITIAL_SESSION', session);
     };
 
     getSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        handleAuthStateChange(session);
-        if (_event === 'SIGNED_IN') {
-          toast({
-            title: '¡Has iniciado sesión correctamente!',
-            description: `¡Bienvenido de nuevo, ${session.user.user_metadata.full_name || session.user.email}!`,
-          });
-        }
-        if (_event === 'SIGNED_OUT') {
-           toast({
-            title: '¡Sesión cerrada!',
-            description: 'Has cerrado sesión correctamente.',
-          });
-        }
+      async (event, session) => {
+        handleAuthStateChange(event, session);
       }
     );
 
     return () => subscription.unsubscribe();
-  }, [handleAuthStateChange, toast]);
+  }, [handleAuthStateChange]);
 
   const signUp = useCallback(async (email, password, fullName) => {
     const { data, error } = await supabase.auth.signUp({
@@ -139,36 +143,16 @@ export const AuthProvider = ({ children }) => {
   }, [toast]);
 
   const signOut = useCallback(async () => {
-    let error = null;
-    try {
-      const result = await supabase.auth.signOut();
-      error = result.error;
-      // Limpiar estado local
-      setUser(null);
-      setProfile(null);
-      setSession(null);
-      setLoading(false);
-      // Redirigir al home
-      window.location.replace('/');
-      if (error) {
-        toast({
-          variant: "destructive",
-          title: "Falló el cierre de sesión",
-          description: error.message || "Algo salió mal",
-        });
-      } else {
-        toast({
-          title: '¡Sesión cerrada!',
-          description: 'Has cerrado sesión correctamente.',
-        });
-      }
-    } catch (e) {
+    const { error } = await supabase.auth.signOut();
+
+    if (error && error.code !== 'session_not_found') {
       toast({
         variant: "destructive",
-        title: "Error inesperado al cerrar sesión",
-        description: e.message || "Algo salió mal",
+        title: "Falló el cierre de sesión",
+        description: error.message || "Algo salió mal",
       });
     }
+
     return { error };
   }, [toast]);
 

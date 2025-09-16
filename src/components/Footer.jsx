@@ -49,6 +49,9 @@ const Footer = () => {
     }, {
       name: 'Trabaja con Nosotros',
       path: '/nosotros/empleos'
+    }, {
+      name: 'Mapa del Sitio',
+      path: '/mapa-del-sitio'
     }]
   }, {
     title: 'Legal',

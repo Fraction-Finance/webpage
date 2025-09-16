@@ -1,3 +1,4 @@
+
 import React, { Suspense, lazy, useState, useEffect } from 'react';
     import { Routes, Route, Navigate } from 'react-router-dom';
     import { Helmet } from 'react-helmet';
@@ -6,9 +7,18 @@ import React, { Suspense, lazy, useState, useEffect } from 'react';
     import Background from '@/components/Background';
     import ProtectedRoute from '@/components/ProtectedRoute';
     import { useSettings } from '@/contexts/SettingsContext';
-    import { Loader2, X } from 'lucide-react';
-    import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+    import { Loader2 } from 'lucide-react';
     import { Button } from '@/components/ui/button';
+    import { WalletProvider } from '@/contexts/WalletContext';
+    import {
+      AlertDialog,
+      AlertDialogAction,
+      AlertDialogContent,
+      AlertDialogDescription,
+      AlertDialogFooter,
+      AlertDialogHeader,
+      AlertDialogTitle,
+    } from "@/components/ui/alert-dialog";
 
     const Home = lazy(() => import('@/pages/Home'));
     const Ecosystem = lazy(() => import('@/pages/Ecosystem'));
@@ -45,6 +55,7 @@ import React, { Suspense, lazy, useState, useEffect } from 'react';
     const ManagePolicies = lazy(() => import('@/pages/admin/components/ManagePolicies'));
     const ManageReports = lazy(() => import('@/pages/admin/components/ManageReports'));
     const ManageTeam = lazy(() => import('@/pages/admin/components/ManageTeam'));
+    const ManageContactSubmissions = lazy(() => import('@/pages/admin/components/ManageContactSubmissions'));
     const AuthCallback = lazy(() => import('@/pages/AuthCallback'));
     const GlobalMarkets = lazy(() => import('@/pages/product/GlobalMarkets'));
     const RWAInvest = lazy(() => import('@/pages/product/RWAInvest'));
@@ -55,6 +66,7 @@ import React, { Suspense, lazy, useState, useEffect } from 'react';
     const CookiePolicy = lazy(() => import('@/pages/legal/CookiePolicy'));
     const ComplaintChannel = lazy(() => import('@/pages/legal/ComplaintChannel'));
     const WhistleblowerChannel = lazy(() => import('@/pages/legal/WhistleblowerChannel'));
+    const Sitemap = lazy(() => import('@/pages/Sitemap'));
 
     const DevelopmentNotice = () => {
       const [visible, setVisible] = useState(false);
@@ -71,20 +83,20 @@ import React, { Suspense, lazy, useState, useEffect } from 'react';
         setVisible(false);
       };
 
-      if (!visible) return null;
-
       return (
-        <div className="fixed bottom-4 right-4 z-50 max-w-sm">
-          <Alert>
-            <AlertTitle>Aviso de Desarrollo</AlertTitle>
-            <AlertDescription>
-              El sitio se encuentra en desarrollo. La información publicada es referencial y no corresponde a la versión final de la plataforma.
-            </AlertDescription>
-            <Button variant="ghost" size="sm" className="absolute top-2 right-2" onClick={handleDismiss}>
-              <X className="h-4 w-4" />
-            </Button>
-          </Alert>
-        </div>
+        <AlertDialog open={visible} onOpenChange={setVisible}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Aviso de Contenido Referencial</AlertDialogTitle>
+              <AlertDialogDescription className="text-justify">
+                Este sitio web se encuentra en fase de desarrollo. La información publicada tiene carácter meramente informativo y no constituye una oferta, recomendación ni representación definitiva de los productos o servicios de Fraction Finance. Fraction Finance se encuentra actualmente en proceso de aprobación y regulación ante la Comisión para el Mercado Financiero (CMF). El contenido está sujeto a cambios sin previo aviso y no corresponde a la versión final de la plataforma.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogAction onClick={handleDismiss}>Entendido</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       );
     };
 
@@ -103,34 +115,37 @@ import React, { Suspense, lazy, useState, useEffect } from 'react';
 
           <div className="relative z-10 flex flex-col min-h-screen">
             <Suspense fallback={<div className="flex h-screen w-full items-center justify-center"><Loader2 className="h-16 w-16 animate-spin text-primary" /></div>}>
-              <Routes>
-                <Route path="/*" element={<MainLayout />} />
-                <Route path="/administracion/*" element={
-                  <ProtectedRoute>
-                    <Administration>
-                      <Routes>
-                        <Route path="/" element={<Navigate to="panel" replace />} />
-                        <Route path="panel" element={<AdminDashboard />} />
-                        <Route path="activos" element={<ManageDigitalAssets />} />
-                        <Route path="activos-defi" element={<ManageDeFiAssets />} />
-                        <Route path="fondos" element={<ManageTokenizedVaults />} />
-                        <Route path="fondos/:vaultId" element={<VaultDetail />} />
-                        <Route path="stos" element={<ManageSTOs />} />
-                        <Route path="blog" element={<BlogManager />} />
-                        <Route path="blog/nuevo" element={<BlogEditor />} />
-                        <Route path="blog/editar/:postId" element={<BlogEditor />} />
-                        <Route path="usuarios" element={<UsersManager />} />
-                        <Route path="empleos" element={<ManageJobs />} />
-                        <Route path="equipo" element={<ManageTeam />} />
-                        <Route path="socios" element={<ManageEcosystemPartners />} />
-                        <Route path="configuracion" element={<PlatformSettings />} />
-                        <Route path="politicas" element={<ManagePolicies />} />
-                        <Route path="reportes" element={<ManageReports />} />
-                      </Routes>
-                    </Administration>
-                  </ProtectedRoute>
-                } />
-              </Routes>
+              <WalletProvider>
+                <Routes>
+                  <Route path="/*" element={<MainLayout />} />
+                  <Route path="/administracion/*" element={
+                    <ProtectedRoute>
+                      <Administration>
+                        <Routes>
+                          <Route path="/" element={<Navigate to="panel" replace />} />
+                          <Route path="panel" element={<AdminDashboard />} />
+                          <Route path="activos" element={<ManageDigitalAssets />} />
+                          <Route path="activos-defi" element={<ManageDeFiAssets />} />
+                          <Route path="fondos" element={<ManageTokenizedVaults />} />
+                          <Route path="fondos/:vaultId" element={<VaultDetail />} />
+                          <Route path="stos" element={<ManageSTOs />} />
+                          <Route path="blog" element={<BlogManager />} />
+                          <Route path="blog/nuevo" element={<BlogEditor />} />
+                          <Route path="blog/editar/:postId" element={<BlogEditor />} />
+                          <Route path="usuarios" element={<UsersManager />} />
+                          <Route path="mensajes" element={<ManageContactSubmissions />} />
+                          <Route path="empleos" element={<ManageJobs />} />
+                          <Route path="equipo" element={<ManageTeam />} />
+                          <Route path="socios" element={<ManageEcosystemPartners />} />
+                          <Route path="configuracion" element={<PlatformSettings />} />
+                          <Route path="politicas" element={<ManagePolicies />} />
+                          <Route path="reportes" element={<ManageReports />} />
+                        </Routes>
+                      </Administration>
+                    </ProtectedRoute>
+                  } />
+                </Routes>
+              </WalletProvider>
             </Suspense>
           </div>
         </div>
@@ -173,6 +188,7 @@ import React, { Suspense, lazy, useState, useEffect } from 'react';
               <Route path="/legal/politica-de-cookies" element={<CookiePolicy />} />
               <Route path="/legal/canal-de-denuncias" element={<WhistleblowerChannel />} />
               <Route path="/legal/canal-de-reclamos" element={<ComplaintChannel />} />
+              <Route path="/mapa-del-sitio" element={<Sitemap />} />
               <Route path="/perfil" element={
                   <ProtectedRoute>
                       <ProfileLayout />

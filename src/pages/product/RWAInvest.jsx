@@ -24,9 +24,9 @@ const RWAInvest = () => {
   }];
   return <>
                 <Helmet>
-                    <title>RWA (Activos Reales) | Fraction Finance</title>
+                    <title>Mercado RWA (Activos Reales) | Fraction Finance</title>
                     <meta name="description" content="Cerramos la brecha entre los activos tradicionales y el mundo digital, permitiéndote invertir en Activos del Mundo Real (RWA) tokenizados con facilidad y seguridad." />
-                    <meta property="og:title" content="RWA (Activos Reales)" />
+                    <meta property="og:title" content="Mercado RWA (Activos Reales)" />
                     <meta property="og:description" content="Cerramos la brecha entre los activos tradicionales y el mundo digital, permitiéndote invertir en Activos del Mundo Real (RWA) tokenizados con facilidad y seguridad." />
                 </Helmet>
     
@@ -46,7 +46,7 @@ const RWAInvest = () => {
                                     <Gem className="inline-block h-4 w-4 mr-2" /> Activos del Mundo Real
                                 </div>
                                 <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                                    <span className="text-gray-900">RWA<br />(Activos Reales)</span>
+                                    <span className="text-gray-900">Mercado RWA<br />(Activos Reales)</span>
                                 </h1>
                                 <p className="text-xl text-gray-700 max-w-3xl mx-auto mb-8">Conectamos activos tradicionales con blockchain, permitiéndote invertir en Activos del Mundo Real (RWA) tokenizados de manera fácil, segura y transparente.</p>
                                 <Button asChild size="lg" className="bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700 text-white px-8 py-4 rounded-full font-semibold text-lg glow-effect">

@@ -5,7 +5,6 @@ import React from 'react';
     import '@/index.css';
     import { Toaster } from '@/components/ui/toaster';
     import { AuthProvider } from '@/contexts/SupabaseAuthContext';
-    import { WalletProvider } from '@/contexts/WalletContext';
     import { SettingsProvider } from '@/contexts/SettingsContext';
     import { AlchemyProvider } from '@/contexts/AlchemyContext';
 
@@ -15,10 +14,8 @@ import React from 'react';
             <AuthProvider>
               <SettingsProvider>
                 <AlchemyProvider>
-                  <WalletProvider>
                     <App />
                     <Toaster />
-                  </WalletProvider>
                 </AlchemyProvider>
               </SettingsProvider>
             </AuthProvider>

@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Package, Landmark, FileText, Rss, Users, Briefcase, Settings, Network, Shield, MessageSquare as MessageSquareWarning, Zap } from 'lucide-react';
+import { LayoutDashboard, Package, Landmark, FileText, Rss, Users, Briefcase, Settings, Network, Shield, MessageSquare as MessageSquareWarning, Zap, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Logo from '@/components/Logo';
 
@@ -13,6 +14,7 @@ const AdminSidebar = () => {
         { to: 'stos', icon: FileText, text: 'STOs' },
         { to: 'blog', icon: Rss, text: 'Blog' },
         { to: 'usuarios', icon: Users, text: 'Usuarios' },
+        { to: 'mensajes', icon: Mail, text: 'Mensajes de Contacto' },
         { to: 'empleos', icon: Briefcase, text: 'Empleos' },
         { to: 'equipo', icon: Users, text: 'Equipo' },
         { to: 'socios', icon: Network, text: 'Socios del Ecosistema' },
@@ -23,28 +25,30 @@ const AdminSidebar = () => {
 
     return (
         <aside className="w-64 bg-gray-900 text-white flex flex-col">
-            <div className="h-20 flex items-center justify-center border-b border-gray-800">
+            <div className="h-20 flex items-center justify-center border-b border-gray-800 flex-shrink-0">
                 <Logo className="h-12 w-auto" variant="white" />
             </div>
-            <nav className="flex-1 px-4 py-6 space-y-2">
-                {navLinks.map(({ to, icon: Icon, text }) => (
-                    <NavLink
-                        key={to}
-                        to={to}
-                        className={({ isActive }) =>
-                            cn(
-                                'flex items-center px-4 py-3 rounded-lg transition-colors duration-200',
-                                isActive
-                                    ? 'bg-primary text-white'
-                                    : 'text-gray-400 hover:bg-gray-800 hover:text-white'
-                            )
-                        }
-                    >
-                        <Icon className="h-5 w-5 mr-3" />
-                        <span>{text}</span>
-                    </NavLink>
-                ))}
-            </nav>
+            <div className="flex-1 overflow-y-auto">
+                <nav className="px-4 py-6 space-y-2">
+                    {navLinks.map(({ to, icon: Icon, text }) => (
+                        <NavLink
+                            key={to}
+                            to={to}
+                            className={({ isActive }) =>
+                                cn(
+                                    'flex items-center px-4 py-3 rounded-lg transition-colors duration-200',
+                                    isActive
+                                        ? 'bg-primary text-white'
+                                        : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                                )
+                            }
+                        >
+                            <Icon className="h-5 w-5 mr-3" />
+                            <span>{text}</span>
+                        </NavLink>
+                    ))}
+                </nav>
+            </div>
         </aside>
     );
 };

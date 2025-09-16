@@ -2,14 +2,14 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Wallet } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useWallet } from '@/contexts/WalletContext';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import DeFiAssetTable from '@/components/defi/DeFiAssetTable';
+import ConnectWalletPrompt from '@/components/ConnectWalletPrompt';
+import { Button } from '@/components/ui/button';
 
 const DeFiPlatform = () => {
-  const { isConnected, connectWallet } = useWallet();
+  const { isConnected } = useWallet();
   const { user } = useAuth();
 
   return (
@@ -53,18 +53,7 @@ const DeFiPlatform = () => {
                   </Button>
                 </motion.div>
               ) : !isConnected ? (
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5 }}
-                  className="text-center glass-effect p-8 rounded-2xl max-w-md mx-auto"
-                >
-                  <h3 className="text-2xl font-semibold mb-4">Conecta tu Billetera</h3>
-                  <p className="text-gray-600 mb-6">Para interactuar con los activos DeFi, necesitas conectar tu billetera Web3.</p>
-                  <Button onClick={connectWallet} size="lg" className="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white px-8 py-3 rounded-full font-semibold text-lg glow-effect">
-                    <Wallet className="mr-2 h-5 w-5" /> Conectar Billetera
-                  </Button>
-                </motion.div>
+                <ConnectWalletPrompt />
               ) : (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}

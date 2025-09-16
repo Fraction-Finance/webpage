@@ -74,7 +74,7 @@ const GlobalMarkets = () => {
             y: 0
           }} transition={{
             duration: 0.8
-          }} className="text-center mb-16">
+          }} className="text-center mb-16 pt-16">
                             <h2 className="text-3xl md:text-5xl font-bold mb-6">
                                 Un Mundo de Oportunidades
                             </h2>
