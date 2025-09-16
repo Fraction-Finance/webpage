@@ -1,5 +1,4 @@
-
-    import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
     import { Helmet } from 'react-helmet';
     import { motion } from 'framer-motion';
     import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -180,4 +179,3 @@
     };
 
     export default Investment;
-  

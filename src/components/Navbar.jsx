@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+
+    import React, { useState, useEffect } from 'react';
     import { Link, useLocation, NavLink } from 'react-router-dom';
     import { motion } from 'framer-motion';
     import { Menu, X, User as UserIcon, LogOut, Info, LayoutDashboard, Wallet, Network, Package, BookOpen, TrendingUp, Landmark, Users, Target, Rss, MailQuestion, Check, Briefcase, Zap } from 'lucide-react';
@@ -127,13 +128,16 @@ import React, { useState, useEffect } from 'react';
       );
     };
 
-    const ListItem = React.forwardRef(({ className, title, children, href, icon: Icon, ...props }, ref) => {
+    const ListItem = React.forwardRef(({ className, title, children, href, icon: Icon, isExternal = false, ...props }, ref) => {
+      const LinkComponent = isExternal ? 'a' : Link;
+      const linkProps = isExternal ? { href, target: "_blank", rel: "noopener noreferrer" } : { to: href };
+
       return (
         <li>
           <NavigationMenuLink asChild>
-            <Link
-              to={href}
+            <LinkComponent
               ref={ref}
+              {...linkProps}
               className={cn(
                 "flex select-none space-x-4 items-center rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-primary/5 focus:bg-primary/5",
                 className
@@ -149,7 +153,7 @@ import React, { useState, useEffect } from 'react';
                   {children}
                 </p>
               </div>
-            </Link>
+            </LinkComponent>
           </NavigationMenuLink>
         </li>
       );
@@ -177,20 +181,21 @@ import React, { useState, useEffect } from 'react';
           path: '/producto',
           icon: Package,
           children: [
-            { title: "Mercado de Activos Digitales", href: "/producto/mercados-globales", description: "Accede a mercados de capitales en todo el mundo.", icon: TrendingUp },
-            { title: "Mercado RWA (Activos Reales)", href: "/producto/invertir-rwa", description: "Invierte en activos del mundo real tokenizados.", icon: Landmark },
-            { title: "Mercado de Activos DeFi", href: "/producto/mercado-activos-descentralizados", description: "Explora el mundo de las finanzas descentralizadas.", icon: Zap },
+            { title: "Mercado de Activos Digitales", href: "/producto/mercados-globales", description: "Accede a mercados de capitales en todo el mundo.", icon: TrendingUp, isExternal: true },
+            { title: "RWA (Activos Reales)", href: "/producto/invertir-rwa", description: "Invierte en activos del mundo real tokenizados.", icon: Landmark, isExternal: true },
+            { title: "Mercado de Activos DeFi", href: "/producto/mercado-activos-descentralizados", description: "Explora el mundo de las finanzas descentralizadas.", icon: Zap, isExternal: true },
           ]
         },
-        { name: "Ecosistema", path: '/ecosistema', icon: Network },
+        { name: "Tokenizar", path: '/tokenizar', icon: Package, isExternal: true },
         { name: "Nosotros", path: '/nosotros', 
           icon: Info,
           children: [
-            { title: "Nuestra Empresa", href: "/nosotros", description: "Conoce nuestra misión y equipo.", icon: Users },
-            { title: "Modelo de Negocio", href: "/nosotros/modelo-de-negocio", description: "Descubre cómo creamos valor.", icon: Target },
-            { title: "Blog", href: "/nosotros/blog", description: "Mantente actualizado con nuestras últimas ideas.", icon: Rss },
-            { title: "Trabaja con Nosotros", href: "/nosotros/empleos", description: "Únete a nuestro equipo.", icon: Briefcase },
-            { title: "Contáctanos", href: "/nosotros/contacto", description: "Ponte en contacto para soporte o consultas.", icon: MailQuestion },
+            { title: "Nuestra Empresa", href: "/nosotros", description: "Conoce nuestra misión y equipo.", icon: Users, isExternal: true },
+            { title: "Modelo de Negocio", href: "/nosotros/modelo-de-negocio", description: "Descubre cómo creamos valor.", icon: Target, isExternal: true },
+            { title: "Ecosistema", href: "/ecosistema", description: "Colabora con líderes de la industria.", icon: Network, isExternal: true },
+            { title: "Blog", href: "/nosotros/blog", description: "Mantente actualizado con nuestras últimas ideas.", icon: Rss, isExternal: true },
+            { title: "Trabaja con Nosotros", href: "/nosotros/empleos", description: "Únete a nuestro equipo.", icon: Briefcase, isExternal: true },
+            { title: "Contacto", href: "/nosotros/contacto", description: "Ponte en contacto para soporte o consultas.", icon: MailQuestion, isExternal: true },
           ]
         },
       ];
@@ -251,6 +256,7 @@ import React, { useState, useEffect } from 'react';
                                     title={component.title}
                                     href={component.href}
                                     icon={component.icon}
+                                    isExternal={component.isExternal}
                                   >
                                     {component.description}
                                   </ListItem>
@@ -260,7 +266,7 @@ import React, { useState, useEffect } from 'react';
                           </>
                         ) : (
                            <NavigationMenuLink asChild>
-                             <NavLinkItem to={item.path}>{item.name}</NavLinkItem>
+                             <NavLinkItem to={item.path} isExternal={item.isExternal}>{item.name}</NavLinkItem>
                            </NavigationMenuLink>
                         )}
                       </NavigationMenuItem>
@@ -313,8 +319,10 @@ import React, { useState, useEffect } from 'react';
                     {navItems.map((item) => (
                       <div key={item.name}>
                           <Link
-                            to={item.children ? item.children[0].href : item.path}
-                            onClick={() => setIsOpen(false)}
+                            to={item.children ? '#' : item.path}
+                            onClick={() => {
+                              if (!item.children) setIsOpen(false);
+                            }}
                             className={`block px-3 py-2 text-base font-medium transition-colors duration-200 ${
                               location.pathname.startsWith(item.path)
                                 ? 'text-primary'
@@ -326,19 +334,17 @@ import React, { useState, useEffect } from 'react';
                           {item.children && (
                               <div className="pl-4">
                                   {item.children.map(child => (
-                                      <Link
+                                      <a
                                           key={child.title}
-                                          to={child.href}
+                                          href={child.href}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
                                           onClick={() => setIsOpen(false)}
-                                          className={`flex items-center gap-2 px-3 py-2 text-base font-medium transition-colors duration-200 ${
-                                              location.pathname === child.href
-                                              ? 'text-primary'
-                                              : 'text-gray-600 hover:text-gray-900'
-                                          }`}
+                                          className={`flex items-center gap-2 px-3 py-2 text-base font-medium transition-colors duration-200 text-gray-600 hover:text-gray-900`}
                                       >
                                           <child.icon className="h-4 w-4" />
                                           {child.title}
-                                      </Link>
+                                      </a>
                                   ))}
                               </div>
                           )}
@@ -367,3 +373,4 @@ import React, { useState, useEffect } from 'react';
       };
       
       export default Navbar;
+  

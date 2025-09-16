@@ -1,125 +1,15 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+    import React, { useState, useEffect, useCallback } from 'react';
     import { supabase } from '@/lib/customSupabaseClient';
     import { useToast } from '@/components/ui/use-toast';
     import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
     import { Label } from '@/components/ui/label';
     import { Switch } from '@/components/ui/switch';
-    import { Loader2, Upload, Save } from 'lucide-react';
+    import { Loader2, Save } from 'lucide-react';
     import { motion } from 'framer-motion';
     import { Button } from '@/components/ui/button';
-    import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
     import { isEqual } from 'lodash';
     import { useSettings } from '@/contexts/SettingsContext';
-
-    const TeamMemberManager = () => {
-        const [team, setTeam] = useState([]);
-        const [loading, setLoading] = useState(true);
-        const { toast } = useToast();
-        const fileInputRefs = useRef({});
-
-        const fetchTeamMembers = useCallback(async () => {
-            setLoading(true);
-            const { data, error } = await supabase.from('team_members').select('*').order('created_at');
-            if (error) {
-                toast({ title: 'Error al obtener miembros del equipo', description: error.message, variant: 'destructive' });
-            } else {
-                setTeam(data);
-            }
-            setLoading(false);
-        }, [toast]);
-
-        useEffect(() => {
-            fetchTeamMembers();
-        }, [fetchTeamMembers]);
-
-        const handleFileChange = async (event, memberId) => {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${memberId}-${Date.now()}.${fileExt}`;
-            const filePath = `${fileName}`;
-
-            setLoading(true);
-
-            let { error: uploadError } = await supabase.storage
-                .from('team_avatars')
-                .upload(filePath, file);
-
-            if (uploadError) {
-                toast({ title: 'Error al subir la imagen', description: uploadError.message, variant: 'destructive' });
-                setLoading(false);
-                return;
-            }
-
-            const { data: urlData } = supabase.storage
-                .from('team_avatars')
-                .getPublicUrl(filePath);
-
-            if (!urlData) {
-                toast({ title: 'Error', description: 'No se pudo obtener la URL de la imagen.', variant: 'destructive' });
-                setLoading(false);
-                return;
-            }
-            const publicURL = urlData.publicUrl;
-
-            const { error: updateError } = await supabase
-                .from('team_members')
-                .update({ image_url: publicURL, updated_at: new Date().toISOString() })
-                .eq('id', memberId);
-
-            if (updateError) {
-                toast({ title: 'Error al actualizar el miembro del equipo', description: updateError.message, variant: 'destructive' });
-            } else {
-                toast({ title: '¡Éxito!', description: 'Foto del miembro del equipo actualizada.' });
-                fetchTeamMembers();
-            }
-            setLoading(false);
-        };
-
-        const triggerFileInput = (memberId) => {
-            fileInputRefs.current[memberId].click();
-        };
-
-        if (loading && !team.length) {
-            return (
-                <div className="flex justify-center items-center py-8">
-                    <Loader2 className="h-8 w-8 animate-spin" />
-                </div>
-            );
-        }
-
-        return (
-            <div className="space-y-4">
-                {team.map((member) => (
-                    <div key={member.id} className="flex items-center justify-between p-4 border rounded-lg">
-                        <div className="flex items-center gap-4">
-                            <Avatar className="h-16 w-16">
-                                <AvatarImage src={member.image_url} alt={member.name} />
-                                <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            <div>
-                                <p className="font-semibold">{member.name}</p>
-                                <p className="text-sm text-muted-foreground">{member.role}</p>
-                            </div>
-                        </div>
-                        <input
-                            type="file"
-                            ref={(el) => (fileInputRefs.current[member.id] = el)}
-                            onChange={(e) => handleFileChange(e, member.id)}
-                            className="hidden"
-                            accept="image/png, image/jpeg, image/webp"
-                        />
-                        <Button onClick={() => triggerFileInput(member.id)} variant="outline" disabled={loading}>
-                            {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
-                            {loading ? 'Subiendo...' : 'Cambiar Foto'}
-                        </Button>
-                    </div>
-                ))}
-            </div>
-        );
-    };
-
 
     const PlatformSettings = () => {
       const [initialSettings, setInitialSettings] = useState({});
@@ -286,18 +176,9 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
             </CardFooter>
           </Card>
 
-          <Card>
-             <CardHeader>
-                <CardTitle>Gestionar Fotos del Equipo</CardTitle>
-                <CardDescription>Sube y actualiza las fotos para la sección "Conoce a la Fuerza Impulsora" en la página "Nuestra Empresa".</CardDescription>
-             </CardHeader>
-             <CardContent>
-                <TeamMemberManager />
-             </CardContent>
-          </Card>
-
         </motion.div>
       );
     };
 
     export default PlatformSettings;
+  
