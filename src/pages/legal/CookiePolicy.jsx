@@ -48,7 +48,7 @@ const CookiePolicy = () => {
                             className="prose lg:prose-xl max-w-none glass-effect-custom p-8 rounded-lg"
                         >
                             <h1 className="text-4xl md:text-5xl font-bold mb-8 gradient-text">{policy.title}</h1>
-                            <div dangerouslySetInnerHTML={{ __html: policy.content }} />
+                            <div className="text-justify" dangerouslySetInnerHTML={{ __html: policy.content }} />
                         </motion.div>
                     ) : (
                         <div className="text-center">

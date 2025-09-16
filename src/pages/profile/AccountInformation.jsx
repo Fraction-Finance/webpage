@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { Button } from '@/components/ui/button';
@@ -10,6 +11,8 @@ import { supabase } from '@/lib/customSupabaseClient';
 import { Loader2, User, Building, TrendingUp, Shield, BarChart, Zap } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
+import { CountryComboBox } from '@/components/CountryComboBox';
+import { countries } from '@/data/countries';
 
 const AccountInformation = () => {
   const {
@@ -28,6 +31,7 @@ const AccountInformation = () => {
   const [nationality, setNationality] = useState('');
   const [idDocumentNumber, setIdDocumentNumber] = useState('');
   const [residentialAddress, setResidentialAddress] = useState('');
+  const [residentialCountry, setResidentialCountry] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [businessName, setBusinessName] = useState('');
@@ -46,7 +50,17 @@ const AccountInformation = () => {
       setDateOfBirth(profile.date_of_birth || '');
       setNationality(profile.nationality || '');
       setIdDocumentNumber(profile.id_document_number || '');
-      setResidentialAddress(profile.residential_address || '');
+      
+      const fullAddress = profile.residential_address || '';
+      const countryMatch = countries.find(c => fullAddress.toLowerCase().includes(c.label.toLowerCase()));
+      if (countryMatch) {
+        setResidentialCountry(countryMatch.value);
+        setResidentialAddress(fullAddress.replace(new RegExp(`,? ${countryMatch.label}`, 'i'), '').trim());
+      } else {
+        setResidentialAddress(fullAddress);
+        setResidentialCountry('');
+      }
+
       setPhoneNumber(profile.phone_number || '');
       setCompanyName(profile.company_name || '');
       setBusinessName(profile.business_name || '');
@@ -63,6 +77,10 @@ const AccountInformation = () => {
   const handleUpdateProfile = async e => {
     e.preventDefault();
     setLoading(true);
+
+    const countryLabel = countries.find(c => c.value === residentialCountry)?.label || '';
+    const fullResidentialAddress = [residentialAddress.trim(), countryLabel].filter(Boolean).join(', ');
+
     const updates = {
       id: user.id,
       account_type: accountType,
@@ -72,17 +90,18 @@ const AccountInformation = () => {
       Object.assign(updates, {
         full_name: fullName,
         date_of_birth: dateOfBirth,
-        nationality,
+        nationality: nationality,
         id_document_number: idDocumentNumber,
-        residential_address: residentialAddress,
+        residential_address: fullResidentialAddress,
         phone_number: phoneNumber
       });
     } else {
+       const incorporationCountryLabel = countries.find(c => c.value === countryOfIncorporation)?.label || '';
       Object.assign(updates, {
         full_name: fullName,
         company_name: companyName,
         business_name: businessName,
-        country_of_incorporation: countryOfIncorporation,
+        country_of_incorporation: incorporationCountryLabel,
         tax_id: taxId,
         date_of_incorporation: dateOfIncorporation,
         legal_address: legalAddress,
@@ -144,7 +163,11 @@ const AccountInformation = () => {
         </div>
         <div>
             <Label htmlFor="nationality">Nacionalidad</Label>
-            <Input id="nationality" value={nationality} onChange={e => setNationality(e.target.value)} className="mt-1" />
+            <CountryComboBox 
+              value={nationality}
+              onChange={setNationality}
+              placeholder="Selecciona una nacionalidad..."
+            />
         </div>
       </div>
       <div>
@@ -152,8 +175,16 @@ const AccountInformation = () => {
         <Input id="idDocumentNumber" value={idDocumentNumber} onChange={e => setIdDocumentNumber(e.target.value)} className="mt-1" />
       </div>
       <div>
-        <Label htmlFor="residentialAddress">Dirección Residencial (incluyendo país)</Label>
-        <Input id="residentialAddress" value={residentialAddress} onChange={e => setResidentialAddress(e.target.value)} className="mt-1" />
+        <Label htmlFor="residentialAddress">Dirección</Label>
+        <Input id="residentialAddress" placeholder="Calle, número, ciudad, etc." value={residentialAddress} onChange={e => setResidentialAddress(e.target.value)} className="mt-1" />
+      </div>
+      <div>
+        <Label htmlFor="residentialCountry">País de Residencia</Label>
+        <CountryComboBox 
+            value={residentialCountry}
+            onChange={setResidentialCountry}
+            placeholder="Selecciona un país..."
+        />
       </div>
       <div>
         <Label htmlFor="phoneNumber">Teléfono de Contacto</Label>
@@ -174,7 +205,11 @@ const AccountInformation = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <Label htmlFor="countryOfIncorporation">País de Constitución</Label>
-          <Input id="countryOfIncorporation" value={countryOfIncorporation} onChange={e => setCountryOfIncorporation(e.target.value)} className="mt-1" />
+          <CountryComboBox
+             value={countryOfIncorporation}
+             onChange={setCountryOfIncorporation}
+             placeholder="Selecciona un país..."
+          />
         </div>
         <div>
           <Label htmlFor="taxId">RUT</Label>

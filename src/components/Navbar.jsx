@@ -173,13 +173,14 @@ import React, { useState, useEffect } from 'react';
 
       const navItems = [
         { 
-          name: "Producto",
+          name: "Productos", // Changed from "Producto" to "Productos"
           path: '/producto',
           icon: Package,
           children: [
+            // Reordered children as requested
+            { title: "Mercados de Activos DeFi", href: "/producto/mercado-activos-descentralizados", description: "Explora el mundo de las finanzas descentralizadas.", icon: Zap },
             { title: "Mercado de Activos Digitales", href: "/producto/mercados-globales", description: "Accede a mercados de capitales en todo el mundo.", icon: TrendingUp },
             { title: "Mercado RWA (Activos Reales)", href: "/producto/invertir-rwa", description: "Invierte en activos del mundo real tokenizados.", icon: Landmark },
-            { title: "Mercado de Activos DeFi", href: "/producto/mercado-activos-descentralizados", description: "Explora el mundo de las finanzas descentralizadas.", icon: Zap },
           ]
         },
         { name: "Ecosistema", path: '/ecosistema', icon: Network },

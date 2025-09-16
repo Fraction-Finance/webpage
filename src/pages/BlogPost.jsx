@@ -3,9 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import { supabase } from '@/lib/customSupabaseClient';
-import { Calendar, Clock, Share2, ArrowLeft } from 'lucide-react';
+import { Calendar, Clock, Share2, ArrowLeft, Twitter, Linkedin, Facebook } from 'lucide-react';
 import { Loader2 } from 'lucide-react';
-import { FacebookShareButton, TwitterShareButton, LinkedinShareButton, FacebookIcon, TwitterIcon, LinkedinIcon } from 'react-share';
+import { FacebookShareButton, TwitterShareButton, LinkedinShareButton } from 'react-share';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
@@ -61,6 +61,12 @@ const BlogPost = () => {
       return null;
     }
 
+    const ShareButton = ({ children, ...props }) => (
+        <Button variant="outline" size="icon" className="rounded-full h-10 w-10 transition-all duration-300 hover:bg-primary/10 hover:text-primary hover:border-primary" {...props}>
+            {children}
+        </Button>
+    );
+
     return (
         <>
             <Helmet>
@@ -102,23 +108,33 @@ const BlogPost = () => {
                         )}
 
                         <div 
-                            className="prose lg:prose-xl max-w-none"
+                            className="prose lg:prose-xl max-w-none text-justify"
                             dangerouslySetInnerHTML={{ __html: post.content }}
                         />
 
                         <footer className="mt-12 pt-8 border-t">
-                            <div className="flex items-center justify-center gap-4">
-                                <Share2 className="h-6 w-6 text-gray-600"/>
-                                <span className="font-semibold text-gray-700">Compartir:</span>
-                                <TwitterShareButton url={shareUrl} title={post.title}>
-                                    <TwitterIcon size={32} round />
-                                </TwitterShareButton>
-                                <LinkedinShareButton url={shareUrl} title={post.title} summary={post.excerpt}>
-                                    <LinkedinIcon size={32} round />
-                                </LinkedinShareButton>
-                                <FacebookShareButton url={shareUrl} quote={post.title}>
-                                    <FacebookIcon size={32} round />
-                                </FacebookShareButton>
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                                <div className="flex items-center gap-2">
+                                    <Share2 className="h-5 w-5 text-gray-600"/>
+                                    <span className="font-semibold text-gray-700">Compartir este artículo:</span>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <TwitterShareButton url={shareUrl} title={post.title}>
+                                        <ShareButton>
+                                            <Twitter className="h-5 w-5" />
+                                        </ShareButton>
+                                    </TwitterShareButton>
+                                    <LinkedinShareButton url={shareUrl} title={post.title} summary={post.excerpt}>
+                                        <ShareButton>
+                                            <Linkedin className="h-5 w-5" />
+                                        </ShareButton>
+                                    </LinkedinShareButton>
+                                    <FacebookShareButton url={shareUrl} quote={post.title}>
+                                        <ShareButton>
+                                            <Facebook className="h-5 w-5" />
+                                        </ShareButton>
+                                    </FacebookShareButton>
+                                </div>
                             </div>
                         </footer>
 
