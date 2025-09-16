@@ -140,17 +140,19 @@
               <Route path="/ecosistema" element={<Ecosystem />} />
               <Route path="/nosotros" element={<About />} />
               <Route path="/nosotros/modelo-de-negocio" element={<BusinessModel />} />
+              <Route path="/blog" element={<Blog />} />
               <Route path="/nosotros/blog" element={<Blog />} />
               <Route path="/nosotros/blog/:slug" element={<BlogPost />} />
               <Route path="/nosotros/contacto" element={<Contact />} />
+              <Route path="/documentacion" element={<Docs />} />
               <Route path="/nosotros/empleos" element={<Careers />} />
               <Route path="/tokenizar" element={<Tokenize />} />
+              <Route path="/producto/mercados-globales" element={<GlobalMarkets />} />
+              <Route path="/producto/invertir-rwa" element={<RWAInvest />} />
+              <Route path="/producto/mercado-activos-descentralizados" element={<DeFiAssets />} />
               <Route path="/plataforma" element={<ProtectedRoute><Platform /></ProtectedRoute>} />
               <Route path="/plataforma/invertir/:stoId" element={<ProtectedRoute><InvestDetail /></ProtectedRoute>} />
               <Route path="/inversiones" element={<WalletProtectedRoute><Investment /></WalletProtectedRoute>} />
-              {settings.show_global_markets && <Route path="/producto/mercados-globales" element={<GlobalMarkets />} />}
-              {settings.show_rwa_invest && <Route path="/producto/invertir-rwa" element={<RWAInvest />} />}
-              {settings.show_defi_assets && <Route path="/producto/mercado-activos-descentralizados" element={<DeFiAssets />} />}
               <Route path="/plataforma-defi" element={<ProtectedRoute><DeFiPlatform /></ProtectedRoute>} />
               <Route path="/legal/politica-de-privacidad" element={<PrivacyPolicy />} />
               <Route path="/legal/terminos-de-servicio" element={<TermsOfService />} />
@@ -158,7 +160,6 @@
               <Route path="/legal/canal-de-denuncias" element={<WhistleblowerChannel />} />
               <Route path="/legal/canal-de-reclamos" element={<ComplaintChannel />} />
               <Route path="/mapa-del-sitio" element={<Sitemap />} />
-              <Route path="/documentacion" element={<Docs />} />
               <Route path="/producto" element={<Product />} />
               <Route path="/perfil" element={
                   <ProtectedRoute>
