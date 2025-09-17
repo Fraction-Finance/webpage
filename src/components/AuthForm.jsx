@@ -10,9 +10,11 @@ const AuthForm = ({ mode, onAuthSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     let error;
     if (mode === 'signin') {
       ({ error } = await signIn(email, password));
@@ -22,11 +24,12 @@ const AuthForm = ({ mode, onAuthSuccess }) => {
     if (!error) {
       onAuthSuccess();
     }
+    setLoading(false);
   };
 
   const handleGoogleAuth = async () => {
+    setLoading(true);
     await signInWithGoogle();
-    onAuthSuccess();
   };
 
   return (
@@ -35,18 +38,18 @@ const AuthForm = ({ mode, onAuthSuccess }) => {
         {mode === 'signup' && (
           <div className="relative">
             <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <Input id="name-signup" placeholder="Nombre Completo" className="pl-10" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+            <Input id="name-signup" placeholder="Nombre Completo" className="pl-10" value={fullName} onChange={(e) => setFullName(e.target.value)} required disabled={loading} />
           </div>
         )}
         <div className="relative">
           <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-          <Input id={`email-${mode}`} type="email" placeholder="Correo Electrónico" className="pl-10" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <Input id={`email-${mode}`} type="email" placeholder="Correo Electrónico" className="pl-10" value={email} onChange={(e) => setEmail(e.target.value)} required disabled={loading} />
         </div>
         <div className="relative">
           <Key className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-          <Input id={`password-${mode}`} type="password" placeholder="Contraseña" className="pl-10" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <Input id={`password-${mode}`} type="password" placeholder="Contraseña" className="pl-10" value={password} onChange={(e) => setPassword(e.target.value)} required disabled={loading} />
         </div>
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full" disabled={loading}>
           {mode === 'signin' ? 'Iniciar Sesión' : 'Crear Cuenta'}
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
@@ -61,7 +64,7 @@ const AuthForm = ({ mode, onAuthSuccess }) => {
           </span>
         </div>
       </div>
-      <Button variant="outline" className="w-full" onClick={handleGoogleAuth}>
+      <Button variant="outline" className="w-full" onClick={handleGoogleAuth} disabled={loading}>
         <GoogleIcon className="mr-2 h-5 w-5" />
         {mode === 'signin' ? 'Iniciar Sesión con Google' : 'Registrarse con Google'}
       </Button>

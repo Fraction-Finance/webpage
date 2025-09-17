@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -6,10 +6,12 @@ import { useAuth } from '@/contexts/SupabaseAuthContext';
 const AuthCallback = () => {
   const navigate = useNavigate();
   const { session } = useAuth();
+  const hasNavigated = useRef(false);
 
   useEffect(() => {
-    if (session) {
-      navigate('/plataforma');
+    if (session && !hasNavigated.current) {
+      hasNavigated.current = true;
+      navigate('/plataforma', { replace: true });
     }
   }, [session, navigate]);
 

@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
         .eq('id', userId)
         .single();
 
-      if (error && status !== 406) { // 406 is when no rows are found
+      if (error && status !== 406) {
         throw error;
       }
       return data;
@@ -120,9 +120,6 @@ export const AuthProvider = ({ children }) => {
   const signInWithGoogle = useCallback(async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
     });
 
     if (error) {
@@ -138,7 +135,7 @@ export const AuthProvider = ({ children }) => {
   const signOut = useCallback(async () => {
     const { error } = await supabase.auth.signOut();
 
-    if (error && error.code !== 'session_not_found') {
+    if (error) {
       toast({
         variant: "destructive",
         title: "Falló el cierre de sesión",
