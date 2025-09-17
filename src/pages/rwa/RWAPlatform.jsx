@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
@@ -154,7 +155,7 @@ const RWAPlatform = () => {
                                             <Card className="h-full flex flex-col overflow-hidden glass-effect hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1">
                                                 <CardHeader className="p-0">
                                                     <div className="h-48 overflow-hidden">
-                                                        <img class="w-full h-full object-cover" alt={opp.name} src="https://images.unsplash.com/photo-1643568963826-ab9ad9e34121" />
+                                                        <img className="w-full h-full object-cover" alt={opp.name} src={opp.asset_image_url || "https://images.unsplash.com/photo-1643568963826-ab9ad9e34121"} />
                                                     </div>
                                                     <div className="p-6">
                                                         <Badge variant="secondary" className="w-fit mb-2">{opp.category}</Badge>

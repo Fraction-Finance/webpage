@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
@@ -78,7 +79,7 @@ const Contact = () => {
         <title>Contacto | Fraction Finance</title>
         <meta name="description" content="¡Estamos aquí para ayudar! Contáctanos para cualquier pregunta o soporte." />
       </Helmet>
-      <div className="pt-24 sm:pt-32">
+      <div className="pt-24 sm:pt-32 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

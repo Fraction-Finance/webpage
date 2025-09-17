@@ -1,9 +1,8 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet';
-import { Layers, Share2, Award, Banknote, ShieldCheck, Users, ArrowRight, Coins as HandCoins } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import { Layers, Share2, Award, Banknote, ShieldCheck, Users, Coins as HandCoins } from 'lucide-react';
 
 const BusinessModel = () => {
   const processSteps = [

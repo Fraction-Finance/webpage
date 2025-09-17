@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-    import { Link, useLocation, NavLink } from 'react-router-dom';
+
+    import React, { useState, useEffect } from 'react';
+    import { Link, useLocation } from 'react-router-dom';
     import { motion } from 'framer-motion';
-    import { Menu, X, User as UserIcon, LogOut, Info, LayoutDashboard, Wallet, Network, Package, BookOpen, TrendingUp, Landmark, Users, Target, Rss, MailQuestion, Check, Briefcase, Zap } from 'lucide-react';
+    import { Menu, X, User as UserIcon, LogOut, Info, LayoutDashboard, Wallet, Network, Package, TrendingUp, Landmark, Users, Target, Rss, MailQuestion, Briefcase, Zap, Check } from 'lucide-react';
     import { Button } from '@/components/ui/button';
     import AuthModal from '@/components/AuthModal';
     import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -29,11 +30,11 @@ import React, { useState, useEffect } from 'react';
     import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
     import { cn } from "@/lib/utils";
     import Logo from '@/components/Logo';
-
+    
     const UserMenu = () => {
       const { user, profile, signOut } = useAuth();
       const { isConnected, wallet, connectWallet, disconnectWallet, switchNetwork, supportedChains } = useWallet();
-
+    
       const getInitials = (name) => {
         if (!name) return '?';
         const names = name.split(' ');
@@ -42,7 +43,7 @@ import React, { useState, useEffect } from 'react';
         }
         return name.substring(0, 2).toUpperCase();
       };
-
+    
       const formatAddress = (address) => {
         if (!address) return '';
         return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
@@ -126,7 +127,7 @@ import React, { useState, useEffect } from 'react';
         </DropdownMenu>
       );
     };
-
+    
     const ListItem = React.forwardRef(({ className, title, children, href, icon: Icon, ...props }, ref) => {
       return (
         <li>
@@ -155,14 +156,40 @@ import React, { useState, useEffect } from 'react';
       );
     });
     ListItem.displayName = "ListItem";
-
-
+    
+    const NavLinkItem = ({ to, children, isDropdown, isExternal = false }) => {
+      const location = useLocation();
+      const isActive = location.pathname.startsWith(to) && to !== '/';
+      const isHomeActive = location.pathname === '/' && to === '/';
+      const LinkComponent = isExternal ? 'a' : Link;
+      const linkProps = isExternal ? { href: to, target: "_blank", rel: "noopener noreferrer" } : { to };
+      
+      return (
+        <div
+          className={cn(
+            "relative px-4 py-2 text-base font-semibold transition-all duration-300 rounded-md cursor-pointer",
+            (isActive || isHomeActive) && !isExternal
+              ? 'text-primary bg-primary/5 glow-effect-sm'
+              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100/50'
+          )}
+        >
+          {isDropdown ? <span>{children}</span> : <LinkComponent {...linkProps}>{children}</LinkComponent>}
+          {(isActive || isHomeActive) && !isExternal && (
+            <motion.div
+              layoutId="activeTab"
+              className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"
+            />
+          )}
+        </div>
+      );
+    };
+    
     const Navbar = () => {
       const [isOpen, setIsOpen] = useState(false);
       const [scrolled, setScrolled] = useState(false);
       const { user, loading } = useAuth();
       const location = useLocation();
-
+    
       useEffect(() => {
         const handleScroll = () => {
           setScrolled(window.scrollY > 50);
@@ -170,14 +197,13 @@ import React, { useState, useEffect } from 'react';
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
       }, []);
-
+    
       const navItems = [
         { 
-          name: "Productos", // Changed from "Producto" to "Productos"
+          name: "Productos",
           path: '/producto',
           icon: Package,
           children: [
-            // Reordered children as requested
             { title: "Mercados de Activos DeFi", href: "/producto/mercado-activos-descentralizados", description: "Explora el mundo de las finanzas descentralizadas.", icon: Zap },
             { title: "Mercado de Activos Digitales", href: "/producto/mercados-globales", description: "Accede a mercados de capitales en todo el mundo.", icon: TrendingUp },
             { title: "Mercado RWA (Activos Reales)", href: "/producto/invertir-rwa", description: "Invierte en activos del mundo real tokenizados.", icon: Landmark },
@@ -195,31 +221,7 @@ import React, { useState, useEffect } from 'react';
           ]
         },
       ];
-
-      const NavLinkItem = ({ to, children, isDropdown, isExternal = false }) => {
-        const isActive = location.pathname.startsWith(to);
-        const LinkComponent = isExternal ? 'a' : Link;
-        const linkProps = isExternal ? { href: to, target: "_blank", rel: "noopener noreferrer" } : { to };
-        return (
-          <div
-            className={cn(
-              "relative px-4 py-2 text-base font-semibold transition-all duration-300 rounded-md cursor-pointer",
-              isActive && !isExternal
-                ? 'text-primary bg-primary/5 glow-effect-sm'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100/50'
-            )}
-          >
-            {isDropdown ? <span>{children}</span> : <LinkComponent {...linkProps}>{children}</LinkComponent>}
-            {isActive && !isExternal && (
-              <motion.div
-                layoutId="activeTab"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"
-              />
-            )}
-          </div>
-        );
-      };
-
+    
       return (
         <motion.nav
           initial={{ y: -100 }}
@@ -231,9 +233,11 @@ import React, { useState, useEffect } from 'react';
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-20">
               <div className="flex-1 flex justify-start">
-                <Logo className="h-12 w-auto" />
+                <Link to="/">
+                  <Logo className="h-12 w-auto" />
+                </Link>
               </div>
-
+    
               <div className="hidden md:flex flex-2 justify-center">
                 <NavigationMenu>
                   <NavigationMenuList className="flex space-x-1">
@@ -280,91 +284,64 @@ import React, { useState, useEffect } from 'react';
                 </div>
       
                 <div className="md:hidden flex items-center">
-                   {!loading && !user && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setIsOpen(!isOpen)}
-                      className="text-gray-800 ml-4"
-                    >
-                      {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-                    </Button>
-                   )}
-                   {user && (
+                   <div className="flex items-center">
+                      {user && <UserMenu />}
                       <Button
                           variant="ghost"
                           size="icon"
                           onClick={() => setIsOpen(!isOpen)}
-                          className="text-gray-800 ml-4"
+                          className="text-gray-800 ml-2"
                       >
                           {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                       </Button>
-                   )}
+                   </div>
                 </div>
-              </div>
-      
-              {isOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="md:hidden glass-effect-custom rounded-lg mt-2 p-4"
-                >
-                  <div className="flex flex-col space-y-4">
-                    {navItems.map((item) => (
-                      <div key={item.name}>
-                          <Link
-                            to={item.children ? item.children[0].href : item.path}
-                            onClick={() => setIsOpen(false)}
-                            className={`block px-3 py-2 text-base font-medium transition-colors duration-200 ${
-                              location.pathname.startsWith(item.path)
-                                ? 'text-primary'
-                                : 'text-gray-600 hover:text-gray-900'
-                            }`}
-                          >
-                            {item.name}
-                          </Link>
-                          {item.children && (
-                              <div className="pl-4">
-                                  {item.children.map(child => (
-                                      <Link
-                                          key={child.title}
-                                          to={child.href}
-                                          onClick={() => setIsOpen(false)}
-                                          className={`flex items-center gap-2 px-3 py-2 text-base font-medium transition-colors duration-200 ${
-                                              location.pathname === child.href
-                                              ? 'text-primary'
-                                              : 'text-gray-600 hover:text-gray-900'
-                                          }`}
-                                      >
-                                          <child.icon className="h-4 w-4" />
-                                          {child.title}
-                                      </Link>
-                                  ))}
-                              </div>
-                          )}
-                      </div>
-                    ))}
-                    <a
-                        href="https://docs.fractionfinance.cl/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() => setIsOpen(false)}
-                        className="block px-3 py-2 text-base font-medium transition-colors duration-200 text-gray-600 hover:text-gray-900"
-                    >
-                        Documentación
-                    </a>
-                    {!user && (
-                      <div className="pt-4 border-t border-gray-200">
-                        <AuthModal />
-                      </div>
-                    )}
-                  </div>
-                </motion.div>
-              )}
             </div>
-          </motion.nav>
-        );
-      };
+          </div>
       
-      export default Navbar;
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden absolute top-full left-0 right-0 glass-effect-custom shadow-lg"
+            >
+              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                {navItems.map((item) => (
+                  <div key={item.name}>
+                      <Link
+                        to={item.path}
+                        onClick={() => setIsOpen(false)}
+                        className={`block px-3 py-2 rounded-md text-base font-medium ${
+                          location.pathname.startsWith(item.path)
+                            ? 'text-primary bg-primary/10'
+                            : 'text-gray-600 hover:bg-gray-100'
+                        }`}
+                      >
+                        {item.name}
+                      </Link>
+                  </div>
+                ))}
+                <a
+                    href="https://docs.fractionfinance.cl/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setIsOpen(false)}
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:bg-gray-100"
+                >
+                    Documentación
+                </a>
+                {!user && (
+                  <div className="pt-4 border-t border-gray-200/50">
+                    <AuthModal />
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </motion.nav>
+      );
+    };
+          
+    export default Navbar;
+  

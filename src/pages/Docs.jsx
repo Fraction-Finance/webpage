@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { Helmet } from 'react-helmet';
 import DocsHero from '@/components/docs/DocsHero';
 import QuickResources from '@/components/docs/QuickResources';
@@ -7,8 +8,6 @@ import ApiExplorer from '@/components/docs/ApiExplorer';
 import DocsCta from '@/components/docs/DocsCta';
 
 const Docs = () => {
-  const [activeCategory, setActiveCategory] = useState('getting-started');
-
   return (
     <>
       <Helmet>
@@ -19,7 +18,7 @@ const Docs = () => {
       <div className="pt-16">
         <DocsHero />
         <QuickResources />
-        <DocCategories activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
+        <DocCategories />
         <ApiExplorer />
         <DocsCta />
       </div>
