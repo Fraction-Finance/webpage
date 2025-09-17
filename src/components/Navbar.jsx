@@ -1,5 +1,4 @@
-
-    import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
     import { Link, useLocation } from 'react-router-dom';
     import { motion } from 'framer-motion';
     import { Menu, X, User as UserIcon, LogOut, Info, LayoutDashboard, Wallet, Network, Package, TrendingUp, Landmark, Users, Target, Rss, MailQuestion, Briefcase, Zap, Check } from 'lucide-react';
@@ -344,4 +343,3 @@
     };
           
     export default Navbar;
-  

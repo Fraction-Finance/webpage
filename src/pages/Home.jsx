@@ -1,15 +1,15 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { ArrowRight, Shield, Zap, Globe, TrendingUp, Users, Lock } from 'lucide-react';
+import { ArrowRight, Shield, Zap, Globe, TrendingUp, Users, Lock, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSettings } from '@/contexts/SettingsContext';
+
 const Home = () => {
-  const {
-    settings,
-    loading
-  } = useSettings();
+  const { settings, homeContent, loading } = useSettings();
+
   const features = [{
     icon: Shield,
     title: 'Seguridad y Confianza',
@@ -35,7 +35,31 @@ const Home = () => {
     title: 'Innovación y Sostenibilidad',
     description: 'Foco en activos verdes y sostenibles. Impulsa la inversión responsable con impacto real en la economía y el medio ambiente.'
   }];
+
   const showAssetTypesSection = !loading && (settings.show_home_defi || settings.show_home_tradfi || settings.show_home_real_assets);
+
+  const AssetCard = ({ sectionKey, content, delay }) => {
+    if (!content) return null;
+    return (
+      <motion.div 
+        initial={{ opacity: 0, y: 50 }} 
+        whileInView={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 0.8, delay }} 
+        className="glass-effect p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1"
+      >
+        <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">{content.title}</h3>
+        <ul className="space-y-4 text-lg text-gray-700">
+          {content.items.map((item, index) => (
+            <li key={index} className="flex items-start">
+              <ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </motion.div>
+    );
+  };
+
   return <>
       <Helmet>
         <title>Fraction Finance - Revolucionaria Plataforma de Tokenización de Activos Digitales</title>
@@ -74,7 +98,10 @@ const Home = () => {
           </div>
         </section>
 
-        {showAssetTypesSection && <section className="py-20 bg-gray-50/50">
+        {loading ? (
+          <div className="py-20 flex justify-center items-center"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div>
+        ) : showAssetTypesSection && (
+          <section className="py-20 bg-gray-50/50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <motion.div initial={{
             opacity: 0,
@@ -92,61 +119,9 @@ const Home = () => {
               </motion.div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {settings.show_home_defi && <motion.div initial={{
-              opacity: 0,
-              y: 50
-            }} whileInView={{
-              opacity: 1,
-              y: 0
-            }} transition={{
-              duration: 0.8,
-              delay: 0.2
-            }} className="glass-effect p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Activos DeFi</h3>
-                    <ul className="space-y-4 text-lg text-gray-700">
-                      <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Earn</span></li>
-                      <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>LSTs</span></li>
-                      <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>LP tokens</span></li>
-                      <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Yield-bearing tokens</span></li>
-                      <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Derivados DeFi</span></li>
-                    </ul>
-                  </motion.div>}
-                
-                {settings.show_home_tradfi && <motion.div initial={{
-              opacity: 0,
-              y: 50
-            }} whileInView={{
-              opacity: 1,
-              y: 0
-            }} transition={{
-              duration: 0.8,
-              delay: 0.4
-            }} className="glass-effect p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Finanzas Tradicionales</h3>
-                    <ul className="space-y-4 text-lg text-gray-700">
-                      <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Acciones y ETFs</span></li>
-                      <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Bonos y Renta Fija</span></li>
-                      <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Fondos de Inversión</span></li>
-                    </ul>
-                  </motion.div>}
-
-                {settings.show_home_real_assets && <motion.div initial={{
-              opacity: 0,
-              y: 50
-            }} whileInView={{
-              opacity: 1,
-              y: 0
-            }} transition={{
-              duration: 0.8,
-              delay: 0.6
-            }} className="glass-effect p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Activos Reales</h3>
-                    <ul className="space-y-4 text-lg text-gray-700">
-                      <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Bienes Raíces</span></li>
-                      <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Infraestructura</span></li>
-                      <li className="flex items-start"><ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" /><span>Materias Primas</span></li>
-                    </ul>
-                  </motion.div>}
+                {settings.show_home_defi && <AssetCard sectionKey="defi" content={homeContent.defi} delay={0.2} />}
+                {settings.show_home_tradfi && <AssetCard sectionKey="tradfi" content={homeContent.tradfi} delay={0.4} />}
+                {settings.show_home_real_assets && <AssetCard sectionKey="real_assets" content={homeContent.real_assets} delay={0.6} />}
               </div>
 
               <motion.div initial={{
@@ -163,7 +138,8 @@ const Home = () => {
                 <p className="text-lg text-gray-700 leading-relaxed">Cada producto tokenizado de Fraction Finance está diseñado para ser fraccionable, accesible y cumplir con los marcos regulatorios, conectando el capital tradicional con las oportunidades digitales.</p>
               </motion.div>
             </div>
-          </section>}
+          </section>
+        )}
 
         <section className="py-20 bg-gray-50/50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

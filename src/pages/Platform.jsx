@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
@@ -139,7 +140,7 @@ const Platform = () => {
   return (
     <>
       <Helmet>
-        <title>Fondos y Mercado de Capitales | Fraction Finance</title>
+        <title>Mercado de Activos Digitales | Fraction Finance</title>
         <meta name="description" content="Descubre, analiza e invierte en activos tokenizados del mercado chileno." />
       </Helmet>
       <div className="pt-24 pb-12 bg-gray-50/50 min-h-screen">
@@ -151,7 +152,7 @@ const Platform = () => {
             className="pt-10 mb-10 text-center"
           >
             <h1 className="text-4xl md:text-5xl font-bold mb-2">
-              <span className="text-gray-900">Fondos y Mercado de Capitales</span>
+              <span className="text-gray-900">Mercado de Activos Digitales</span>
             </h1>
             <p className="text-lg text-gray-600">
               Descubre, analiza e invierte en activos tokenizados del mercado chileno.

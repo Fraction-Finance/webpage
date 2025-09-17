@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
     import { supabase } from '@/lib/customSupabaseClient';
 
@@ -14,10 +15,10 @@ import React, { createContext, useContext, useState, useEffect, useMemo, useCall
         show_home_tradfi: true,
         show_home_real_assets: true,
       });
+      const [homeContent, setHomeContent] = useState({});
       const [loading, setLoading] = useState(true);
 
       const fetchSettings = useCallback(async () => {
-        setLoading(true);
         const { data, error } = await supabase.from('platform_settings').select('*');
         
         if (error) {
@@ -29,30 +30,56 @@ import React, { createContext, useContext, useState, useEffect, useMemo, useCall
           }, {});
           setSettings(prev => ({...prev, ...newSettings}));
         }
-        setLoading(false);
       }, []);
+
+      const fetchHomeContent = useCallback(async () => {
+        const { data, error } = await supabase.from('home_page_content').select('*');
+        if (error) {
+            console.error('Error fetching home page content:', error);
+        } else {
+            const content = data.reduce((acc, item) => {
+                acc[item.section_key] = { title: item.title, items: item.items };
+                return acc;
+            }, {});
+            setHomeContent(content);
+        }
+      }, []);
+
+      const refreshAllData = useCallback(async () => {
+        setLoading(true);
+        await Promise.all([fetchSettings(), fetchHomeContent()]);
+        setLoading(false);
+      }, [fetchSettings, fetchHomeContent]);
 
 
       useEffect(() => {
-        fetchSettings();
+        refreshAllData();
 
-        const channel = supabase
+        const settingsChannel = supabase
           .channel('platform_settings_changes')
           .on(
             'postgres_changes',
-            { event: 'UPDATE', schema: 'public', table: 'platform_settings' },
-            (payload) => {
-                fetchSettings();
-            }
+            { event: '*', schema: 'public', table: 'platform_settings' },
+            () => fetchSettings()
+          )
+          .subscribe();
+
+        const contentChannel = supabase
+          .channel('home_page_content_changes')
+          .on(
+            'postgres_changes',
+            { event: '*', schema: 'public', table: 'home_page_content' },
+            () => fetchHomeContent()
           )
           .subscribe();
 
         return () => {
-          supabase.removeChannel(channel);
+          supabase.removeChannel(settingsChannel);
+          supabase.removeChannel(contentChannel);
         };
-      }, [fetchSettings]);
+      }, [fetchSettings, fetchHomeContent]);
 
-      const value = useMemo(() => ({ settings, loading, refreshSettings: fetchSettings }), [settings, loading, fetchSettings]);
+      const value = useMemo(() => ({ settings, homeContent, loading, refreshSettings: refreshAllData }), [settings, homeContent, loading, refreshAllData]);
 
       return (
         <SettingsContext.Provider value={value}>
