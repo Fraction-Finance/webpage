@@ -203,8 +203,9 @@ export const WalletProvider = ({ children }) => {
                 updateWalletState(accounts);
             };
 
-            const handleChainChanged = (_chainId) => {
-                window.location.reload();
+            const handleChainChanged = async (_chainId) => {
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                await updateWalletState(accounts);
             };
 
             window.ethereum.on('accountsChanged', handleAccountsChanged);

@@ -38,55 +38,40 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user, fetchProfile]);
 
-  const handleAuthStateChange = useCallback(async (event, session) => {
-    setSession(session);
-    const currentUser = session?.user ?? null;
-    setUser(currentUser);
-
-    if (currentUser) {
-      const userProfile = await fetchProfile(currentUser.id);
-      setProfile(userProfile);
-    } else {
-      setProfile(null);
-    }
-
-    if (event === 'SIGNED_IN' && session) {
-      toast({
-        title: '¡Has iniciado sesión correctamente!',
-        description: `¡Bienvenido de nuevo, ${session.user.user_metadata.full_name || session.user.email}!`,
-      });
-    }
-    if (event === 'SIGNED_OUT') {
-       toast({
-        title: '¡Sesión cerrada!',
-        description: 'Has cerrado sesión correctamente.',
-      });
-    }
-    
-    setLoading(false);
-  }, [fetchProfile, toast]);
-  
   useEffect(() => {
     setLoading(true);
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (event === 'TOKEN_REFRESHED' && session === null) {
-          // This can happen if the refresh token is invalid.
-          // We sign out to clear any remaining local state.
-          supabase.auth.signOut();
+      async (event, session) => {
+        setSession(session);
+        const currentUser = session?.user ?? null;
+        setUser(currentUser);
+
+        if (currentUser) {
+          const userProfile = await fetchProfile(currentUser.id);
+          setProfile(userProfile);
         } else {
-          handleAuthStateChange(event, session);
+          setProfile(null);
         }
+
+        if (event === 'SIGNED_IN' && session) {
+          toast({
+            title: '¡Has iniciado sesión correctamente!',
+            description: `¡Bienvenido de nuevo, ${session.user.user_metadata.full_name || session.user.email}!`,
+          });
+        }
+        if (event === 'SIGNED_OUT') {
+           toast({
+            title: '¡Sesión cerrada!',
+            description: 'Has cerrado sesión correctamente.',
+          });
+        }
+        
+        setLoading(false);
       }
     );
 
-    // Initial session fetch
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      handleAuthStateChange('INITIAL_SESSION', session);
-    });
-
     return () => subscription.unsubscribe();
-  }, [handleAuthStateChange]);
+  }, [fetchProfile, toast]);
 
   const signUp = useCallback(async (email, password, fullName) => {
     const { data, error } = await supabase.auth.signUp({
