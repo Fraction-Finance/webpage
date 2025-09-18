@@ -1,6 +1,5 @@
-
 import React, { Suspense, lazy } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -20,7 +19,6 @@ const BlogPost = lazy(() => import('@/pages/BlogPost'));
 const Contact = lazy(() => import('@/pages/Contact'));
 const Careers = lazy(() => import('@/pages/Careers'));
 const Tokenize = lazy(() => import('@/pages/Tokenize'));
-const Platform = lazy(() => import('@/pages/Platform'));
 const InvestDetail = lazy(() => import('@/pages/InvestDetail'));
 const Investment = lazy(() => import('@/pages/Investment'));
 const ProfileLayout = lazy(() => import('@/pages/profile/ProfileLayout'));
@@ -28,8 +26,6 @@ const AccountInformation = lazy(() => import('@/pages/profile/AccountInformation
 const InvestmentProfile = lazy(() => import('@/pages/profile/InvestmentProfile'));
 const KycKyb = lazy(() => import('@/pages/profile/KycKyb'));
 const BankAccount = lazy(() => import('@/pages/profile/BankAccount'));
-const RWAPlatform = lazy(() => import('@/pages/rwa/RWAPlatform'));
-const RWAAssetDetail = lazy(() => import('@/pages/rwa/RWAAssetDetail'));
 const Administration = lazy(() => import('@/pages/admin/Administration'));
 const AdminDashboard = lazy(() => import('@/pages/admin/components/AdminDashboard'));
 const ManageDigitalAssets = lazy(() => import('@/pages/admin/components/ManageDigitalAssets'));
@@ -48,10 +44,6 @@ const ManageReports = lazy(() => import('@/pages/admin/components/ManageReports'
 const ManageTeam = lazy(() => import('@/pages/admin/components/ManageTeam'));
 const ManageContactSubmissions = lazy(() => import('@/pages/admin/components/ManageContactSubmissions'));
 const AuthCallback = lazy(() => import('@/pages/AuthCallback'));
-const GlobalMarkets = lazy(() => import('@/pages/product/GlobalMarkets'));
-const RWAInvest = lazy(() => import('@/pages/product/RWAInvest'));
-const DeFiAssets = lazy(() => import('@/pages/product/DeFiAssets'));
-const DeFiPlatform = lazy(() => import('@/pages/DeFiPlatform'));
 const PrivacyPolicy = lazy(() => import('@/pages/legal/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('@/pages/legal/TermsOfService'));
 const CookiePolicy = lazy(() => import('@/pages/legal/CookiePolicy'));
@@ -59,6 +51,7 @@ const ComplaintChannel = lazy(() => import('@/pages/legal/ComplaintChannel'));
 const WhistleblowerChannel = lazy(() => import('@/pages/legal/WhistleblowerChannel'));
 const Sitemap = lazy(() => import('@/pages/Sitemap'));
 const Docs = lazy(() => import('@/pages/Docs'));
+const Markets = lazy(() => import('@/pages/Markets'));
 
 const WalletProtectedRoute = ({ children }) => {
   const { isConnected } = useWallet();
@@ -70,10 +63,13 @@ const WalletProtectedRoute = ({ children }) => {
 
 const MainLayout = () => {
   const { settings, loading } = useSettings();
+  const location = useLocation();
 
   if (loading) {
     return <div className="flex h-screen w-full items-center justify-center"><Loader2 className="h-16 w-16 animate-spin text-primary" /></div>;
   }
+
+  const isMarketsPage = location.pathname.startsWith('/mercados');
 
   return (
     <>
@@ -82,8 +78,8 @@ const MainLayout = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
-          <Route path="/mercado-rwa" element={<ProtectedRoute><RWAPlatform /></ProtectedRoute>} />
-          <Route path="/mercado-rwa/:stoId" element={<ProtectedRoute><RWAAssetDetail /></ProtectedRoute>} />
+          <Route path="/mercados" element={<ProtectedRoute><Markets /></ProtectedRoute>} />
+          <Route path="/mercados/:stoId" element={<ProtectedRoute><InvestDetail /></ProtectedRoute>} />
           <Route path="/ecosistema" element={<Ecosystem />} />
           <Route path="/nosotros" element={<About />} />
           <Route path="/nosotros/modelo-de-negocio" element={<BusinessModel />} />
@@ -92,13 +88,7 @@ const MainLayout = () => {
           <Route path="/nosotros/contacto" element={<Contact />} />
           <Route path="/nosotros/empleos" element={<Careers />} />
           <Route path="/tokenizar" element={<Tokenize />} />
-          <Route path="/plataforma" element={<ProtectedRoute><Platform /></ProtectedRoute>} />
-          <Route path="/plataforma/invertir/:stoId" element={<ProtectedRoute><InvestDetail /></ProtectedRoute>} />
           <Route path="/inversiones" element={<WalletProtectedRoute><Investment /></WalletProtectedRoute>} />
-          {settings.show_global_markets && <Route path="/producto/mercados-globales" element={<GlobalMarkets />} />}
-          {settings.show_rwa_invest && <Route path="/producto/invertir-rwa" element={<RWAInvest />} />}
-          {settings.show_defi_assets && <Route path="/producto/mercado-activos-descentralizados" element={<DeFiAssets />} />}
-          <Route path="/plataforma-defi" element={<ProtectedRoute><DeFiPlatform /></ProtectedRoute>} />
           <Route path="/legal/politica-de-privacidad" element={<PrivacyPolicy />} />
           <Route path="/legal/terminos-de-servicio" element={<TermsOfService />} />
           <Route path="/legal/politica-de-cookies" element={<CookiePolicy />} />
@@ -120,7 +110,7 @@ const MainLayout = () => {
            <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
-      <Footer />
+      {!isMarketsPage && <Footer />}
     </>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
     import { Link, useLocation } from 'react-router-dom';
     import { motion } from 'framer-motion';
-    import { Menu, X, User as UserIcon, LogOut, Info, LayoutDashboard, Wallet, Network, Package, TrendingUp, Landmark, Users, Target, Rss, MailQuestion, Briefcase, Zap, Check } from 'lucide-react';
+    import { Menu, X, User as UserIcon, LogOut, Info, LayoutDashboard, Wallet, Network, Package, Users, Target, Rss, MailQuestion, Briefcase, Check, BookOpen } from 'lucide-react';
     import { Button } from '@/components/ui/button';
     import AuthModal from '@/components/AuthModal';
     import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -52,9 +52,9 @@ import React, { useState, useEffect } from 'react';
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full glow-effect-sm">
-              <Avatar className="h-10 w-10">
+              <Avatar className="h-10 w-10 border-2 border-primary/50">
                 <AvatarImage src={profile?.avatar_url} alt={profile?.full_name || user?.email} />
-                <AvatarFallback>{getInitials(profile?.full_name)}</AvatarFallback>
+                <AvatarFallback className="bg-primary/10 text-primary font-semibold">{getInitials(profile?.full_name)}</AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
@@ -135,7 +135,7 @@ import React, { useState, useEffect } from 'react';
               to={href}
               ref={ref}
               className={cn(
-                "flex select-none space-x-4 items-center rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-primary/5 focus:bg-primary/5",
+                "flex select-none space-x-4 items-center rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
                 className
               )}
               {...props}
@@ -166,17 +166,18 @@ import React, { useState, useEffect } from 'react';
       return (
         <div
           className={cn(
-            "relative px-4 py-2 text-base font-semibold transition-all duration-300 rounded-md cursor-pointer",
+            "relative px-4 py-2 text-base font-medium transition-all duration-300 rounded-md cursor-pointer",
             (isActive || isHomeActive) && !isExternal
-              ? 'text-primary bg-primary/5 glow-effect-sm'
-              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100/50'
+              ? 'text-primary'
+              : 'text-foreground/60 hover:text-foreground'
           )}
         >
           {isDropdown ? <span>{children}</span> : <LinkComponent {...linkProps}>{children}</LinkComponent>}
           {(isActive || isHomeActive) && !isExternal && (
             <motion.div
               layoutId="activeTab"
-              className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"
+              className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-0.5 bg-primary rounded-full"
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
             />
           )}
         </div>
@@ -191,23 +192,14 @@ import React, { useState, useEffect } from 'react';
     
       useEffect(() => {
         const handleScroll = () => {
-          setScrolled(window.scrollY > 50);
+          setScrolled(window.scrollY > 20);
         };
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
       }, []);
     
       const navItems = [
-        { 
-          name: "Productos",
-          path: '/producto',
-          icon: Package,
-          children: [
-            { title: "Mercados de Activos DeFi", href: "/producto/mercado-activos-descentralizados", description: "Explora el mundo de las finanzas descentralizadas.", icon: Zap },
-            { title: "Mercado de Activos Digitales", href: "/producto/mercados-globales", description: "Accede a mercados de capitales en todo el mundo.", icon: TrendingUp },
-            { title: "Mercado RWA (Activos Reales)", href: "/producto/invertir-rwa", description: "Invierte en activos del mundo real tokenizados.", icon: Landmark },
-          ]
-        },
+        { name: "Mercados", path: '/mercados', icon: Package },
         { name: "Ecosistema", path: '/ecosistema', icon: Network },
         { name: "Nosotros", path: '/nosotros', 
           icon: Info,
@@ -225,9 +217,11 @@ import React, { useState, useEffect } from 'react';
         <motion.nav
           initial={{ y: -100 }}
           animate={{ y: 0 }}
-          className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-            scrolled ? 'glass-effect-custom shadow-lg' : 'bg-transparent'
-          }`}
+          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          className={cn(
+            'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+            scrolled ? 'glass-effect-custom' : 'bg-transparent'
+          )}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-20">
@@ -244,10 +238,10 @@ import React, { useState, useEffect } from 'react';
                       <NavigationMenuItem key={item.name}>
                         {item.children ? (
                           <>
-                            <NavigationMenuTrigger className="!bg-transparent hover:!bg-gray-100/50 p-0">
+                            <NavigationMenuTrigger className="!bg-transparent hover:!bg-accent p-0">
                               <NavLinkItem to={item.path} isDropdown>{item.name}</NavLinkItem>
                             </NavigationMenuTrigger>
-                            <NavigationMenuContent className="p-2 border border-gray-200 rounded-lg shadow-xl glass-effect-custom">
+                            <NavigationMenuContent>
                               <ul className="grid gap-3 p-4 w-[300px] md:w-[400px] lg:w-[500px] lg:grid-cols-1">
                                 {item.children.map((component) => (
                                   <ListItem
@@ -270,9 +264,12 @@ import React, { useState, useEffect } from 'react';
                       </NavigationMenuItem>
                     ))}
                     <NavigationMenuItem>
-                        <NavLinkItem to="https://docs.fractionfinance.cl/" isExternal>
-                            Documentación
-                        </NavLinkItem>
+                        <a href="https://docs.fractionfinance.cl/" target="_blank" rel="noopener noreferrer" className="flex items-center">
+                          <NavLinkItem to="https://docs.fractionfinance.cl/" isExternal>
+                              <BookOpen className="inline-block h-4 w-4 mr-2" />
+                              Documentación
+                          </NavLinkItem>
+                        </a>
                     </NavigationMenuItem>
                   </NavigationMenuList>
                   </NavigationMenu>
@@ -289,7 +286,7 @@ import React, { useState, useEffect } from 'react';
                           variant="ghost"
                           size="icon"
                           onClick={() => setIsOpen(!isOpen)}
-                          className="text-gray-800 ml-2"
+                          className="text-foreground ml-2"
                       >
                           {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                       </Button>
@@ -314,7 +311,7 @@ import React, { useState, useEffect } from 'react';
                         className={`block px-3 py-2 rounded-md text-base font-medium ${
                           location.pathname.startsWith(item.path)
                             ? 'text-primary bg-primary/10'
-                            : 'text-gray-600 hover:bg-gray-100'
+                            : 'text-foreground/80 hover:bg-accent'
                         }`}
                       >
                         {item.name}
@@ -326,12 +323,12 @@ import React, { useState, useEffect } from 'react';
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => setIsOpen(false)}
-                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:bg-gray-100"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-foreground/80 hover:bg-accent"
                 >
                     Documentación
                 </a>
                 {!user && (
-                  <div className="pt-4 border-t border-gray-200/50">
+                  <div className="pt-4 border-t border-border">
                     <AuthModal />
                   </div>
                 )}

@@ -9,9 +9,7 @@ const Footer = () => {
     {
       title: 'Productos',
       links: [
-        { name: 'Mercado de Activos Digitales', path: '/producto/mercados-globales' },
-        { name: 'RWA (Activos Reales)', path: '/producto/invertir-rwa' },
-        { name: 'Mercado de Activos DeFi', path: '/producto/mercado-activos-descentralizados' },
+        { name: 'Mercados', path: '/mercados' },
         { name: 'Tokenizar', path: '/tokenizar' },
       ],
     },
@@ -52,25 +50,25 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="glass-effect-dark text-gray-800">
-      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <footer className="glass-effect-dark text-foreground">
+      <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
-          <div className="col-span-2 md:col-span-4 lg:col-span-1">
+          <div className="col-span-2 md:col-span-4 lg:col-span-1 mb-8 lg:mb-0">
             <Logo className="h-12 w-auto mb-4" />
-            <p className="text-gray-600 text-sm">Revolucionando la forma de invertir en Chile</p>
+            <p className="text-muted-foreground text-sm">Revolucionando la forma de invertir en Chile</p>
           </div>
           {footerSections.map((section) => (
             <div key={section.title}>
-              <p className="font-semibold text-gray-900 tracking-wider uppercase">{section.title}</p>
-              <ul className="mt-4 space-y-2">
+              <p className="font-semibold text-foreground tracking-wider uppercase text-sm">{section.title}</p>
+              <ul className="mt-4 space-y-3">
                 {section.links.map((link) => (
                   <li key={link.name}>
                     {link.external ? (
-                      <a href={link.path} target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 hover:text-primary transition-colors">
+                      <a href={link.path} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                         {link.name}
                       </a>
                     ) : (
-                      <Link to={link.path} className="text-sm text-gray-600 hover:text-primary transition-colors">
+                      <Link to={link.path} className="text-sm text-muted-foreground hover:text-primary transition-colors">
                         {link.name}
                       </Link>
                     )}
@@ -80,8 +78,8 @@ const Footer = () => {
             </div>
           ))}
         </div>
-        <div className="mt-12 border-t border-gray-200/50 pt-8 flex flex-col sm:flex-row justify-between items-center">
-          <p className="text-sm text-gray-500">&copy; {new Date().getFullYear()} Fraction Finance. Todos los derechos reservados.</p>
+        <div className="mt-16 border-t border-border pt-8 flex flex-col sm:flex-row justify-between items-center">
+          <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Fraction Finance. Todos los derechos reservados.</p>
           <div className="flex space-x-6 mt-4 sm:mt-0">
             {socialLinks.map((social, index) => (
               <motion.a
@@ -89,10 +87,10 @@ const Footer = () => {
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ scale: 1.2, color: '#4F46E5' }}
-                className="text-gray-500"
+                whileHover={{ scale: 1.2, color: 'hsl(var(--primary))' }}
+                className="text-muted-foreground"
               >
-                <social.icon className="h-6 w-6" />
+                <social.icon className="h-5 w-5" />
               </motion.a>
             ))}
           </div>

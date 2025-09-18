@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
     import { supabase } from '@/lib/customSupabaseClient';
 

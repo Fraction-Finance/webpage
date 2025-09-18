@@ -1,4 +1,3 @@
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
@@ -9,6 +8,8 @@ import { AuthProvider } from '@/contexts/SupabaseAuthContext';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 import { AlchemyProvider } from '@/contexts/AlchemyContext';
 import { WalletProvider } from '@/contexts/WalletContext';
+import { MarketsProvider } from '@/contexts/MarketsContext';
+import { SwapProvider } from '@/contexts/SwapContext';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -17,7 +18,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <SettingsProvider>
             <AlchemyProvider>
               <WalletProvider>
-                <App />
+                <MarketsProvider>
+                  <SwapProvider>
+                    <App />
+                  </SwapProvider>
+                </MarketsProvider>
               </WalletProvider>
             </AlchemyProvider>
             <Toaster />
