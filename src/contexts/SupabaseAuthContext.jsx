@@ -31,47 +31,58 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  useEffect(() => {
+    setLoading(true);
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      setSession(session);
+      const currentUser = session?.user ?? null;
+      setUser(currentUser);
+      if (currentUser) {
+        const userProfile = await fetchProfile(currentUser.id);
+        setProfile(userProfile);
+      }
+      setLoading(false);
+
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(
+        async (event, session) => {
+          setSession(session);
+          const newCurrentUser = session?.user ?? null;
+          setUser(newCurrentUser);
+
+          if (newCurrentUser) {
+            if (newCurrentUser.id !== user?.id) {
+              const userProfile = await fetchProfile(newCurrentUser.id);
+              setProfile(userProfile);
+            }
+          } else {
+            setProfile(null);
+          }
+
+          if (event === 'SIGNED_IN' && session) {
+            toast({
+              title: '¡Has iniciado sesión correctamente!',
+              description: `¡Bienvenido de nuevo, ${session.user.user_metadata.full_name || session.user.email}!`,
+            });
+          }
+          if (event === 'SIGNED_OUT') {
+             toast({
+              title: '¡Sesión cerrada!',
+              description: 'Has cerrado sesión correctamente.',
+            });
+          }
+        }
+      );
+
+      return () => subscription.unsubscribe();
+    });
+  }, [fetchProfile, toast, user?.id]);
+
   const refreshProfile = useCallback(async () => {
     if (user) {
       const userProfile = await fetchProfile(user.id);
       setProfile(userProfile);
     }
   }, [user, fetchProfile]);
-
-  useEffect(() => {
-    setLoading(true);
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        const currentUser = session?.user ?? null;
-        setUser(currentUser);
-
-        if (currentUser) {
-          const userProfile = await fetchProfile(currentUser.id);
-          setProfile(userProfile);
-        } else {
-          setProfile(null);
-        }
-
-        if (event === 'SIGNED_IN' && session) {
-          toast({
-            title: '¡Has iniciado sesión correctamente!',
-            description: `¡Bienvenido de nuevo, ${session.user.user_metadata.full_name || session.user.email}!`,
-          });
-        }
-        if (event === 'SIGNED_OUT') {
-           toast({
-            title: '¡Sesión cerrada!',
-            description: 'Has cerrado sesión correctamente.',
-          });
-        }
-        
-        setLoading(false);
-      }
-    );
-
-    return () => subscription.unsubscribe();
-  }, [fetchProfile, toast]);
 
   const signUp = useCallback(async (email, password, fullName) => {
     const { data, error } = await supabase.auth.signUp({
@@ -153,7 +164,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     signUp,
     signIn,
-    signOut,
+signOut,
     signInWithGoogle,
     refreshProfile,
   }), [user, profile, session, loading, signUp, signIn, signOut, signInWithGoogle, refreshProfile]);

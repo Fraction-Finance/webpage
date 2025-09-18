@@ -2,7 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import PortfolioSummary from '@/components/portfolio/PortfolioSummary';
 import PortfolioChart from '@/components/portfolio/PortfolioChart';
-import HoldingsList from '@/components/portfolio/HoldingsList';
 import QuickActions from '@/components/portfolio/QuickActions';
 
 const containerVariants = {
@@ -55,10 +54,6 @@ const PortfolioDashboard = ({ portfolioData }) => {
           <QuickActions />
         </motion.div>
       </div>
-
-      <motion.div variants={itemVariants}>
-        <HoldingsList holdings={portfolioData.holdings} />
-      </motion.div>
     </motion.div>
   );
 };

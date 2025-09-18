@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useMarkets } from '@/contexts/MarketsContext';
 import { Card, CardContent } from '@/components/ui/card';
@@ -8,8 +9,15 @@ import { Button } from '@/components/ui/button';
 import { Loader2, ArrowRight } from 'lucide-react';
 import CountUp from 'react-countup';
 
-const DeFi = () => {
+const DeFi = ({ category }) => {
   const { defiAssets, loading, error } = useMarkets();
+
+  const filteredAssets = useMemo(() => {
+    if (!category || category === 'Todos') {
+      return defiAssets;
+    }
+    return defiAssets.filter(asset => asset.category === category);
+  }, [defiAssets, category]);
 
   if (loading) return <div className="flex justify-center items-center h-96"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div>;
   if (error) return <div className="text-center py-20 text-red-500"><p>{error}</p></div>;
@@ -35,7 +43,7 @@ const DeFi = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {defiAssets.map((asset, index) => (
+                {filteredAssets.length > 0 ? filteredAssets.map((asset, index) => (
                   <motion.tr
                     key={asset.id}
                     initial={{ opacity: 0, y: 10 }}
@@ -68,7 +76,13 @@ const DeFi = () => {
                       </Button>
                     </TableCell>
                   </motion.tr>
-                ))}
+                )) : (
+                  <TableRow>
+                    <TableCell colSpan={6} className="h-24 text-center">
+                      No hay activos en esta categoría.
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </div>

@@ -27,7 +27,7 @@ const AssetDetails = ({ holdings }) => {
       >
         <Card className="glass-effect">
           <CardHeader>
-            <CardTitle>Detalles del Activo</CardTitle>
+            <CardTitle>Distribución de Activos</CardTitle>
             <CardDescription>
               Aquí encontrarás un desglose detallado de todos los activos en tu portafolio.
             </CardDescription>

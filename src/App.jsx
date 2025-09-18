@@ -70,6 +70,7 @@ const MainLayout = () => {
   }
 
   const isMarketsPage = location.pathname.startsWith('/mercados');
+  const isInvestmentPage = location.pathname.startsWith('/portafolio');
 
   return (
     <>
@@ -88,7 +89,7 @@ const MainLayout = () => {
           <Route path="/nosotros/contacto" element={<Contact />} />
           <Route path="/nosotros/empleos" element={<Careers />} />
           <Route path="/tokenizar" element={<Tokenize />} />
-          <Route path="/inversiones" element={<WalletProtectedRoute><Investment /></WalletProtectedRoute>} />
+          <Route path="/portafolio" element={<WalletProtectedRoute><Investment /></WalletProtectedRoute>} />
           <Route path="/legal/politica-de-privacidad" element={<PrivacyPolicy />} />
           <Route path="/legal/terminos-de-servicio" element={<TermsOfService />} />
           <Route path="/legal/politica-de-cookies" element={<CookiePolicy />} />
@@ -110,7 +111,7 @@ const MainLayout = () => {
            <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
-      {!isMarketsPage && <Footer />}
+      {!isMarketsPage && !isInvestmentPage && <Footer />}
     </>
   );
 };

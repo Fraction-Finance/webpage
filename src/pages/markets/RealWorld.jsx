@@ -1,3 +1,4 @@
+
 import React, { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useMarkets } from '@/contexts/MarketsContext';
@@ -5,19 +6,24 @@ import { Input } from '@/components/ui/input';
 import { Loader2, Search } from 'lucide-react';
 import DigitalAssetCard from '@/components/markets/DigitalAssetCard';
 
-const RealWorld = () => {
+const RealWorld = ({ category }) => {
   const { stos, loading, error } = useMarkets();
   const [searchTerm, setSearchTerm] = useState('');
 
   const rwa = useMemo(() => stos.filter(sto => sto.sto_type === 'RWA'), [stos]);
 
   const filteredRwa = useMemo(() => {
-    return rwa.filter(sto => {
+    let categoryFiltered = rwa;
+    if (category && category !== 'Todos') {
+      categoryFiltered = rwa.filter(sto => sto.stock_market_category === category);
+    }
+
+    return categoryFiltered.filter(sto => {
       const asset = sto.digital_assets;
       if (!asset) return false;
       return searchTerm === '' || asset.name.toLowerCase().includes(searchTerm.toLowerCase()) || asset.symbol.toLowerCase().includes(searchTerm.toLowerCase());
     });
-  }, [rwa, searchTerm]);
+  }, [rwa, searchTerm, category]);
 
   if (loading) return <div className="flex justify-center items-center h-96"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div>;
   if (error) return <div className="text-center py-20 text-red-500"><p>{error}</p></div>;

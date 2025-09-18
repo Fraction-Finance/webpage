@@ -112,7 +112,7 @@ import React, { useState, useEffect } from 'react';
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link to="/inversiones">
+              <Link to="/portafolio">
                 <LayoutDashboard className="mr-2 h-4 w-4" />
                 <span>Portafolio</span>
               </Link>

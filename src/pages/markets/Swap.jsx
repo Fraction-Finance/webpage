@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -121,7 +122,7 @@ const Swap = () => {
       <Card className="w-full max-w-md glass-effect-light shadow-lg border-none">
         <CardHeader>
           <CardTitle className="flex justify-between items-center text-2xl font-bold">
-            <span>Intercambiar</span>
+            <span>Swap</span>
             <div className="flex items-center gap-2">
               <Button variant="ghost" size="icon" onClick={refreshBalances}>
                 <RefreshCw className={`h-5 w-5 text-gray-500 hover:text-primary transition-colors ${loading === 'balances' ? 'animate-spin' : ''}`} />
@@ -200,7 +201,7 @@ const Swap = () => {
               </div>
             </div>
 
-            {toAmount > 0 && (
+            {toAmount > 0 && fromAmount > 0 && (
               <div className="text-sm text-muted-foreground pt-4 text-center">
                 <p>1 {fromToken.symbol} ≈ {(toAmount / fromAmount).toFixed(4)} {toToken.symbol}</p>
               </div>
@@ -213,7 +214,7 @@ const Swap = () => {
               disabled={loading || !fromAmount || fromAmount === '0' || insufficientBalance}
             >
               {loading === 'approve' || loading === 'swap' ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : null}
-              {insufficientBalance ? 'Balance Insuficiente' : (isApproved ? 'Intercambiar' : `Aprobar ${fromToken?.symbol}`)}
+              {insufficientBalance ? 'Balance Insuficiente' : (isApproved ? 'Swap' : `Aprobar ${fromToken?.symbol}`)}
             </Button>
           </div>
         </CardContent>

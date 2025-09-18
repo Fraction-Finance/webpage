@@ -4,7 +4,7 @@ import { useMarkets } from './MarketsContext';
 import { useToast } from '@/components/ui/use-toast';
 import { ethers, parseUnits, formatUnits } from 'ethers';
 import { Token, Percent, TradeType } from '@uniswap/sdk-core';
-import { Pool, Route, SwapQuoter, SwapRouter, Trade } from '@uniswap/v3-sdk';
+import { Pool, Route, SwapRouter, Trade } from '@uniswap/v3-sdk';
 import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
 import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json';
 import { SWAP_ROUTER_ADDRESS, QUOTER_CONTRACT_ADDRESS, ERC20_ABI } from '@/lib/constants';
@@ -18,8 +18,8 @@ export const SwapProvider = ({ children }) => {
   const { provider, wallet, isConnected } = useWallet();
   const { swapTokens } = useMarkets();
 
-  const [fromToken, setFromToken] = useState(swapTokens[0]);
-  const [toToken, setToToken] = useState(swapTokens[1]);
+  const [fromToken, setFromToken] = useState(swapTokens.find(t => t.symbol === 'WETH'));
+  const [toToken, setToToken] = useState(swapTokens.find(t => t.symbol === 'USDC'));
   const [fromAmount, setFromAmount] = useState('');
   const [toAmount, setToAmount] = useState('');
   const [slippage, setSlippage] = useState(0.5);
@@ -44,7 +44,7 @@ export const SwapProvider = ({ children }) => {
   };
 
   const getQuote = useCallback(async () => {
-    if (!provider || !fromAmount || parseFloat(fromAmount) <= 0) {
+    if (!provider || !fromAmount || parseFloat(fromAmount) <= 0 || !fromToken || !toToken) {
       setToAmount('');
       return;
     }
@@ -54,7 +54,8 @@ export const SwapProvider = ({ children }) => {
       const tokenOut = new Token(toToken.chainId, toToken.address, toToken.decimals, toToken.symbol, toToken.name);
       
       const quoterContract = new ethers.Contract(QUOTER_CONTRACT_ADDRESS, QuoterABI, provider);
-      const amountIn = parseUnits(fromAmount, fromToken.decimals);
+      
+      const amountIn = parseUnits(fromAmount.toString(), fromToken.decimals);
 
       const quotedAmountOut = await quoterContract.quoteExactInputSingle.staticCall(
         tokenIn.address,
@@ -76,7 +77,7 @@ export const SwapProvider = ({ children }) => {
     } catch (error) {
       console.error('Error getting quote:', error);
       setToAmount('');
-      toast({ title: 'Error al obtener cotización', description: 'No se pudo obtener una cotización para este par.', variant: 'destructive' });
+      toast({ title: 'Error al obtener cotización', description: 'No se pudo obtener una cotización para este par. Puede que no haya liquidez.', variant: 'destructive' });
     } finally {
       setLoading(null);
     }
@@ -87,9 +88,14 @@ export const SwapProvider = ({ children }) => {
     setLoading('balances');
     const newBalances = {};
     for (const token of swapTokens) {
-      const contract = new ethers.Contract(token.address, ERC20_ABI, provider);
-      const balance = await contract.balanceOf(wallet.address);
-      newBalances[token.address] = balance;
+      try {
+        const contract = new ethers.Contract(token.address, ERC20_ABI, provider);
+        const balance = await contract.balanceOf(wallet.address);
+        newBalances[token.address] = balance;
+      } catch (e) {
+        console.error(`Could not fetch balance for ${token.symbol}`, e);
+        newBalances[token.address] = 0n;
+      }
     }
     setBalances(newBalances);
     setLoading(null);
@@ -100,10 +106,15 @@ export const SwapProvider = ({ children }) => {
       setIsApproved(false);
       return;
     }
-    const tokenContract = new ethers.Contract(fromToken.address, ERC20_ABI, provider);
-    const allowance = await tokenContract.allowance(wallet.address, SWAP_ROUTER_ADDRESS);
-    const amountIn = parseUnits(fromAmount, fromToken.decimals);
-    setIsApproved(allowance >= amountIn);
+    try {
+      const tokenContract = new ethers.Contract(fromToken.address, ERC20_ABI, provider);
+      const allowance = await tokenContract.allowance(wallet.address, SWAP_ROUTER_ADDRESS);
+      const amountIn = parseUnits(fromAmount.toString(), fromToken.decimals);
+      setIsApproved(allowance >= amountIn);
+    } catch (e) {
+      console.error("Error checking allowance:", e);
+      setIsApproved(false);
+    }
   }, [provider, wallet.address, fromToken, fromAmount]);
 
   useEffect(() => {
@@ -122,7 +133,7 @@ export const SwapProvider = ({ children }) => {
     try {
       const signer = await provider.getSigner();
       const tokenContract = new ethers.Contract(fromToken.address, ERC20_ABI, signer);
-      const amountToApprove = parseUnits(fromAmount, fromToken.decimals);
+      const amountToApprove = parseUnits(fromAmount.toString(), fromToken.decimals);
       const tx = await tokenContract.approve(SWAP_ROUTER_ADDRESS, amountToApprove);
       toast({ title: 'Aprobación en progreso', description: 'Esperando confirmación de la transacción.' });
       await tx.wait();
@@ -142,7 +153,7 @@ export const SwapProvider = ({ children }) => {
     try {
       const signer = await provider.getSigner();
       const options = {
-        slippageTolerance: new Percent(slippage * 100, 10000),
+        slippageTolerance: new Percent(Math.floor(slippage * 100), 10000),
         deadline: Math.floor(Date.now() / 1000) + 60 * 20,
         recipient: wallet.address,
       };

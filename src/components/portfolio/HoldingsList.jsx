@@ -10,7 +10,7 @@ import React from 'react';
         return (
           <Card className="glass-effect">
             <CardHeader>
-              <CardTitle>Mis Activos</CardTitle>
+              <CardTitle>Activos en Portafolio</CardTitle>
               <CardDescription>Una descripción detallada de tus activos actuales.</CardDescription>
             </CardHeader>
             <CardContent>
@@ -25,7 +25,7 @@ import React from 'react';
       return (
         <Card className="glass-effect">
           <CardHeader>
-            <CardTitle>Mis Activos</CardTitle>
+            <CardTitle>Activos en Portafolio</CardTitle>
             <CardDescription>Una descripción detallada de tus activos actuales.</CardDescription>
           </CardHeader>
           <CardContent>
@@ -59,7 +59,7 @@ import React from 'react';
                     </TableCell>
                     <TableCell className="text-right">
                       <Button asChild variant="outline" size="sm">
-                        <Link to={`/mercado-rwa/${item.sto_id}`}>Operar</Link>
+                        <Link to={`/mercados/${item.sto_id}`}>Operar</Link>
                       </Button>
                     </TableCell>
                   </TableRow>
