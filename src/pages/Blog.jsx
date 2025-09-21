@@ -60,7 +60,7 @@ const Blog = () => {
           >
             <Rss className="h-16 w-16 text-primary mx-auto mb-4" />
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Nuestros Artículos y Noticias
+              <span className="gradient-text">Nuestros Artículos y Noticias</span>
             </h1>
             <p className="text-xl text-gray-700 max-w-2xl mx-auto">
               Explora los últimos desarrollos en tokenización, blockchain y finanzas globales.

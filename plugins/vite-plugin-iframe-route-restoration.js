@@ -12,7 +12,9 @@ export default function iframeRouteRestorationPlugin() {
 
           const save = () => {
             try {
-              sessionStorage.setItem(STORAGE_KEY, getCurrentRoute());
+              const currentRoute = getCurrentRoute();
+              sessionStorage.setItem(STORAGE_KEY, currentRoute);
+              window.parent.postMessage({message: 'route-changed', route: currentRoute}, '*');
             } catch {}
           };
 

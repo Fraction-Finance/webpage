@@ -1,8 +1,9 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { ArrowRight, Shield, Zap, Globe, TrendingUp, Users, Lock, Loader2 } from 'lucide-react';
+import { Shield, Zap, Globe, TrendingUp, Users, Lock, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSettings } from '@/contexts/SettingsContext';
 
@@ -37,24 +38,16 @@ const Home = () => {
 
   const showAssetTypesSection = !loading && (settings.show_home_defi || settings.show_home_tradfi || settings.show_home_real_assets);
 
-  const AssetCard = ({ sectionKey, content, delay }) => {
+  const AssetCard = ({ content, delay }) => {
     if (!content) return null;
     return (
       <motion.div 
-        initial={{ opacity: 0, y: 50 }} 
+        initial={{ opacity: 0, y: 20 }} 
         whileInView={{ opacity: 1, y: 0 }} 
-        transition={{ duration: 0.5, delay, type: 'spring', stiffness: 50 }} 
-        className="glass-effect p-8 rounded-2xl shadow-lg hover:shadow-primary/10 transition-all duration-300 ease-in-out transform hover:-translate-y-2"
+        transition={{ duration: 0.5, delay }} 
+        className="glass-effect p-6 rounded-2xl shadow-lg hover:shadow-primary/10 transition-all duration-300 ease-in-out transform hover:-translate-y-1 flex items-center justify-center"
       >
-        <h3 className="text-2xl font-bold text-foreground mb-6 text-center">{content.title}</h3>
-        <ul className="space-y-4 text-lg text-muted-foreground">
-          {content.items.map((item, index) => (
-            <li key={index} className="flex items-start">
-              <ArrowRight className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" />
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
+        <h3 className="text-xl font-bold text-foreground text-center">{content.title}</h3>
       </motion.div>
     );
   };
@@ -97,35 +90,39 @@ const Home = () => {
         ) : showAssetTypesSection && (
           <section className="py-20 bg-white/30">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }} 
-                whileInView={{ opacity: 1, y: 0 }} 
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }} 
-                className="text-center mb-16 pt-16"
-              >
-                <h2 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight">
-                  <span className="gradient-text">Invierte en Activos Tokenizados</span>
-                </h2>
-                <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">En Fraction Finance unimos las finanzas tradicionales, DeFi y activos del mundo real, facilitando en inversiones digitales seguras y al alcance de todos.</p>
-              </motion.div>
+              <div className="grid md:grid-cols-2 gap-12 items-center">
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8 }}
+                >
+                  <h2 className="text-3xl md:text-5xl font-bold mb-6 mt-12 tracking-tight">
+                    <span className="gradient-text">Invierte en Activos Tokenizados</span>
+                  </h2>
+                  <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed mb-8">En Fraction Finance unimos las finanzas tradicionales, DeFi y activos del mundo real, facilitando en inversiones digitales seguras y al alcance de todos.</p>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                    {settings.show_home_defi && <AssetCard content={homeContent.defi} delay={0.2} />}
+                    {settings.show_home_tradfi && <AssetCard content={homeContent.tradfi} delay={0.4} />}
+                    {settings.show_home_real_assets && <AssetCard content={homeContent.real_assets} delay={0.6} />}
+                  </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {settings.show_home_defi && <AssetCard sectionKey="defi" content={homeContent.defi} delay={0.2} />}
-                {settings.show_home_tradfi && <AssetCard sectionKey="tradfi" content={homeContent.tradfi} delay={0.4} />}
-                {settings.show_home_real_assets && <AssetCard sectionKey="real_assets" content={homeContent.real_assets} delay={0.6} />}
+                  <div className="glass-effect p-6 rounded-2xl">
+                    <h3 className="text-xl font-bold text-foreground mb-2">📌 Nuestra Ventaja</h3>
+                    <p className="text-muted-foreground leading-relaxed">Cada producto tokenizado de Fraction Finance está diseñado para ser fraccionable, accesible y cumplir con los marcos regulatorios, conectando el capital tradicional con las oportunidades digitales.</p>
+                  </div>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="flex justify-center items-center"
+                >
+                  <img class="w-full max-w-xl" alt="Abstract visualization of digital asset tokenization" src="https://horizons-cdn.hostinger.com/f8b5c881-f6e8-4070-abdf-aa8b891ef867/3684509d6da8b68b7fd32a3174f9ed11.png" />
+                </motion.div>
               </div>
-
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }} 
-                whileInView={{ opacity: 1, y: 0 }} 
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.8 }} 
-                className="mt-16 text-center glass-effect p-8 rounded-2xl shadow-lg"
-              >
-                <h3 className="text-2xl font-bold text-foreground mb-4">📌 Nuestra Ventaja</h3>
-                <p className="text-lg text-muted-foreground leading-relaxed">Cada producto tokenizado de Fraction Finance está diseñado para ser fraccionable, accesible y cumplir con los marcos regulatorios, conectando el capital tradicional con las oportunidades digitales.</p>
-              </motion.div>
             </div>
           </section>
         )}

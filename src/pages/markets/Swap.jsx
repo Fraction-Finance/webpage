@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,17 +10,22 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
 import { useSwap } from '@/contexts/SwapContext';
 import { useMarkets } from '@/contexts/MarketsContext';
+import { useWallet } from '@/contexts/WalletContext';
 import { Label } from '@/components/ui/label';
 import { formatUnits } from 'ethers';
 
 const TokenSelector = ({ selectedToken, onSelectToken, disabledTokenSymbol }) => {
   const [open, setOpen] = useState(false);
   const { swapTokens } = useMarkets();
+  const { wallet } = useWallet();
+
+  const networkChainId = wallet.network ? parseInt(wallet.network.chainId, 16) : null;
+  const tokensForNetwork = swapTokens.filter(t => t.chainId === networkChainId);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" role="combobox" aria-expanded={open} className="w-[150px] justify-between h-12 text-lg">
+        <Button variant="outline" role="combobox" aria-expanded={open} className="w-[150px] justify-between h-12 text-lg" disabled={!wallet.isConnected}>
           {selectedToken ? (
             <div className="flex items-center gap-2">
               <img src={selectedToken.logoURI} alt={selectedToken.name} className="h-6 w-6" />
@@ -36,7 +40,7 @@ const TokenSelector = ({ selectedToken, onSelectToken, disabledTokenSymbol }) =>
           <CommandInput placeholder="Buscar token..." />
           <CommandEmpty>No se encontró el token.</CommandEmpty>
           <CommandGroup>
-            {swapTokens.map((token) => (
+            {tokensForNetwork.map((token) => (
               <CommandItem
                 key={token.symbol}
                 value={token.symbol}
@@ -74,6 +78,7 @@ const Swap = () => {
     isApproved,
     approveToken,
   } = useSwap();
+  const { wallet } = useWallet();
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
@@ -107,10 +112,10 @@ const Swap = () => {
     }
   };
 
-  const fromBalance = balances[fromToken?.address] ? formatUnits(balances[fromToken.address], fromToken.decimals) : '0.00';
-  const toBalance = balances[toToken?.address] ? formatUnits(balances[toToken.address], toToken.decimals) : '0.00';
+  const fromBalance = fromToken && balances[fromToken.address] ? formatUnits(balances[fromToken.address], fromToken.decimals) : '0.00';
+  const toBalance = toToken && balances[toToken.address] ? formatUnits(balances[toToken.address], toToken.decimals) : '0.00';
 
-  const insufficientBalance = parseFloat(fromAmount) > parseFloat(fromBalance);
+  const insufficientBalance = fromAmount && fromBalance ? parseFloat(fromAmount) > parseFloat(fromBalance) : false;
 
   return (
     <motion.div
@@ -124,7 +129,7 @@ const Swap = () => {
           <CardTitle className="flex justify-between items-center text-2xl font-bold">
             <span>Swap</span>
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" onClick={refreshBalances}>
+              <Button variant="ghost" size="icon" onClick={refreshBalances} disabled={!wallet.isConnected}>
                 <RefreshCw className={`h-5 w-5 text-gray-500 hover:text-primary transition-colors ${loading === 'balances' ? 'animate-spin' : ''}`} />
               </Button>
               <Popover open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
@@ -168,13 +173,14 @@ const Swap = () => {
                   value={fromAmount}
                   onChange={handleAmountChange}
                   className="text-3xl font-mono border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 h-auto bg-transparent" 
+                  disabled={!wallet.isConnected}
                 />
                 <TokenSelector selectedToken={fromToken} onSelectToken={setFromToken} disabledTokenSymbol={toToken?.symbol} />
               </div>
             </div>
 
             <div className="flex justify-center items-center h-8">
-              <Button variant="outline" size="icon" className="rounded-full bg-background hover:bg-muted z-10" onClick={switchTokens}>
+              <Button variant="outline" size="icon" className="rounded-full bg-background hover:bg-muted z-10" onClick={switchTokens} disabled={!wallet.isConnected}>
                 <ArrowDown className="h-5 w-5 text-gray-500" />
               </Button>
             </div>
@@ -211,10 +217,10 @@ const Swap = () => {
               size="lg" 
               className="w-full text-lg h-14 mt-4" 
               onClick={handleSwapAction}
-              disabled={loading || !fromAmount || fromAmount === '0' || insufficientBalance}
+              disabled={!wallet.isConnected || loading || !fromAmount || fromAmount === '0' || insufficientBalance}
             >
               {loading === 'approve' || loading === 'swap' ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : null}
-              {insufficientBalance ? 'Balance Insuficiente' : (isApproved ? 'Swap' : `Aprobar ${fromToken?.symbol}`)}
+              {!wallet.isConnected ? 'Conecta tu Billetera' : (insufficientBalance ? 'Balance Insuficiente' : (isApproved ? 'Swap' : `Aprobar ${fromToken?.symbol}`))}
             </Button>
           </div>
         </CardContent>

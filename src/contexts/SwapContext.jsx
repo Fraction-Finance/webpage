@@ -18,8 +18,8 @@ export const SwapProvider = ({ children }) => {
   const { provider, wallet, isConnected } = useWallet();
   const { swapTokens } = useMarkets();
 
-  const [fromToken, setFromToken] = useState(swapTokens.find(t => t.symbol === 'WETH'));
-  const [toToken, setToToken] = useState(swapTokens.find(t => t.symbol === 'USDC'));
+  const [fromToken, setFromToken] = useState(null);
+  const [toToken, setToToken] = useState(null);
   const [fromAmount, setFromAmount] = useState('');
   const [toAmount, setToAmount] = useState('');
   const [slippage, setSlippage] = useState(0.5);
@@ -27,6 +27,19 @@ export const SwapProvider = ({ children }) => {
   const [balances, setBalances] = useState({});
   const [isApproved, setIsApproved] = useState(false);
   const [trade, setTrade] = useState(null);
+
+  useEffect(() => {
+    if (wallet.network) {
+      const networkChainId = parseInt(wallet.network.chainId, 16);
+      const defaultFrom = swapTokens.find(t => t.symbol === 'WETH' && t.chainId === networkChainId);
+      const defaultTo = swapTokens.find(t => t.symbol === 'USDC' && t.chainId === networkChainId);
+      setFromToken(defaultFrom || null);
+      setToToken(defaultTo || null);
+    } else {
+      setFromToken(null);
+      setToToken(null);
+    }
+  }, [wallet.network, swapTokens]);
 
   const getPoolInfo = async (tokenIn, tokenOut) => {
     if (!provider) throw new Error("Provider not available");
@@ -84,10 +97,13 @@ export const SwapProvider = ({ children }) => {
   }, [provider, fromToken, toToken, fromAmount, toast]);
 
   const refreshBalances = useCallback(async () => {
-    if (!isConnected || !wallet.address) return;
+    if (!isConnected || !wallet.address || !wallet.network) return;
     setLoading('balances');
     const newBalances = {};
-    for (const token of swapTokens) {
+    const networkChainId = parseInt(wallet.network.chainId, 16);
+    const tokensForNetwork = swapTokens.filter(t => t.chainId === networkChainId);
+
+    for (const token of tokensForNetwork) {
       try {
         const contract = new ethers.Contract(token.address, ERC20_ABI, provider);
         const balance = await contract.balanceOf(wallet.address);
@@ -99,7 +115,7 @@ export const SwapProvider = ({ children }) => {
     }
     setBalances(newBalances);
     setLoading(null);
-  }, [isConnected, wallet.address, swapTokens, provider]);
+  }, [isConnected, wallet.address, wallet.network, swapTokens, provider]);
 
   const checkAllowance = useCallback(async () => {
     if (!provider || !wallet.address || !fromToken || !fromAmount || parseFloat(fromAmount) <= 0) {

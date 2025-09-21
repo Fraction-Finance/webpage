@@ -1,11 +1,10 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, memo } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Background from '@/components/Background';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import { useSettings } from '@/contexts/SettingsContext';
 import { Loader2 } from 'lucide-react';
 import DevelopmentNotice from '@/components/DevelopmentNotice';
 import { useWallet } from '@/contexts/WalletContext';
@@ -22,36 +21,17 @@ const Tokenize = lazy(() => import('@/pages/Tokenize'));
 const InvestDetail = lazy(() => import('@/pages/InvestDetail'));
 const Investment = lazy(() => import('@/pages/Investment'));
 const ProfileLayout = lazy(() => import('@/pages/profile/ProfileLayout'));
-const AccountInformation = lazy(() => import('@/pages/profile/AccountInformation'));
-const InvestmentProfile = lazy(() => import('@/pages/profile/InvestmentProfile'));
-const KycKyb = lazy(() => import('@/pages/profile/KycKyb'));
-const BankAccount = lazy(() => import('@/pages/profile/BankAccount'));
 const Administration = lazy(() => import('@/pages/admin/Administration'));
-const AdminDashboard = lazy(() => import('@/pages/admin/components/AdminDashboard'));
-const ManageDigitalAssets = lazy(() => import('@/pages/admin/components/ManageDigitalAssets'));
-const ManageDeFiAssets = lazy(() => import('@/pages/admin/components/ManageDeFiAssets'));
-const ManageTokenizedVaults = lazy(() => import('@/pages/admin/components/ManageTokenizedVaults'));
-const VaultDetail = lazy(() => import('@/pages/admin/components/VaultDetail'));
-const ManageSTOs = lazy(() => import('@/pages/admin/components/ManageSTOs'));
-const BlogManager = lazy(() => import('@/pages/admin/components/BlogManager'));
-const BlogEditor = lazy(() => import('@/pages/admin/components/BlogEditor'));
-const UsersManager = lazy(() => import('@/pages/admin/components/UsersManager'));
-const ManageJobs = lazy(() => import('@/pages/admin/components/ManageJobs'));
-const PlatformSettings = lazy(() => import('@/pages/admin/components/PlatformSettings'));
-const ManageEcosystemPartners = lazy(() => import('@/pages/admin/components/ManageEcosystemPartners'));
-const ManagePolicies = lazy(() => import('@/pages/admin/components/ManagePolicies'));
-const ManageReports = lazy(() => import('@/pages/admin/components/ManageReports'));
-const ManageTeam = lazy(() => import('@/pages/admin/components/ManageTeam'));
-const ManageContactSubmissions = lazy(() => import('@/pages/admin/components/ManageContactSubmissions'));
 const AuthCallback = lazy(() => import('@/pages/AuthCallback'));
 const PrivacyPolicy = lazy(() => import('@/pages/legal/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('@/pages/legal/TermsOfService'));
 const CookiePolicy = lazy(() => import('@/pages/legal/CookiePolicy'));
 const ComplaintChannel = lazy(() => import('@/pages/legal/ComplaintChannel'));
 const WhistleblowerChannel = lazy(() => import('@/pages/legal/WhistleblowerChannel'));
-const Sitemap = lazy(() => import('@/pages/Sitemap'));
 const Docs = lazy(() => import('@/pages/Docs'));
 const Markets = lazy(() => import('@/pages/Markets'));
+const FinancialEducation = lazy(() => import('@/pages/FinancialEducation'));
+const ArticleDetail = lazy(() => import('@/pages/ArticleDetail'));
 
 const WalletProtectedRoute = ({ children }) => {
   const { isConnected } = useWallet();
@@ -61,14 +41,8 @@ const WalletProtectedRoute = ({ children }) => {
   return children;
 };
 
-const MainLayout = () => {
-  const { settings, loading } = useSettings();
+const MainLayout = memo(() => {
   const location = useLocation();
-
-  if (loading) {
-    return <div className="flex h-screen w-full items-center justify-center"><Loader2 className="h-16 w-16 animate-spin text-primary" /></div>;
-  }
-
   const isMarketsPage = location.pathname.startsWith('/mercados');
   const isInvestmentPage = location.pathname.startsWith('/portafolio');
 
@@ -84,37 +58,28 @@ const MainLayout = () => {
           <Route path="/ecosistema" element={<Ecosystem />} />
           <Route path="/nosotros" element={<About />} />
           <Route path="/nosotros/modelo-de-negocio" element={<BusinessModel />} />
+          <Route path="/nosotros/educacion-financiera" element={<FinancialEducation />} />
+          <Route path="/nosotros/educacion-financiera/:slug" element={<ArticleDetail />} />
           <Route path="/nosotros/blog" element={<Blog />} />
           <Route path="/nosotros/blog/:slug" element={<BlogPost />} />
           <Route path="/nosotros/contacto" element={<Contact />} />
           <Route path="/nosotros/empleos" element={<Careers />} />
           <Route path="/tokenizar" element={<Tokenize />} />
           <Route path="/portafolio" element={<WalletProtectedRoute><Investment /></WalletProtectedRoute>} />
+          <Route path="/perfil/*" element={<ProtectedRoute><ProfileLayout /></ProtectedRoute>} />
           <Route path="/legal/politica-de-privacidad" element={<PrivacyPolicy />} />
           <Route path="/legal/terminos-de-servicio" element={<TermsOfService />} />
           <Route path="/legal/politica-de-cookies" element={<CookiePolicy />} />
           <Route path="/legal/canal-de-denuncias" element={<WhistleblowerChannel />} />
           <Route path="/legal/canal-de-reclamos" element={<ComplaintChannel />} />
-          <Route path="/mapa-del-sitio" element={<Sitemap />} />
           <Route path="/documentacion" element={<Docs />} />
-          <Route path="/perfil/*" element={
-              <ProtectedRoute>
-                  <ProfileLayout />
-              </ProtectedRoute>
-          }>
-              <Route index element={<Navigate to="cuenta" replace />} />
-              <Route path="cuenta" element={<AccountInformation />} />
-              <Route path="perfil-inversion" element={<InvestmentProfile />} />
-              <Route path="verificacion" element={<KycKyb />} />
-              <Route path="cuenta-bancaria" element={<BankAccount />} />
-          </Route>
-           <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
       {!isMarketsPage && !isInvestmentPage && <Footer />}
     </>
   );
-};
+});
 
 function App() {
   return (
@@ -135,28 +100,7 @@ function App() {
               <Route path="/*" element={<MainLayout />} />
               <Route path="/administracion/*" element={
                 <ProtectedRoute>
-                  <Administration>
-                    <Routes>
-                      <Route path="/" element={<Navigate to="panel" replace />} />
-                      <Route path="panel" element={<AdminDashboard />} />
-                      <Route path="activos" element={<ManageDigitalAssets />} />
-                      <Route path="activos-defi" element={<ManageDeFiAssets />} />
-                      <Route path="fondos" element={<ManageTokenizedVaults />} />
-                      <Route path="fondos/:vaultId" element={<VaultDetail />} />
-                      <Route path="stos" element={<ManageSTOs />} />
-                      <Route path="blog" element={<BlogManager />} />
-                      <Route path="blog/nuevo" element={<BlogEditor />} />
-                      <Route path="blog/editar/:postId" element={<BlogEditor />} />
-                      <Route path="usuarios" element={<UsersManager />} />
-                      <Route path="mensajes" element={<ManageContactSubmissions />} />
-                      <Route path="empleos" element={<ManageJobs />} />
-                      <Route path="equipo" element={<ManageTeam />} />
-                      <Route path="socios" element={<ManageEcosystemPartners />} />
-                      <Route path="configuracion" element={<PlatformSettings />} />
-                      <Route path="politicas" element={<ManagePolicies />} />
-                      <Route path="reportes" element={<ManageReports />} />
-                    </Routes>
-                  </Administration>
+                  <Administration />
                 </ProtectedRoute>
               } />
             </Routes>

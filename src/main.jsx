@@ -5,29 +5,41 @@ import App from '@/App';
 import '@/index.css';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/contexts/SupabaseAuthContext';
-import { SettingsProvider } from '@/contexts/SettingsContext';
 import { AlchemyProvider } from '@/contexts/AlchemyContext';
 import { WalletProvider } from '@/contexts/WalletContext';
 import { MarketsProvider } from '@/contexts/MarketsContext';
 import { SwapProvider } from '@/contexts/SwapContext';
+import { EducationProvider } from '@/contexts/EducationContext';
+import { SettingsProvider } from '@/contexts/SettingsContext';
+import { Loader2 } from 'lucide-react';
+
+const AppLoader = () => (
+  <div className="flex h-screen w-full items-center justify-center bg-background">
+    <Loader2 className="h-16 w-16 animate-spin text-primary" />
+  </div>
+);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-      <BrowserRouter>
+    <BrowserRouter>
+      <React.Suspense fallback={<AppLoader />}>
         <AuthProvider>
           <SettingsProvider>
             <AlchemyProvider>
               <WalletProvider>
                 <MarketsProvider>
                   <SwapProvider>
-                    <App />
+                    <EducationProvider>
+                      <App />
+                    </EducationProvider>
                   </SwapProvider>
                 </MarketsProvider>
               </WalletProvider>
             </AlchemyProvider>
-            <Toaster />
           </SettingsProvider>
+          <Toaster />
         </AuthProvider>
-      </BrowserRouter>
+      </React.Suspense>
+    </BrowserRouter>
   </React.StrictMode>
 );

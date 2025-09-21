@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Package, Landmark, FileText, Rss, Users, Briefcase, Settings, Network, Shield, MessageSquare as MessageSquareWarning, Zap, Mail } from 'lucide-react';
+import { LayoutDashboard, Package, Landmark, FileText, Rss, Users, Briefcase, Network, Shield, MessageSquare as MessageSquareWarning, Zap, Mail, GraduationCap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Logo from '@/components/Logo';
 
@@ -12,6 +12,7 @@ const AdminSidebar = () => {
         { to: 'fondos', icon: Landmark, text: 'Fondos Tokenizados' },
         { to: 'stos', icon: FileText, text: 'STOs' },
         { to: 'blog', icon: Rss, text: 'Blog' },
+        { to: 'educacion', icon: GraduationCap, text: 'Educación' },
         { to: 'usuarios', icon: Users, text: 'Usuarios' },
         { to: 'mensajes', icon: Mail, text: 'Mensajes de Contacto' },
         { to: 'empleos', icon: Briefcase, text: 'Empleos' },
@@ -19,7 +20,6 @@ const AdminSidebar = () => {
         { to: 'socios', icon: Network, text: 'Socios del Ecosistema' },
         { to: 'politicas', icon: Shield, text: 'Políticas' },
         { to: 'reportes', icon: MessageSquareWarning, text: 'Denuncias y Reclamos' },
-        { to: 'configuracion', icon: Settings, text: 'Configuración' },
     ];
 
     return (
