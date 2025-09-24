@@ -18,12 +18,6 @@ const BusinessModel = () => {
       description: 'Digitalizamos fondos tradicionales para hacerlos más líquidos, accesibles y eficientes para el mercado global.',
       items: ['Bonos', 'Renta Fija', 'Fondos de Inversión']
     },
-    { 
-      icon: Building, 
-      title: 'Tokenización de Mundo Real (RWA)', 
-      description: 'Convertimos activos físicos en tokens digitales, desbloqueando su valor y permitiendo la inversión fraccionada.',
-      items: ['Bienes Raíces', 'Infraestructura']
-    },
   ];
 
   const valuePropositions = [
@@ -71,13 +65,13 @@ const BusinessModel = () => {
               transition={{ duration: 0.8 }}
             >
               <div className="inline-block px-4 py-2 glass-effect rounded-full text-sm font-medium text-primary mb-8">
-                ⚙️ TradFi + DeFi + RWA = El Futuro
+                ⚙️ TradFi + DeFi = El Futuro
               </div>
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
                 <span className="gradient-text">Nuestro Modelo de Negocio</span>
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Construimos puentes entre las finanzas tradicionales, el universo DeFi y los activos del mundo real para desbloquear un valor sin precedentes.
+                Construimos puentes entre las finanzas tradicionales y el universo DeFi para desbloquear un valor sin precedentes.
               </p>
             </motion.div>
           </div>
@@ -87,9 +81,9 @@ const BusinessModel = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-5xl font-bold mb-4">Nuestros Pilares de Inversión</h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">Nos especializamos en tres áreas clave para ofrecer un abanico completo de oportunidades de inversión digital.</p>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">Nos especializamos en dos áreas clave para ofrecer un abanico completo de oportunidades de inversión digital.</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {businessPillars.map((pillar, index) => (
                 <PillarCard {...pillar} index={index} />
               ))}
@@ -136,9 +130,9 @@ const BusinessModel = () => {
                         transition={{ duration: 0.8 }}
                     >
                         <h2 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight">
-                            <span className="gradient-text">La Revolución de los Activos del Mundo Real (RWA)</span>
+                            <span className="gradient-text">La Revolución de los Activos</span>
                         </h2>
-                        <p className="text-lg text-muted-foreground leading-relaxed mb-4">Al tokenizar activos del mundo real (Real World Assets), no solo los digitalizamos; los hacemos más inteligentes, accesibles y eficientes.</p>
+                        <p className="text-lg text-muted-foreground leading-relaxed mb-4">Al tokenizar activos, no solo los digitalizamos; los hacemos más inteligentes, accesibles y eficientes.</p>
                         <ul className="space-y-3 text-muted-foreground">
                             <li className="flex items-start"><ArrowRight className="w-5 h-5 text-primary mr-3 mt-1 flex-shrink-0" /><span><strong>Acceso Democrático:</strong> Inversión fraccionada desde montos bajos.</span></li>
                             <li className="flex items-start"><ArrowRight className="w-5 h-5 text-primary mr-3 mt-1 flex-shrink-0" /><span><strong>Liquidez Global:</strong> Mercados secundarios que operan 24/7 sin fronteras.</span></li>

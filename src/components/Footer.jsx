@@ -29,7 +29,6 @@ const Footer = () => {
         { name: 'Contacto', path: '/nosotros/contacto' },
         { name: 'Documentación', path: 'https://docs.fractionfinance.cl/', external: true },
         { name: 'Trabaja con Nosotros', path: '/nosotros/empleos' },
-        { name: 'Mapa del Sitio', path: '/mapa-del-sitio' },
       ],
     },
     {
