@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -7,8 +8,7 @@ import ConnectWalletPrompt from '@/components/ConnectWalletPrompt';
 import Swap from '@/pages/markets/Swap';
 import DeFi from '@/pages/markets/DeFi';
 import Funds from '@/pages/markets/Funds';
-import RealWorld from '@/pages/markets/RealWorld';
-import { RefreshCw, Zap, Shield, Gem } from 'lucide-react';
+import { RefreshCw, Zap, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Markets = () => {
@@ -22,24 +22,8 @@ const Markets = () => {
 
   const tabs = [
     { value: 'swap', label: 'Swap', icon: RefreshCw, component: <Swap /> },
-    {
-      value: 'defi',
-      label: 'DeFi',
-      icon: Zap,
-      component: <DeFi category="Todos" />,
-    },
-    {
-      value: 'funds',
-      label: 'Fondos',
-      icon: Shield,
-      component: <Funds category="Todos" />,
-    },
-    {
-      value: 'rwa',
-      label: 'Mundo Real',
-      icon: Gem,
-      component: <RealWorld category="Todos" />,
-    },
+    { value: 'defi', label: 'DeFi', icon: Zap, component: <DeFi category="Todos" /> },
+    { value: 'funds', label: 'Fondos', icon: Shield, component: <Funds category="Todos" /> },
   ];
 
   const ActiveComponent = tabs.find(tab => tab.value === activeTab)?.component;
@@ -61,14 +45,12 @@ const Markets = () => {
             <h1>
               <span className="gradient-text text-4xl md:text-5xl font-bold mb-2">Invierte en Activos Tokenizados</span>
             </h1>
-            <p className="text-lg text-gray-600">
-              En Fraction Finance unimos las finanzas tradicionales, DeFi y activos del mundo real, facilitando en inversiones digitales seguras y al alcance de todos.
-            </p>
+            <p className="text-lg text-gray-600">En Fraction Finance unimos las finanzas tradicionales y DeFi, facilitando en inversiones digitales seguras y al alcance de todos.</p>
           </motion.div>
 
           <AnimatePresence mode="wait">
             {!user ? (
-              <motion.div 
+              <motion.div
                 key="auth-prompt"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -79,11 +61,21 @@ const Markets = () => {
                 <p className="text-gray-600 mb-6">Por favor, inicia sesión para acceder a los mercados.</p>
               </motion.div>
             ) : !isConnected ? (
-              <motion.div key="wallet-prompt" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <motion.div
+                key="wallet-prompt"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
                 <ConnectWalletPrompt />
               </motion.div>
             ) : (
-              <motion.div key="market-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col md:flex-row gap-8">
+              <motion.div
+                key="market-content"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex flex-col md:flex-row gap-8"
+              >
                 <aside className="w-full md:w-64">
                   <nav className="flex flex-col gap-2">
                     {tabs.map(({ value, label, icon: Icon }) => (
