@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Menu, X, User as UserIcon, LogOut, Info, LayoutDashboard, Wallet, Network, Package, Users, Target, Rss, MailQuestion, Briefcase, BookOpen, GraduationCap, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -16,7 +17,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuPortal,
   DropdownMenuTrigger,
-  DropdownMenuSubTrigger, // Added this import
+  DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
   NavigationMenu,
@@ -192,6 +193,7 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const { user, loading } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -274,6 +276,7 @@ const Navbar = () => {
             </div>
             
             <div className="hidden md:flex flex-1 justify-end items-center space-x-4">
+              <Button onClick={() => navigate('/lista-de-espera')} className="pulse-glow">Lista de Espera</Button>
               {!loading && (user ? <UserMenu /> : <AuthModal />)}
             </div>
   
@@ -316,11 +319,12 @@ const Navbar = () => {
                   </Link>
               </div>
             ))}
-            {!user && (
-              <div className="pt-4 border-t border-border">
+            <div className="pt-4 border-t border-border">
+              <Button onClick={() => { navigate('/lista-de-espera'); setIsOpen(false); }} className="w-full mb-2 pulse-glow">Lista de Espera</Button>
+              {!user && (
                 <AuthModal />
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </motion.div>
       )}

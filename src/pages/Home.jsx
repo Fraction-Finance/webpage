@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { Shield, Zap, Globe, TrendingUp, Users, Lock, Loader2 } from 'lucide-react';
+import { Shield, Zap, Globe, TrendingUp, Users, Lock, Loader2, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSettings } from '@/contexts/SettingsContext';
 const Home = () => {
@@ -39,9 +39,11 @@ const Home = () => {
   const showAssetTypesSection = !loading && (settings.show_home_defi || settings.show_home_tradfi || settings.show_home_real_assets);
   const AssetCard = ({
     content,
-    delay
+    delay,
+    icon: Icon
   }) => {
     if (!content) return null;
+    const title = content.title === 'DeFi' ? 'Mercado DeFi' : content.title === 'Fondos' ? 'Fondos Tokenizados' : content.title;
     return <motion.div initial={{
       opacity: 0,
       y: 20
@@ -51,8 +53,14 @@ const Home = () => {
     }} transition={{
       duration: 0.5,
       delay
-    }} className="glass-effect p-6 rounded-2xl shadow-lg hover:shadow-primary/10 transition-all duration-300 ease-in-out transform hover:-translate-y-1 flex items-center justify-center">
-        <h3 className="text-xl font-bold text-foreground text-center">{content.title === 'DeFi' ? 'Mercado DeFi' : content.title === 'Fondos' ? 'Fondos Tokenizados' : content.title}</h3>
+    }} className="group relative p-6 rounded-2xl shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden border border-transparent hover:border-primary/30 bg-card">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div className="relative flex flex-col items-center justify-center text-center h-full">
+          <div className="p-3 rounded-xl bg-primary/10 w-fit mb-4 group-hover:scale-110 transition-transform duration-300">
+            <Icon className="h-8 w-8 text-primary" />
+          </div>
+          <h3 className="text-xl font-bold text-foreground">{title}</h3>
+        </div>
       </motion.div>;
   };
   return <>
@@ -117,9 +125,9 @@ const Home = () => {
                   </h2>
                   <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed mb-8">En Fraction Finance unimos las finanzas tradicionales y DeFi, facilitando en inversiones digitales seguras y al alcance de todos.</p>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                    {settings.show_home_defi && <AssetCard content={homeContent.defi} delay={0.2} />}
-                    {settings.show_home_tradfi && <AssetCard content={homeContent.tradfi} delay={0.4} />}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8">
+                    {settings.show_home_defi && <AssetCard content={homeContent.defi} delay={0.2} icon={TrendingUp} />}
+                    {settings.show_home_tradfi && <AssetCard content={homeContent.tradfi} delay={0.4} icon={Package} />}
                   </div>
 
                   <div className="glass-effect p-6 rounded-2xl">

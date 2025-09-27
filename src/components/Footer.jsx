@@ -1,11 +1,13 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '@/components/Logo';
-import { Facebook, Twitter, Linkedin, Instagram, Youtube, Mail, Phone } from 'lucide-react';
+import { Facebook, Twitter, Linkedin, Instagram, Youtube, Mail, Shield } from 'lucide-react';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { profile } = useAuth();
+  const isAdmin = profile?.role === 'admin';
 
   const socialLinks = [
     { name: 'Facebook', icon: Facebook, href: 'https://facebook.com' },
@@ -33,15 +35,13 @@ const Footer = () => {
   ];
 
   const contactInfo = [
-    { icon: Mail, text: 'info@fractionfinance.cl', href: 'mailto:info@fractionfinance.cl' },
-    { icon: Phone, text: '+56 2 2XXX XXXX', href: 'tel:+5622XXXXXXX' },
+    { icon: Mail, text: 'contacto@fractionfinance.cl', href: 'mailto:contacto@fractionfinance.cl' },
   ];
 
   return (
     <footer className="bg-gradient-to-r from-gray-900 to-black text-gray-300 py-12 border-t border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Columna 1: Logo y Redes Sociales */}
           <div className="flex flex-col items-center md:items-start">
             <Link to="/" className="mb-4">
               <Logo className="h-16 w-auto" />
@@ -65,7 +65,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Columna 2: Empresa */}
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">Empresa</h3>
             <ul className="space-y-2">
@@ -79,7 +78,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Columna 3: Legal */}
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">Legal</h3>
             <ul className="space-y-2">
@@ -93,7 +91,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Columna 4: Contacto */}
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">Contacto</h3>
             <ul className="space-y-2">
@@ -106,6 +103,19 @@ const Footer = () => {
                 </li>
               ))}
             </ul>
+             {isAdmin && (
+              <div className="mt-4">
+                <h3 className="text-lg font-semibold text-white mb-2">Administración</h3>
+                <ul className="space-y-2">
+                  <li>
+                    <Link to="/administracion" className="flex items-center hover:text-primary transition-colors text-sm">
+                      <Shield className="h-5 w-5 mr-2 text-gray-400" />
+                      Panel de Administración
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
         </div>
 

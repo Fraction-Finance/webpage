@@ -1,3 +1,4 @@
+
 import React, { Suspense, lazy, memo } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -32,6 +33,7 @@ const Docs = lazy(() => import('@/pages/Docs'));
 const Markets = lazy(() => import('@/pages/Markets'));
 const FinancialEducation = lazy(() => import('@/pages/FinancialEducation'));
 const ArticleDetail = lazy(() => import('@/pages/ArticleDetail'));
+const Waitlist = lazy(() => import('@/pages/Waitlist'));
 
 const WalletProtectedRoute = ({ children }) => {
   const { isConnected } = useWallet();
@@ -65,6 +67,7 @@ const MainLayout = memo(() => {
           <Route path="/nosotros/contacto" element={<Contact />} />
           <Route path="/nosotros/empleos" element={<Careers />} />
           <Route path="/tokenizar" element={<Tokenize />} />
+          <Route path="/lista-de-espera" element={<Waitlist />} />
           <Route path="/portafolio" element={<WalletProtectedRoute><Investment /></WalletProtectedRoute>} />
           <Route path="/perfil/*" element={<ProtectedRoute><ProfileLayout /></ProtectedRoute>} />
           <Route path="/legal/politica-de-privacidad" element={<PrivacyPolicy />} />

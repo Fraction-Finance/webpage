@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Package, Landmark, FileText, Rss, Users, Briefcase, Network, Shield, MessageSquare as MessageSquareWarning, Zap, Mail, GraduationCap } from 'lucide-react';
+import { LayoutDashboard, Package, Landmark, FileText, Rss, Users, Briefcase, Network, Shield, MessageSquare as MessageSquareWarning, Zap, Mail, GraduationCap, List } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Logo from '@/components/Logo';
 
@@ -14,6 +15,7 @@ const AdminSidebar = () => {
         { to: 'blog', icon: Rss, text: 'Blog' },
         { to: 'educacion', icon: GraduationCap, text: 'Educación' },
         { to: 'usuarios', icon: Users, text: 'Usuarios' },
+        { to: 'lista-espera', icon: List, text: 'Lista de Espera' },
         { to: 'mensajes', icon: Mail, text: 'Mensajes de Contacto' },
         { to: 'empleos', icon: Briefcase, text: 'Empleos' },
         { to: 'equipo', icon: Users, text: 'Equipo' },

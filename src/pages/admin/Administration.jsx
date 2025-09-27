@@ -1,3 +1,4 @@
+
 import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from '@/pages/admin/components/AdminLayout';
@@ -21,6 +22,7 @@ const ManageTeam = lazy(() => import('@/pages/admin/components/ManageTeam'));
 const ManageContactSubmissions = lazy(() => import('@/pages/admin/components/ManageContactSubmissions'));
 const ManageEducation = lazy(() => import('@/pages/admin/components/ManageEducation'));
 const EducationEditor = lazy(() => import('@/pages/admin/components/EducationEditor'));
+const ManageWaitlist = lazy(() => import('@/pages/admin/components/ManageWaitlist'));
 
 const Administration = () => {
   return (
@@ -41,6 +43,7 @@ const Administration = () => {
           <Route path="educacion/nuevo" element={<EducationEditor />} />
           <Route path="educacion/editar/:articleId" element={<EducationEditor />} />
           <Route path="usuarios" element={<UsersManager />} />
+          <Route path="lista-espera" element={<ManageWaitlist />} />
           <Route path="mensajes" element={<ManageContactSubmissions />} />
           <Route path="empleos" element={<ManageJobs />} />
           <Route path="equipo" element={<ManageTeam />} />
