@@ -65,8 +65,8 @@ const Home = () => {
   };
   return <>
       <Helmet>
-        <title>Fraction Finance - Revolucionaria Plataforma de Tokenización de Activos Digitales</title>
-        <meta name="description" content="Transforma activos tradicionales en tokens basados en blockchain con seguridad de grado institucional. Accede a mercados de liquidez globales y desbloquea el futuro de los mercados de capitales." />
+        <title>Fraction Finance - Redefiniendo la manera de invertir.</title>
+        <meta name="description" content="En Fraction Finance facilitamos las inversiones digitales." />
       </Helmet>
 
       <div className="overflow-x-hidden">
@@ -93,15 +93,15 @@ const Home = () => {
               delay: 0.2,
               type: 'spring',
               stiffness: 200
-            }} className="inline-block px-4 py-2 glass-effect rounded-full text-sm font-medium text-primary">
-                🚀 El Futuro de la Tokenización de Activos está Aquí
+            }} className="inline-block px-4 py-2 glass-effect rounded-full text-sm font-medium text-primary mt-16">
+                🚀 El Futuro de las inversiones está Aquí
               </motion.div>
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter mt-4">
-                <span className="gradient-text">Tokeniza Activos.</span>
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter mt-20">
+                <span className="gradient-text">Redefiniendo la manera de invertir.</span>
                 <br />
-                <span className="text-foreground">Desbloquea Liquidez.</span>
+                <span className="text-foreground"> </span>
               </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">"Tu acceso a inversiones DeFi y fondos tokenizados."</p>
+              <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">"Facilitamos las inversiones en DeFi y fondos tokenizados."</p>
             </motion.div>
           </div>
         </section>
@@ -121,7 +121,7 @@ const Home = () => {
               duration: 0.8
             }}>
                   <h2 className="text-3xl md:text-5xl font-bold mb-6 mt-12 tracking-tight">
-                    <span className="gradient-text">Invierte en Activos Tokenizados</span>
+                    <span className="gradient-text">Invierte en Activos Digitales</span>
                   </h2>
                   <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed mb-8">En Fraction Finance unimos las finanzas tradicionales y DeFi, facilitando en inversiones digitales seguras y al alcance de todos.</p>
                   
@@ -132,7 +132,7 @@ const Home = () => {
 
                   <div className="glass-effect p-6 rounded-2xl">
                     <h3 className="text-xl font-bold text-foreground mb-2">📌 Nuestra Ventaja</h3>
-                    <p className="text-muted-foreground leading-relaxed">Cada producto tokenizado de Fraction Finance está diseñado para ser fraccionable, accesible y cumplir con los marcos regulatorios, conectando el capital tradicional con las oportunidades digitales.</p>
+                    <p className="text-muted-foreground leading-relaxed">Transformamos fondos tradicionales en activos tokenizados, brindando liquidez y acceso al mercado DeFi.</p>
                   </div>
                 </motion.div>
                 <motion.div initial={{
@@ -169,7 +169,7 @@ const Home = () => {
               <h2 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight">
                 <span className="gradient-text">¿Por qué elegir Fraction Finance?</span>
               </h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">Construido para inversores individuales e institucionales, así como para gestores de activos, que exigen altos estándares de seguridad, cumplimiento y rendimiento.</p>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">Construido para inversores individuales e institucionales, que exigen estándares de seguridad, cumplimiento y rendimiento.</p>
             </motion.div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {features.map((feature, index) => <motion.div key={index} initial={{
@@ -211,10 +211,8 @@ const Home = () => {
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-primary/5 rounded-full blur-2xl"></div>
               <div className="relative z-10 text-center space-y-8">
                 <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Tokeniza con Fraction</h2>
-                <p className="text-xl text-muted-foreground max-w-2xl mx-auto whitespace-pre-line">La forma más simple y segura de convertir activos y fondos en tokens en la blockchain.
-Tokenización y gestión en cadena con total transparencia.
-Datos en tiempo real e informes automatizados.
-Emite activos, registra transacciones y gestiona tu cartera en una única plataforma.</p>
+                <p className="text-xl text-muted-foreground max-w-2xl mx-auto whitespace-pre-line">La forma más simple y segura de convertir activos y fondos en tokens en la blockchain.</p>
+                <p className="text-xl text-muted-foreground max-w-2xl mx-auto whitespace-pre-line">Emite activos, registra transacciones y gestiona tu cartera en una única plataforma.</p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                   <Link to="/nosotros/contacto">
                     <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-full font-semibold text-lg pulse-glow">
