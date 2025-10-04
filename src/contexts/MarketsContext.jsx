@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/lib/customSupabaseClient';
-import { SWAP_TOKENS } from '@/lib/constants';
 
 const MarketsContext = createContext();
 
@@ -9,7 +8,6 @@ export const useMarkets = () => useContext(MarketsContext);
 export const MarketsProvider = ({ children }) => {
   const [stos, setStos] = useState([]);
   const [defiAssets, setDefiAssets] = useState([]);
-  const [swapTokens] = useState(SWAP_TOKENS);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -42,7 +40,6 @@ export const MarketsProvider = ({ children }) => {
   const value = {
     stos,
     defiAssets,
-    swapTokens,
     loading,
     error,
   };

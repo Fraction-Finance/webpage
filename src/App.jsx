@@ -1,4 +1,3 @@
-
 import React, { Suspense, lazy, memo } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -9,6 +8,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import { Loader2 } from 'lucide-react';
 import DevelopmentNotice from '@/components/DevelopmentNotice';
 import { useWallet } from '@/contexts/WalletContext';
+import { MarketsProvider } from '@/contexts/MarketsContext';
 
 const Home = lazy(() => import('@/pages/Home'));
 const Ecosystem = lazy(() => import('@/pages/Ecosystem'));
@@ -43,6 +43,15 @@ const WalletProtectedRoute = ({ children }) => {
   return children;
 };
 
+const MarketsLayout = () => (
+  <MarketsProvider>
+    <Routes>
+      <Route index element={<Markets />} />
+      <Route path=":stoId" element={<InvestDetail />} />
+    </Routes>
+  </MarketsProvider>
+);
+
 const MainLayout = memo(() => {
   const location = useLocation();
   const isMarketsPage = location.pathname.startsWith('/mercados');
@@ -52,32 +61,33 @@ const MainLayout = memo(() => {
     <>
       <Navbar />
       <main className="flex-grow">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/auth/callback" element={<AuthCallback />} />
-          <Route path="/mercados" element={<ProtectedRoute><Markets /></ProtectedRoute>} />
-          <Route path="/mercados/:stoId" element={<ProtectedRoute><InvestDetail /></ProtectedRoute>} />
-          <Route path="/ecosistema" element={<Ecosystem />} />
-          <Route path="/nosotros" element={<About />} />
-          <Route path="/nosotros/modelo-de-negocio" element={<BusinessModel />} />
-          <Route path="/nosotros/educacion-financiera" element={<FinancialEducation />} />
-          <Route path="/nosotros/educacion-financiera/:slug" element={<ArticleDetail />} />
-          <Route path="/nosotros/blog" element={<Blog />} />
-          <Route path="/nosotros/blog/:slug" element={<BlogPost />} />
-          <Route path="/nosotros/contacto" element={<Contact />} />
-          <Route path="/nosotros/empleos" element={<Careers />} />
-          <Route path="/tokenizar" element={<Tokenize />} />
-          <Route path="/lista-de-espera" element={<Waitlist />} />
-          <Route path="/portafolio" element={<WalletProtectedRoute><Investment /></WalletProtectedRoute>} />
-          <Route path="/perfil/*" element={<ProtectedRoute><ProfileLayout /></ProtectedRoute>} />
-          <Route path="/legal/politica-de-privacidad" element={<PrivacyPolicy />} />
-          <Route path="/legal/terminos-de-servicio" element={<TermsOfService />} />
-          <Route path="/legal/politica-de-cookies" element={<CookiePolicy />} />
-          <Route path="/legal/canal-de-denuncias" element={<WhistleblowerChannel />} />
-          <Route path="/legal/canal-de-reclamos" element={<ComplaintChannel />} />
-          <Route path="/documentacion" element={<Docs />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <Suspense fallback={<div className="flex h-screen w-full items-center justify-center"><Loader2 className="h-16 w-16 animate-spin text-primary" /></div>}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
+            <Route path="/mercados/*" element={<ProtectedRoute><MarketsLayout /></ProtectedRoute>} />
+            <Route path="/ecosistema" element={<Ecosystem />} />
+            <Route path="/nosotros" element={<About />} />
+            <Route path="/nosotros/modelo-de-negocio" element={<BusinessModel />} />
+            <Route path="/nosotros/educacion-financiera" element={<FinancialEducation />} />
+            <Route path="/nosotros/educacion-financiera/:slug" element={<ArticleDetail />} />
+            <Route path="/nosotros/blog" element={<Blog />} />
+            <Route path="/nosotros/blog/:slug" element={<BlogPost />} />
+            <Route path="/nosotros/contacto" element={<Contact />} />
+            <Route path="/nosotros/empleos" element={<Careers />} />
+            <Route path="/tokenizar" element={<Tokenize />} />
+            <Route path="/lista-de-espera" element={<Waitlist />} />
+            <Route path="/portafolio" element={<WalletProtectedRoute><Investment /></WalletProtectedRoute>} />
+            <Route path="/perfil/*" element={<ProtectedRoute><ProfileLayout /></ProtectedRoute>} />
+            <Route path="/legal/politica-de-privacidad" element={<PrivacyPolicy />} />
+            <Route path="/legal/terminos-de-servicio" element={<TermsOfService />} />
+            <Route path="/legal/politica-de-cookies" element={<CookiePolicy />} />
+            <Route path="/legal/canal-de-denuncias" element={<WhistleblowerChannel />} />
+            <Route path="/legal/canal-de-reclamos" element={<ComplaintChannel />} />
+            <Route path="/documentacion" element={<Docs />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </main>
       {!isMarketsPage && !isInvestmentPage && <Footer />}
     </>

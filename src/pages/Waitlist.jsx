@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
@@ -40,8 +39,8 @@ const Waitlist = () => {
   return (
     <>
       <Helmet>
-        <title>Lista de Espera - Fraction Finance</title>
-        <meta name="description" content="Únete a la lista de espera de Fraction Finance para ser el primero en saber sobre nuestro lanzamiento y acceder a oportunidades de inversión exclusivas." />
+        <title>Lista de Acceso Anticipado - Fraction Finance</title>
+        <meta name="description" content="Únete a la lista de acceso anticipado de Fraction Finance para ser el primero en saber sobre nuestro lanzamiento y acceder a oportunidades de inversión exclusivas." />
       </Helmet>
       <div className="container mx-auto px-4 py-24 sm:py-32 flex items-center justify-center min-h-screen">
         <motion.div
@@ -58,11 +57,11 @@ const Waitlist = () => {
                 <Rocket className="mx-auto h-12 w-12 text-primary" />
               )}
               <CardTitle className="text-3xl font-bold mt-4">
-                {submitted ? "¡Estás en la lista!" : "Únete a la Lista de Espera"}
+                {submitted ? "¡Estás en la Lista de Acceso Anticipado!" : "Lista de Acceso Anticipado"}
               </CardTitle>
               <CardDescription>
                 {submitted 
-                  ? "Gracias por tu interés. Te notificaremos tan pronto como lancemos la plataforma. ¡Prepárate para revolucionar tus inversiones!"
+                  ? "Gracias por tu interés. Te notificaremos tan pronto como lancemos la plataforma. ¡Prepárate para revolucionar tus inversiones con acceso anticipado!"
                   : "Sé el primero en enterarte de nuestro lanzamiento y obtén acceso anticipado a oportunidades de inversión únicas. ¡El futuro de las finanzas te espera!"
                 }
               </CardDescription>
@@ -101,7 +100,7 @@ const Waitlist = () => {
                         Enviando...
                       </>
                     ) : (
-                      "¡Quiero ser el primero!"
+                      "¡Unirme a la Lista de Acceso Anticipado!"
                     )}
                   </Button>
                 </form>

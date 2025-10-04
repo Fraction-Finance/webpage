@@ -1,4 +1,3 @@
-
 import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from '@/pages/admin/components/AdminLayout';

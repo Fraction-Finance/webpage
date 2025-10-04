@@ -11,7 +11,7 @@ const AuthCallback = () => {
   useEffect(() => {
     if (session && !hasNavigated.current) {
       hasNavigated.current = true;
-      navigate('/plataforma', { replace: true });
+      navigate('/mercados', { replace: true });
     }
   }, [session, navigate]);
 

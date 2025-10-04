@@ -1,27 +1,25 @@
-
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWallet } from '@/contexts/WalletContext';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import ConnectWalletPrompt from '@/components/ConnectWalletPrompt';
-import Swap from '@/pages/markets/Swap';
-import DeFi from '@/pages/markets/DeFi';
-import Funds from '@/pages/markets/Funds';
-import { RefreshCw, Zap, Shield } from 'lucide-react';
+import { Zap, Shield, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+const DeFi = lazy(() => import('@/pages/markets/DeFi'));
+const Funds = lazy(() => import('@/pages/markets/Funds'));
 
 const Markets = () => {
   const { isConnected } = useWallet();
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState('swap');
+  const [activeTab, setActiveTab] = useState('defi');
 
   const handleTabClick = (tabValue) => {
     setActiveTab(tabValue);
   };
 
   const tabs = [
-    { value: 'swap', label: 'Swap', icon: RefreshCw, component: <Swap /> },
     { value: 'defi', label: 'DeFi', icon: Zap, component: <DeFi category="Todos" /> },
     { value: 'funds', label: 'Fondos', icon: Shield, component: <Funds category="Todos" /> },
   ];
@@ -104,7 +102,9 @@ const Markets = () => {
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.3 }}
                     >
-                      {ActiveComponent}
+                      <Suspense fallback={<div className="flex justify-center items-center h-64"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+                        {ActiveComponent}
+                      </Suspense>
                     </motion.div>
                   </AnimatePresence>
                 </div>

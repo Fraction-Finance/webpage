@@ -31,18 +31,41 @@ import React, { createContext, useContext, useEffect, useState, useCallback, use
         }
       }, []);
     
+      const signOut = useCallback(async () => {
+        const { error } = await supabase.auth.signOut();
+    
+        if (error) {
+          toast({
+            variant: "destructive",
+            title: "Falló el cierre de sesión",
+            description: error.message || "Algo salió mal",
+          });
+        }
+    
+        return { error };
+      }, [toast]);
+
       useEffect(() => {
         setLoading(true);
         const getInitialSession = async () => {
-          const { data: { session } } = await supabase.auth.getSession();
-          setSession(session);
-          const currentUser = session?.user ?? null;
-          setUser(currentUser);
-          if (currentUser) {
-            const userProfile = await fetchProfile(currentUser.id);
-            setProfile(userProfile);
+          try {
+            const { data: { session }, error } = await supabase.auth.getSession();
+            if (error) throw error;
+            setSession(session);
+            const currentUser = session?.user ?? null;
+            setUser(currentUser);
+            if (currentUser) {
+              const userProfile = await fetchProfile(currentUser.id);
+              setProfile(userProfile);
+            }
+          } catch (error) {
+            console.error("Error getting initial session:", error);
+            if (error.message.includes("Invalid Refresh Token")) {
+              await signOut();
+            }
+          } finally {
+            setLoading(false);
           }
-          setLoading(false);
         };
     
         getInitialSession();
@@ -72,11 +95,14 @@ import React, { createContext, useContext, useEffect, useState, useCallback, use
                 description: 'Has cerrado sesión correctamente.',
               });
             }
+            if (event === 'TOKEN_REFRESHED' && !session) {
+              await signOut();
+            }
           }
         );
     
         return () => subscription.unsubscribe();
-      }, [fetchProfile, toast]);
+      }, [fetchProfile, toast, signOut]);
     
       const refreshProfile = useCallback(async () => {
         if (user) {
@@ -92,6 +118,7 @@ import React, { createContext, useContext, useEffect, useState, useCallback, use
           options: {
             data: {
               full_name: fullName,
+              role: 'user'
             }
           }
         });
@@ -132,6 +159,13 @@ import React, { createContext, useContext, useEffect, useState, useCallback, use
       const signInWithGoogle = useCallback(async () => {
         const { error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
+          options: {
+            redirectTo: "https://www.fractionfinance.cl/auth/callback",
+            queryParams: {
+              access_type: 'offline',
+              prompt: 'consent',
+            },
+          },
         });
     
         if (error) {
@@ -144,20 +178,6 @@ import React, { createContext, useContext, useEffect, useState, useCallback, use
         return { error };
       }, [toast]);
     
-      const signOut = useCallback(async () => {
-        const { error } = await supabase.auth.signOut();
-    
-        if (error) {
-          toast({
-            variant: "destructive",
-            title: "Falló el cierre de sesión",
-            description: error.message || "Algo salió mal",
-          });
-        }
-    
-        return { error };
-      }, [toast]);
-    
       const value = useMemo(() => ({
         user,
         profile,
@@ -165,7 +185,7 @@ import React, { createContext, useContext, useEffect, useState, useCallback, use
         loading,
         signUp,
         signIn,
-    signOut,
+        signOut,
         signInWithGoogle,
         refreshProfile,
       }), [user, profile, session, loading, signUp, signIn, signOut, signInWithGoogle, refreshProfile]);

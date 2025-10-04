@@ -7,8 +7,6 @@ import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/contexts/SupabaseAuthContext';
 import { AlchemyProvider } from '@/contexts/AlchemyContext';
 import { WalletProvider } from '@/contexts/WalletContext';
-import { MarketsProvider } from '@/contexts/MarketsContext';
-import { SwapProvider } from '@/contexts/SwapContext';
 import { EducationProvider } from '@/contexts/EducationContext';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 import { Loader2 } from 'lucide-react';
@@ -27,13 +25,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <SettingsProvider>
             <AlchemyProvider>
               <WalletProvider>
-                <MarketsProvider>
-                  <SwapProvider>
-                    <EducationProvider>
-                      <App />
-                    </EducationProvider>
-                  </SwapProvider>
-                </MarketsProvider>
+                <EducationProvider>
+                  <App />
+                </EducationProvider>
               </WalletProvider>
             </AlchemyProvider>
           </SettingsProvider>
