@@ -34,7 +34,7 @@ const DigitalAssetCard = ({ sto }) => {
       <Card className="h-full flex flex-col overflow-hidden glass-effect hover:shadow-primary/10 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border-none group">
         <CardHeader className="p-0">
           <div className="h-48 overflow-hidden relative">
-            <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt={asset.name} src="https://images.unsplash.com/photo-1683576235070-1f7685af03dd" />
+            <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt={asset.name} src="https://images.unsplash.com/photo-1636470241984-9c54a8517cf3" />
             <Badge variant="secondary" className="absolute top-3 right-3 glass-effect-light">{sto.stock_market_category || asset.category}</Badge>
           </div>
           <div className="p-6">

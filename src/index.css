@@ -1,10 +1,11 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 0 0% 98%; /* Slightly off-white */
     --foreground: 224 71.4% 4.1%;
 
     --card: 0 0% 100%;
@@ -13,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 224 71.4% 4.1%;
 
-    --primary: 225 100% 46%; /* #004eff */
+    --primary: 225 100% 46%;
     --primary-foreground: 210 20% 98%;
 
     --secondary: 220 14.3% 95.9%;
@@ -32,14 +33,14 @@
     --input: 220 13% 91%;
     --ring: 225 100% 46%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem; /* Slightly smaller radius for a sharper look */
   }
 
   .dark {
     --background: 224 71.4% 4.1%;
     --foreground: 210 20% 98%;
 
-    --card: 224 71.4% 4.1%;
+    --card: 224 71.4% 5.1%;
     --card-foreground: 210 20% 98%;
 
     --popover: 224 71.4% 4.1%;
@@ -131,6 +132,11 @@
 
   .floating-animation {
     animation: float 6s ease-in-out infinite;
+  }
+
+  .bg-grid-pattern {
+    background-image: linear-gradient(hsl(var(--foreground) / 0.03) 1px, transparent 1px), linear-gradient(to right, hsl(var(--foreground) / 0.03) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
 }
 

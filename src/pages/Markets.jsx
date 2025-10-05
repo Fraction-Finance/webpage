@@ -4,24 +4,26 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useWallet } from '@/contexts/WalletContext';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import ConnectWalletPrompt from '@/components/ConnectWalletPrompt';
-import { Zap, Shield, Loader2 } from 'lucide-react';
+import { Zap, Shield, Loader2, LayoutDashboard } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const DeFi = lazy(() => import('@/pages/markets/DeFi'));
 const Funds = lazy(() => import('@/pages/markets/Funds'));
+const PortfolioView = lazy(() => import('@/pages/markets/PortfolioView'));
 
 const Markets = () => {
   const { isConnected } = useWallet();
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState('defi');
+  const [activeTab, setActiveTab] = useState('portfolio');
 
   const handleTabClick = (tabValue) => {
     setActiveTab(tabValue);
   };
 
   const tabs = [
-    { value: 'defi', label: 'DeFi', icon: Zap, component: <DeFi category="Todos" /> },
-    { value: 'funds', label: 'Fondos', icon: Shield, component: <Funds category="Todos" /> },
+    { value: 'portfolio', label: 'Portafolio', icon: LayoutDashboard, component: <PortfolioView /> },
+    { value: 'defi', label: 'DeFi', icon: Zap, component: <DeFi /> },
+    { value: 'funds', label: 'Fondos', icon: Shield, component: <Funds /> },
   ];
 
   const ActiveComponent = tabs.find(tab => tab.value === activeTab)?.component;
@@ -32,20 +34,8 @@ const Markets = () => {
         <title>Mercados | Fraction Finance</title>
         <meta name="description" content="Explora, analiza e invierte en Activos Digitales, Activos del Mundo Real (RWA) y Activos DeFi." />
       </Helmet>
-      <div className="pt-20 bg-gray-50/50 min-h-screen">
+      <div className="pt-28 pb-12 bg-gray-50/50 min-h-screen">
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="pt-10 mb-10 text-center"
-          >
-            <h1>
-              <span className="gradient-text text-4xl md:text-5xl font-bold mb-2">Invierte en Activos Tokenizados</span>
-            </h1>
-            <p className="text-lg text-gray-600">En Fraction Finance unimos las finanzas tradicionales y DeFi, facilitando en inversiones digitales seguras y al alcance de todos.</p>
-          </motion.div>
-
           <AnimatePresence mode="wait">
             {!user ? (
               <motion.div
@@ -72,28 +62,33 @@ const Markets = () => {
                 key="market-content"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="flex flex-col md:flex-row gap-8"
               >
-                <aside className="w-full md:w-64">
-                  <nav className="flex flex-col gap-2">
-                    {tabs.map(({ value, label, icon: Icon }) => (
-                      <button
-                        key={value}
-                        onClick={() => handleTabClick(value)}
-                        className={cn(
-                          "flex items-center p-3 rounded-lg text-base font-medium transition-all w-full text-left",
-                          activeTab === value
-                            ? "bg-primary text-primary-foreground shadow-md"
-                            : "text-gray-700 hover:bg-gray-200/50"
-                        )}
-                      >
-                        <Icon className="mr-3 h-5 w-5" />
-                        {label}
-                      </button>
-                    ))}
-                  </nav>
-                </aside>
-                <div className="flex-1">
+                <div className="mb-8">
+                  <div className="flex items-center justify-start border-b border-gray-200">
+                    <nav className="-mb-px flex space-x-6" aria-label="Tabs">
+                      {tabs.map((tab) => (
+                        <button
+                          key={tab.value}
+                          onClick={() => handleTabClick(tab.value)}
+                          className={cn(
+                            'group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200',
+                            activeTab === tab.value
+                              ? 'border-primary text-primary'
+                              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                          )}
+                        >
+                          <tab.icon className={cn(
+                            'mr-2 h-5 w-5',
+                             activeTab === tab.value ? 'text-primary' : 'text-gray-400 group-hover:text-gray-500'
+                          )} aria-hidden="true" />
+                          <span>{tab.label}</span>
+                        </button>
+                      ))}
+                    </nav>
+                  </div>
+                </div>
+
+                <div className="mt-8">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeTab}

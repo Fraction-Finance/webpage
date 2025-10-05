@@ -1,74 +1,61 @@
 import React from 'react';
-    import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-    import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-    import { Button } from '@/components/ui/button';
-    import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
-    import { Link } from 'react-router-dom';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import CountUp from 'react-countup';
 
-    const HoldingsList = ({ holdings }) => {
-      if (!holdings || holdings.length === 0) {
-        return (
-          <Card className="glass-effect">
-            <CardHeader>
-              <CardTitle>Activos en Portafolio</CardTitle>
-              <CardDescription>Una descripción detallada de tus activos actuales.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center p-8">
-                <p className="text-muted-foreground">No tienes inversiones todavía.</p>
-              </div>
-            </CardContent>
-          </Card>
-        );
-      }
-
-      return (
-        <Card className="glass-effect">
-          <CardHeader>
-            <CardTitle>Activos en Portafolio</CardTitle>
-            <CardDescription>Una descripción detallada de tus activos actuales.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[300px]">Activo</TableHead>
-                  <TableHead>Cantidad</TableHead>
-                  <TableHead>Valor de Mercado</TableHead>
-                  <TableHead className="text-right">Retorno Total</TableHead>
-                  <TableHead className="text-right">Acciones</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {holdings.map((item) => (
-                  <TableRow key={item.id} className="hover:bg-gray-100/50">
-                    <TableCell>
-                      <div className="flex items-center gap-4">
-                        <img src={item.asset.asset_image_url || `https://companiesmarketcap.com/img/company-logos/64/${item.asset.symbol}.png`} alt={item.asset.name} className="h-10 w-10 rounded-full bg-gray-200" />
-                        <div>
-                          <div className="font-bold">{item.asset.name}</div>
-                          <div className="text-sm text-muted-foreground">{item.asset.symbol}</div>
-                        </div>
+const HoldingsList = ({ holdings }) => {
+  return (
+    <Card className="glass-effect border-none h-full">
+      <CardHeader>
+        <CardTitle>Mis Activos</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Activo</TableHead>
+                <TableHead className="text-right">Valor Actual</TableHead>
+                <TableHead className="text-right">Cantidad</TableHead>
+                <TableHead className="text-right">Retorno Total</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {holdings.map((holding) => (
+                <TableRow key={holding.id}>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-500">{holding.asset.symbol.charAt(0)}</div>
+                      <div>
+                        <div className="font-medium">{holding.asset.name}</div>
+                        <div className="text-sm text-muted-foreground">{holding.asset.symbol}</div>
                       </div>
-                    </TableCell>
-                    <TableCell className="font-medium">{parseFloat(item.quantity).toFixed(2)}</TableCell>
-                    <TableCell className="font-medium">${item.currentValue.toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
-                    <TableCell className={`text-right font-semibold flex items-center justify-end gap-1 ${item.totalReturn >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                       {item.totalReturn >= 0 ? <ArrowUpRight className="h-4 w-4" /> : <ArrowDownRight className="h-4 w-4" />}
-                       {item.totalReturnPercent.toFixed(2)}%
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button asChild variant="outline" size="sm">
-                        <Link to={`/mercados/${item.sto_id}`}>Operar</Link>
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      );
-    };
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    $<CountUp end={holding.currentValue} duration={1} separator="," decimals={2} />
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <CountUp end={holding.quantity} duration={1} decimals={4} />
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className={`flex items-center justify-end gap-1 ${holding.totalReturn >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {holding.totalReturn >= 0 ? <ArrowUpRight className="h-4 w-4" /> : <ArrowDownRight className="h-4 w-4" />}
+                      <span>
+                        <CountUp end={holding.totalReturnPercent} duration={1} decimals={2} suffix="%" />
+                      </span>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
 
-    export default HoldingsList;
+export default HoldingsList;

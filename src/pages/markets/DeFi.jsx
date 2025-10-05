@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useMarkets } from '@/contexts/MarketsContext';
 import { Card, CardContent } from '@/components/ui/card';
@@ -7,16 +7,24 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Loader2, ArrowRight } from 'lucide-react';
 import CountUp from 'react-countup';
+import { cn } from '@/lib/utils';
 
-const DeFi = ({ category }) => {
+const DeFi = () => {
   const { defiAssets, loading, error } = useMarkets();
+  const [activeCategory, setActiveCategory] = useState('Todos');
+
+  const categories = useMemo(() => {
+    if (!defiAssets) return [];
+    const uniqueCategories = [...new Set(defiAssets.map(asset => asset.category))];
+    return ['Todos', ...uniqueCategories];
+  }, [defiAssets]);
 
   const filteredAssets = useMemo(() => {
-    if (!category || category === 'Todos') {
+    if (activeCategory === 'Todos') {
       return defiAssets;
     }
-    return defiAssets.filter(asset => asset.category === category);
-  }, [defiAssets, category]);
+    return defiAssets.filter(asset => asset.category === activeCategory);
+  }, [defiAssets, activeCategory]);
 
   if (loading) return <div className="flex justify-center items-center h-96"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div>;
   if (error) return <div className="text-center py-20 text-red-500"><p>{error}</p></div>;
@@ -27,6 +35,21 @@ const DeFi = ({ category }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
+      <div className="mb-8">
+        <div className="flex flex-wrap gap-2">
+          {categories.map(category => (
+            <Button
+              key={category}
+              variant={activeCategory === category ? 'default' : 'outline'}
+              onClick={() => setActiveCategory(category)}
+              className="transition-all"
+            >
+              {category}
+            </Button>
+          ))}
+        </div>
+      </div>
+
       <Card className="glass-effect-light border-none">
         <CardContent className="p-0">
           <div className="overflow-x-auto">

@@ -15,7 +15,7 @@ const BusinessModel = () => {
       icon: BarChart, 
       title: 'Tokenización de Fondos', 
       description: 'Digitalizamos fondos tradicionales para hacerlos más líquidos, accesibles y eficientes para el mercado global.',
-      items: ['Bonos', 'Renta Fija', 'Fondos de Inversión']
+      items: ['Bonos', 'Deuda', 'Renta Fija', 'Fondos de Inversión']
     },
   ];
 

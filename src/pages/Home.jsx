@@ -47,36 +47,45 @@ const Home = () => {
     const title = content.title === 'DeFi' ? 'Mercado DeFi' : content.title === 'Fondos' ? 'Fondos Tokenizados' : content.title;
     return <motion.div initial={{
       opacity: 0,
-      y: 20
+      y: 50
     }} whileInView={{
       opacity: 1,
       y: 0
     }} transition={{
       duration: 0.5,
       delay
-    }} className="group relative p-6 rounded-2xl shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden border border-transparent hover:border-primary/30 bg-card">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        <div className="relative flex flex-col items-center justify-center text-center h-full">
-          <div className="p-3 rounded-xl bg-primary/10 w-fit mb-4 group-hover:scale-110 transition-transform duration-300">
-            <Icon className="h-8 w-8 text-primary" />
+    }} viewport={{
+      once: true
+    }} className="group relative rounded-2xl overflow-hidden">
+        <motion.div whileHover={{
+        scale: 1.03,
+        rotateX: 5,
+        rotateY: -5
+      }} transition={{
+        type: 'spring',
+        stiffness: 300,
+        damping: 20
+      }} className="relative p-8 h-64 flex flex-col justify-between items-start bg-card/80 backdrop-blur-sm border border-white/10 rounded-2xl shadow-2xl shadow-primary/5">
+          <div className="absolute inset-0 bg-grid-pattern opacity-5 group-hover:opacity-10 transition-opacity duration-300"></div>
+          <div className="absolute inset-0 group-hover:bg-gradient-to-br from-primary/10 to-transparent transition-all duration-500"></div>
+          
+          <div className="relative z-10">
+            <div className="p-3 rounded-xl bg-primary/10 mb-4 transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary/20">
+              {Icon && <Icon className="h-8 w-8 text-primary transition-transform duration-300 group-hover:scale-105" />}
+            </div>
+            <h3 className="text-2xl font-bold text-foreground">{title}</h3>
           </div>
-          <h3 className="text-xl font-bold text-foreground">{title}</h3>
-          <motion.div initial={{
-          opacity: 0,
-          y: 10
-        }} whileHover={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.3
-        }} className="absolute bottom-6 opacity-0 group-hover:opacity-100">
-            <Link to={linkTo}>
-              <Button variant="outline" className="glass-effect-light">
-                Explorar <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </motion.div>
-        </div>
+
+          <Link to={linkTo} className="relative z-10">
+            <Button variant="outline" className="glass-effect-light group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all duration-300">
+              Explorar <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </Button>
+          </Link>
+
+          <div className="absolute -bottom-1 -right-1 w-1/2 h-1/2 bg-gradient-to-tr from-primary/20 to-transparent rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          
+          <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-primary/50 transition-all duration-300 pointer-events-none"></div>
+        </motion.div>
       </motion.div>;
   };
   return <>
@@ -115,12 +124,12 @@ const Home = () => {
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter mt-4">
                 <span className="gradient-text">Redefiniendo la inversión digital</span>
               </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mt-4">"Tu acceso a inversiones DeFi y fondos tokenizados."</p>
+              <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mt-4">"Tu acceso a inversiones DeFi y fondos tokenizados"</p>
             </motion.div>
           </div>
         </section>
 
-        {loading ? <div className="py-20 flex justify-center items-center"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div> : showAssetTypesSection && <section className="py-20 bg-white/30">
+        {loading ? <div className="py-20 flex justify-center items-center"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div> : showAssetTypesSection && <section className="py-24 bg-white/30">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="grid md:grid-cols-2 gap-12 items-center">
                 <motion.div initial={{
@@ -137,7 +146,6 @@ const Home = () => {
                   <h2 className="text-3xl md:text-5xl font-bold mb-6 mt-12 tracking-tight">
                     <span className="gradient-text">Invierte en Activos Digitales</span>
                   </h2>
-                  <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed mb-8">En Fraction Finance unimos las finanzas tradicionales y DeFi, facilitando en inversiones digitales seguras y al alcance de todos.</p>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8">
                     {settings.show_home_defi && <AssetCard content={homeContent.defi} delay={0.2} icon={TrendingUp} linkTo="/mercados" />}
@@ -146,7 +154,7 @@ const Home = () => {
 
                   <div className="glass-effect p-6 rounded-2xl">
                     <h3 className="text-xl font-bold text-foreground mb-2">📌 Nuestra Ventaja</h3>
-                    <p className="text-muted-foreground leading-relaxed">Transformamos fondos tradicionales en activos tokenizados, brindando liquidez y acceso al mercado DeFi.</p>
+                    <p className="text-muted-foreground leading-relaxed">Transformamos fondos tradicionales en activos tokenizados, brindando acceso directo al mercado DeFi y a nuevas oportunidades</p>
                   </div>
                 </motion.div>
                 <motion.div initial={{
@@ -161,7 +169,7 @@ const Home = () => {
               duration: 0.8,
               delay: 0.2
             }} className="flex justify-center items-center">
-                  <img class="w-full max-w-xl" alt="Abstract visualization of digital asset tokenization" src="https://horizons-cdn.hostinger.com/f8b5c881-f6e8-4070-abdf-aa8b891ef867/3684509d6da8b68b7fd32a3174f9ed11.png" />
+                  <img className="w-full max-w-xl" alt="Abstract visualization of digital asset tokenization" src="https://horizons-cdn.hostinger.com/f8b5c881-f6e8-4070-abdf-aa8b891ef867/3684509d6da8b68b7fd32a3174f9ed11.png" />
                 </motion.div>
               </div>
             </div>
@@ -183,7 +191,7 @@ const Home = () => {
               <h2 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight">
                 <span className="gradient-text">¿Por qué elegir Fraction Finance?</span>
               </h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">Construido para inversores individuales e institucionales, así como para gestores de activos, que exigen altos estándares de seguridad, cumplimiento y rendimiento.</p>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">Construido para inversores individuales e institucionales.</p>
             </motion.div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {features.map((feature, index) => <motion.div key={index} initial={{
@@ -225,10 +233,7 @@ const Home = () => {
               <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-primary/5 rounded-full blur-2xl"></div>
               <div className="relative z-10 text-center space-y-8">
                 <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Tokeniza con Fraction</h2>
-                <p className="text-xl text-muted-foreground max-w-2xl mx-auto whitespace-pre-line">La forma más simple y segura de convertir activos y fondos en tokens en la blockchain.
-Tokenización y gestión en cadena con total transparencia.
-Datos en tiempo real e informes automatizados.
-Emite activos, registra transacciones y gestiona tu cartera en una única plataforma.</p>
+                <p className="text-xl text-muted-foreground max-w-2xl mx-auto whitespace-pre-line">La forma más simple y segura de convertir activos. Tokenización y gestión con total transparencia. Datos en tiempo real. Emite activos, registra transacciones y gestiona tu cartera en una única plataforma.</p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                   <Link to="/nosotros/contacto">
                     <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-full font-semibold text-lg pulse-glow">
