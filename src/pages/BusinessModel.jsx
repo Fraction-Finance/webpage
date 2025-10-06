@@ -9,7 +9,7 @@ const BusinessModel = () => {
       icon: Activity, 
       title: 'Mercado DeFi', 
       description: 'Accede a un ecosistema financiero abierto y global. Ofrecemos productos para generar rendimientos y optimizar tu capital.',
-      items: ['Stablecoins', 'Earn', 'LSTs', 'Yield-bearing tokens']
+      items: ['Stablecoins', 'Earn', 'Yield-bearing tokens']
     },
     { 
       icon: BarChart, 

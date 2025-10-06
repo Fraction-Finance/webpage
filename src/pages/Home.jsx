@@ -129,7 +129,7 @@ const Home = () => {
           </div>
         </section>
 
-        {loading ? <div className="py-20 flex justify-center items-center"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div> : showAssetTypesSection && <section className="py-24 bg-white/30">
+        {loading ? <div className="py-20 flex justify-center items-center"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div> : showAssetTypesSection && <section className="py-24">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="grid md:grid-cols-2 gap-12 items-center">
                 <motion.div initial={{
@@ -175,7 +175,7 @@ const Home = () => {
             </div>
           </section>}
 
-        <section className="py-20 bg-white/30">
+        <section className="py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div initial={{
             opacity: 0,
