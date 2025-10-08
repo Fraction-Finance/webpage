@@ -4,18 +4,35 @@ import { useMarkets } from '@/contexts/MarketsContext';
 import { Input } from '@/components/ui/input';
 import { Loader2, Search } from 'lucide-react';
 import DigitalAssetCard from '@/components/markets/DigitalAssetCard';
+import { DeFiAssetCard } from '@/pages/markets/DeFi';
 
 const Explore = () => {
-  const { stos, loading, error } = useMarkets();
+  const { stos, defiAssets, loading, error } = useMarkets();
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredAssets = useMemo(() => {
-    return stos.filter(sto => {
-      const asset = sto.digital_assets;
-      if (!asset) return false;
-      return searchTerm === '' || asset.name.toLowerCase().includes(searchTerm.toLowerCase()) || asset.symbol.toLowerCase().includes(searchTerm.toLowerCase());
+  const combinedAssets = useMemo(() => {
+    const rwaAssets = stos.map(sto => ({ ...sto, type: 'rwa' }));
+    const defi = defiAssets.map(asset => ({ ...asset, type: 'defi' }));
+    
+    return [...rwaAssets, ...defi].filter(asset => {
+        if (asset.type === 'rwa') return asset.is_published;
+        if (asset.type === 'defi') return asset.is_active;
+        return false;
     });
-  }, [stos, searchTerm]);
+  }, [stos, defiAssets]);
+
+  const filteredAssets = useMemo(() => {
+    return combinedAssets.filter(asset => {
+      const name = asset.type === 'rwa' ? asset.digital_assets?.name : asset.name;
+      const symbol = asset.type === 'rwa' ? asset.digital_assets?.symbol : asset.symbol;
+      
+      if (!name) return false;
+
+      return searchTerm === '' || 
+             name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+             (symbol && symbol.toLowerCase().includes(searchTerm.toLowerCase()));
+    });
+  }, [combinedAssets, searchTerm]);
 
   if (loading) return <div className="flex justify-center items-center h-96"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div>;
   if (error) return <div className="text-center py-20 text-red-500"><p>{error}</p></div>;
@@ -38,7 +55,13 @@ const Explore = () => {
 
       {filteredAssets.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredAssets.map((sto) => <DigitalAssetCard key={sto.id} sto={sto} />)}
+          {filteredAssets.map((asset, index) => {
+            if (asset.type === 'rwa') {
+              return <DigitalAssetCard key={`rwa-${asset.id}`} sto={asset} />;
+            } else {
+              return <DeFiAssetCard key={`defi-${asset.id}`} asset={asset} delay={index * 0.05} />;
+            }
+          })}
         </div>
       ) : (
         <div className="text-center py-20 text-gray-500"><p>No hay activos que coincidan con tus criterios.</p></div>

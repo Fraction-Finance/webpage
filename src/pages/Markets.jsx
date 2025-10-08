@@ -1,112 +1,89 @@
-import React, { useState, Suspense, lazy } from 'react';
-import { Helmet } from 'react-helmet';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useWallet } from '@/contexts/WalletContext';
-import { useAuth } from '@/contexts/SupabaseAuthContext';
-import ConnectWalletPrompt from '@/components/ConnectWalletPrompt';
-import { Zap, Shield, Loader2, LayoutDashboard } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
-const DeFi = lazy(() => import('@/pages/markets/DeFi'));
+import React, { useState, Suspense, lazy } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Helmet } from 'react-helmet';
+import { useSettings } from '@/contexts/SettingsContext';
+import { useWallet } from '@/contexts/WalletContext';
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Briefcase, LayoutGrid, Loader2, Zap } from 'lucide-react';
+
+const Explore = lazy(() => import('@/pages/markets/Explore'));
 const Funds = lazy(() => import('@/pages/markets/Funds'));
-const PortfolioView = lazy(() => import('@/pages/markets/PortfolioView'));
+const DeFi = lazy(() => import('@/pages/markets/DeFi'));
+
+const tabsConfig = [
+  { value: 'explore', label: 'Todos', icon: LayoutGrid, component: <Explore /> },
+  { value: 'funds', label: 'Fondos', icon: Briefcase, component: <Funds />, setting: 'show_rwa_invest' },
+  { value: 'defi', label: 'DeFi', icon: Zap, component: <DeFi />, setting: 'show_defi_assets' },
+];
 
 const Markets = () => {
+  const [activeTab, setActiveTab] = useState('explore');
+  const { settings, loading: settingsLoading } = useSettings();
   const { isConnected } = useWallet();
-  const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState('portfolio');
 
-  const handleTabClick = (tabValue) => {
-    setActiveTab(tabValue);
-  };
+  const availableTabs = tabsConfig.filter(tab => {
+    if (tab.setting && !settingsLoading && settings[tab.setting] === false) {
+      return false;
+    }
+    if (tab.requiresWallet && !isConnected) {
+      return false;
+    }
+    return true;
+  });
 
-  const tabs = [
-    { value: 'portfolio', label: 'Portafolio', icon: LayoutDashboard, component: <PortfolioView /> },
-    { value: 'defi', label: 'DeFi', icon: Zap, component: <DeFi /> },
-    { value: 'funds', label: 'Fondos', icon: Shield, component: <Funds /> },
-  ];
-
-  const ActiveComponent = tabs.find(tab => tab.value === activeTab)?.component;
+  if (settingsLoading) {
+    return (
+      <div className="flex justify-center items-center h-[calc(100vh-200px)]">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <>
       <Helmet>
-        <title>Mercados | Fraction Finance</title>
-        <meta name="description" content="Explora, analiza e invierte en Activos Digitales, Activos del Mundo Real (RWA) y Activos DeFi." />
+        <title>Mercados de Inversión - Fraction Finance</title>
+        <meta name="description" content="Explora una amplia gama de activos tokenizados, desde acciones y bienes raíces hasta innovadores productos DeFi. Invierte en el futuro de las finanzas." />
       </Helmet>
-      <div className="pt-28 pb-12 bg-gray-50/50 min-h-screen">
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <div className="flex justify-center mb-8 mt-20">
+            <TabsList className="grid grid-cols-3 bg-background/50 backdrop-blur-sm p-2 h-auto rounded-full">
+              {availableTabs.map((tab) => (
+                <TabsTrigger key={tab.value} value={tab.value} className="flex-row gap-2 h-auto py-2 px-6 rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  <tab.icon className="h-5 w-5" />
+                  <span>{tab.label}</span>
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
+          
           <AnimatePresence mode="wait">
-            {!user ? (
-              <motion.div
-                key="auth-prompt"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="text-center glass-effect p-8 rounded-2xl max-w-md mx-auto"
-              >
-                <h3 className="text-2xl font-semibold mb-4">Acceso Restringido</h3>
-                <p className="text-gray-600 mb-6">Por favor, inicia sesión para acceder a los mercados.</p>
-              </motion.div>
-            ) : !isConnected ? (
-              <motion.div
-                key="wallet-prompt"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <ConnectWalletPrompt />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="market-content"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                <div className="mb-8">
-                  <div className="flex items-center justify-start border-b border-gray-200">
-                    <nav className="-mb-px flex space-x-6" aria-label="Tabs">
-                      {tabs.map((tab) => (
-                        <button
-                          key={tab.value}
-                          onClick={() => handleTabClick(tab.value)}
-                          className={cn(
-                            'group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200',
-                            activeTab === tab.value
-                              ? 'border-primary text-primary'
-                              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                          )}
-                        >
-                          <tab.icon className={cn(
-                            'mr-2 h-5 w-5',
-                             activeTab === tab.value ? 'text-primary' : 'text-gray-400 group-hover:text-gray-500'
-                          )} aria-hidden="true" />
-                          <span>{tab.label}</span>
-                        </button>
-                      ))}
-                    </nav>
-                  </div>
-                </div>
-
-                <div className="mt-8">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={activeTab}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <Suspense fallback={<div className="flex justify-center items-center h-64"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
-                        {ActiveComponent}
-                      </Suspense>
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-              </motion.div>
-            )}
+            {availableTabs.map((tab) => (
+              activeTab === tab.value && (
+                <TabsContent key={tab.value} value={tab.value} asChild>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                    className="mt-2"
+                  >
+                    <Suspense fallback={
+                      <div className="flex justify-center items-center h-96">
+                        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+                      </div>
+                    }>
+                      {tab.component}
+                    </Suspense>
+                  </motion.div>
+                </TabsContent>
+              )
+            ))}
           </AnimatePresence>
-        </main>
+        </Tabs>
       </div>
     </>
   );

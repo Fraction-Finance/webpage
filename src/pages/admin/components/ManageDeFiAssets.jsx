@@ -1,287 +1,403 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '@/lib/customSupabaseClient';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useToast } from '@/components/ui/use-toast';
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableHead,
-  TableRow,
-  TableCell,
-} from '@/components/ui/table';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogDescription,
-  DialogFooter,
-} from '@/components/ui/dialog';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { PlusCircle, Search, Edit, Trash2, Loader2 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
+    import { supabase } from '@/lib/customSupabaseClient';
+    import { Button } from '@/components/ui/button';
+    import { Input } from '@/components/ui/input';
+    import { Label } from '@/components/ui/label';
+    import { useToast } from '@/components/ui/use-toast';
+    import {
+      Table,
+      TableHeader,
+      TableBody,
+      TableHead,
+      TableRow,
+      TableCell,
+    } from '@/components/ui/table';
+    import {
+      Dialog,
+      DialogContent,
+      DialogHeader,
+      DialogTitle,
+      DialogTrigger,
+      DialogDescription,
+      DialogFooter,
+    } from '@/components/ui/dialog';
+    import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+    import { PlusCircle, Search, Edit, Trash2, Loader2, Upload } from 'lucide-react';
+    import { Badge } from '@/components/ui/badge';
+    import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+    import { Textarea } from '@/components/ui/textarea';
+    import { Switch } from '@/components/ui/switch';
+    import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-const DeFiAssetForm = ({ asset, onSave, onCancel }) => {
-  const [formData, setFormData] = useState({
-    name: '',
-    symbol: '',
-    category: 'earn',
-    description: '',
-    apy: '',
-    tvl: '',
-    risk_level: 'low',
-    contract_address: '',
-    is_active: true,
-    ...asset,
-  });
-  const [isSaving, setIsSaving] = useState(false);
-  const { toast } = useToast();
+    const DeFiAssetForm = ({ asset, onSave, onCancel }) => {
+      const [formData, setFormData] = useState({
+        name: '',
+        symbol: '',
+        category: 'earn',
+        description: '',
+        apy: '',
+        tvl: '',
+        risk_level: 'low',
+        contract_address: '',
+        link_url: '',
+        portfolio_assets: '',
+        network: '',
+        image_url: '',
+        is_active: true,
+      });
+      const [imageFile, setImageFile] = useState(null);
+      const [previewImage, setPreviewImage] = useState(null);
+      const [isSaving, setIsSaving] = useState(false);
+      const { toast } = useToast();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+      useEffect(() => {
+        const initialData = asset ? {
+          name: asset.name || '',
+          symbol: asset.symbol || '',
+          category: asset.category || 'earn',
+          description: asset.description || '',
+          apy: asset.apy || '',
+          tvl: asset.tvl || '',
+          risk_level: asset.risk_level || 'low',
+          contract_address: asset.contract_address || '',
+          link_url: asset.link_url || '',
+          portfolio_assets: asset.portfolio_assets?.join(', ') || '',
+          network: asset.network || '',
+          image_url: asset.image_url || '',
+          is_active: asset.is_active !== undefined ? asset.is_active : true,
+        } : {
+          name: '', symbol: '', category: 'earn', description: '', apy: '',
+          tvl: '', risk_level: 'low', contract_address: '', link_url: '',
+          portfolio_assets: '', network: '', image_url: '', is_active: true,
+        };
+        setFormData(initialData);
+        setPreviewImage(initialData.image_url);
+        setImageFile(null);
+      }, [asset]);
 
-  const handleSelectChange = (name, value) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+      const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+      };
 
-  const handleSwitchChange = (name, checked) => {
-    setFormData((prev) => ({ ...prev, [name]: checked }));
-  };
+      const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          setImageFile(file);
+          setPreviewImage(URL.createObjectURL(file));
+        }
+      };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSaving(true);
+      const handleSelectChange = (name, value) => {
+        setFormData((prev) => ({ ...prev, [name]: value }));
+      };
 
-    const dataToSave = {
-      ...formData,
-      apy: formData.apy ? parseFloat(formData.apy) : null,
-      tvl: formData.tvl ? parseFloat(formData.tvl) : null,
+      const handleSwitchChange = (name, checked) => {
+        setFormData((prev) => ({ ...prev, [name]: checked }));
+      };
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsSaving(true);
+
+        let imageUrl = formData.image_url;
+        if (imageFile) {
+          const fileExt = imageFile.name.split('.').pop();
+          const fileName = `${Date.now()}.${fileExt}`;
+          const filePath = `${fileName}`;
+          
+          const { error: uploadError } = await supabase.storage
+            .from('defi-assets-logos')
+            .upload(filePath, imageFile);
+
+          if (uploadError) {
+            toast({ title: 'Error de subida', description: uploadError.message, variant: 'destructive' });
+            setIsSaving(false);
+            return;
+          }
+
+          const { data: urlData } = supabase.storage.from('defi-assets-logos').getPublicUrl(filePath);
+          imageUrl = urlData.publicUrl;
+        }
+
+        const portfolioAssetsArray = formData.portfolio_assets
+          ? formData.portfolio_assets.split(',').map(s => s.trim()).filter(Boolean)
+          : [];
+        
+        const { id, created_at, updated_at, ...restOfData } = formData;
+
+        const dataToSave = {
+          ...restOfData,
+          image_url: imageUrl,
+          apy: formData.apy ? parseFloat(formData.apy) : null,
+          tvl: formData.tvl ? parseFloat(formData.tvl) : null,
+          portfolio_assets: portfolioAssetsArray,
+        };
+
+        let response;
+        if (asset?.id) {
+          response = await supabase.from('defi_assets').update(dataToSave).eq('id', asset.id);
+        } else {
+          response = await supabase.from('defi_assets').insert(dataToSave);
+        }
+
+        if (response.error) {
+          toast({ title: 'Error', description: response.error.message, variant: 'destructive' });
+        } else {
+          toast({ title: 'Éxito', description: `Activo DeFi ${asset?.id ? 'actualizado' : 'creado'} correctamente.` });
+          onSave();
+        }
+        setIsSaving(false);
+      };
+
+      return (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="flex items-center gap-4">
+            <Avatar className="h-20 w-20">
+              <AvatarImage src={previewImage} alt={formData.name} />
+              <AvatarFallback><Upload /></AvatarFallback>
+            </Avatar>
+            <div className="grid w-full max-w-sm items-center gap-1.5">
+              <Label htmlFor="image">Imagen del Activo</Label>
+              <Input id="image" type="file" onChange={handleImageChange} accept="image/*" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="name">Nombre</Label>
+              <Input id="name" name="name" value={formData.name} onChange={handleChange} required />
+            </div>
+            <div>
+              <Label htmlFor="symbol">Símbolo</Label>
+              <Input id="symbol" name="symbol" value={formData.symbol} onChange={handleChange} required />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="category">Categoría</Label>
+              <Select value={formData.category} onValueChange={(value) => handleSelectChange('category', value)}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="earn">Earn</SelectItem>
+                  <SelectItem value="lsts">LSTs</SelectItem>
+                  <SelectItem value="lp_tokens">LP tokens</SelectItem>
+                  <SelectItem value="yield_bearing">Yield-bearing tokens</SelectItem>
+                  <SelectItem value="derivatives">Derivados DeFi</SelectItem>
+                  <SelectItem value="vault">Vault</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+                <Label htmlFor="network">Red</Label>
+                <Input id="network" name="network" value={formData.network} onChange={handleChange} placeholder="Ej: Ethereum, Polygon" />
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="description">Descripción</Label>
+            <Textarea id="description" name="description" value={formData.description} onChange={handleChange} />
+          </div>
+          <div>
+            <Label htmlFor="portfolio_assets">Activos del Portafolio</Label>
+            <Input 
+                id="portfolio_assets" 
+                name="portfolio_assets" 
+                value={formData.portfolio_assets} 
+                onChange={handleChange}
+                placeholder="Ej: USDC, DAI, USDT"
+            />
+            <p className="text-xs text-muted-foreground mt-1">Separar activos por comas.</p>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="apy">APY (%)</Label>
+              <Input id="apy" name="apy" type="number" step="0.01" value={formData.apy} onChange={handleChange} />
+            </div>
+            <div>
+              <Label htmlFor="tvl">TVL (USD)</Label>
+              <Input id="tvl" name="tvl" type="number" step="0.01" value={formData.tvl} onChange={handleChange} />
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="risk_level">Nivel de Riesgo</Label>
+            <Select value={formData.risk_level} onValueChange={(value) => handleSelectChange('risk_level', value)}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="low">Bajo</SelectItem>
+                <SelectItem value="medium">Medio</SelectItem>
+                <SelectItem value="high">Alto</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label htmlFor="contract_address">Dirección del Contrato</Label>
+            <Input id="contract_address" name="contract_address" value={formData.contract_address} onChange={handleChange} />
+          </div>
+          <div>
+            <Label htmlFor="link_url">Enlace Externo</Label>
+            <Input id="link_url" name="link_url" value={formData.link_url} onChange={handleChange} placeholder="https://..." />
+          </div>
+          <div className="flex items-center space-x-2">
+            <Switch id="is_active" checked={formData.is_active} onCheckedChange={(checked) => handleSwitchChange('is_active', checked)} />
+            <Label htmlFor="is_active">Activo</Label>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onCancel}>Cancelar</Button>
+            <Button type="submit" disabled={isSaving}>
+              {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              Guardar
+            </Button>
+          </DialogFooter>
+        </form>
+      );
     };
 
-    let response;
-    if (asset?.id) {
-      response = await supabase.from('defi_assets').update(dataToSave).eq('id', asset.id);
-    } else {
-      response = await supabase.from('defi_assets').insert(dataToSave);
-    }
+    const ManageDeFiAssets = () => {
+      const [assets, setAssets] = useState([]);
+      const [filteredAssets, setFilteredAssets] = useState([]);
+      const [loading, setLoading] = useState(true);
+      const [searchTerm, setSearchTerm] = useState('');
+      const [isDialogOpen, setIsDialogOpen] = useState(false);
+      const [editingAsset, setEditingAsset] = useState(null);
+      const { toast } = useToast();
 
-    if (response.error) {
-      toast({ title: 'Error', description: response.error.message, variant: 'destructive' });
-    } else {
-      toast({ title: 'Éxito', description: `Activo DeFi ${asset?.id ? 'actualizado' : 'creado'} correctamente.` });
-      onSave();
-    }
-    setIsSaving(false);
-  };
+      const fetchAssets = async () => {
+        setLoading(true);
+        const { data, error } = await supabase.from('defi_assets').select('*').order('created_at', { ascending: false });
+        if (error) {
+          toast({ title: 'Error', description: error.message, variant: 'destructive' });
+        } else {
+          setAssets(data);
+          setFilteredAssets(data);
+        }
+        setLoading(false);
+      };
 
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="name">Nombre</Label>
-          <Input id="name" name="name" value={formData.name} onChange={handleChange} required />
-        </div>
-        <div>
-          <Label htmlFor="symbol">Símbolo</Label>
-          <Input id="symbol" name="symbol" value={formData.symbol} onChange={handleChange} required />
-        </div>
-      </div>
-      <div>
-        <Label htmlFor="category">Categoría</Label>
-        <Select value={formData.category} onValueChange={(value) => handleSelectChange('category', value)}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="earn">Earn</SelectItem>
-            <SelectItem value="lsts">LSTs</SelectItem>
-            <SelectItem value="lp_tokens">LP tokens</SelectItem>
-            <SelectItem value="yield_bearing">Yield-bearing tokens</SelectItem>
-            <SelectItem value="derivatives">Derivados DeFi</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <div>
-        <Label htmlFor="description">Descripción</Label>
-        <Textarea id="description" name="description" value={formData.description} onChange={handleChange} />
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="apy">APY (%)</Label>
-          <Input id="apy" name="apy" type="number" step="0.01" value={formData.apy} onChange={handleChange} />
-        </div>
-        <div>
-          <Label htmlFor="tvl">TVL (USD)</Label>
-          <Input id="tvl" name="tvl" type="number" step="0.01" value={formData.tvl} onChange={handleChange} />
-        </div>
-      </div>
-      <div>
-        <Label htmlFor="risk_level">Nivel de Riesgo</Label>
-        <Select value={formData.risk_level} onValueChange={(value) => handleSelectChange('risk_level', value)}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="low">Bajo</SelectItem>
-            <SelectItem value="medium">Medio</SelectItem>
-            <SelectItem value="high">Alto</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <div>
-        <Label htmlFor="contract_address">Dirección del Contrato</Label>
-        <Input id="contract_address" name="contract_address" value={formData.contract_address} onChange={handleChange} />
-      </div>
-      <div className="flex items-center space-x-2">
-        <Switch id="is_active" checked={formData.is_active} onCheckedChange={(checked) => handleSwitchChange('is_active', checked)} />
-        <Label htmlFor="is_active">Activo</Label>
-      </div>
-      <DialogFooter>
-        <Button type="button" variant="outline" onClick={onCancel}>Cancelar</Button>
-        <Button type="submit" disabled={isSaving}>
-          {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-          Guardar
-        </Button>
-      </DialogFooter>
-    </form>
-  );
-};
-
-const ManageDeFiAssets = () => {
-  const [assets, setAssets] = useState([]);
-  const [filteredAssets, setFilteredAssets] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingAsset, setEditingAsset] = useState(null);
-  const { toast } = useToast();
-
-  const fetchAssets = async () => {
-    setLoading(true);
-    const { data, error } = await supabase.from('defi_assets').select('*').order('created_at', { ascending: false });
-    if (error) {
-      toast({ title: 'Error', description: error.message, variant: 'destructive' });
-    } else {
-      setAssets(data);
-      setFilteredAssets(data);
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    fetchAssets();
-  }, []);
-
-  useEffect(() => {
-    const results = assets.filter(asset =>
-      asset.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      asset.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      asset.category.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredAssets(results);
-  }, [searchTerm, assets]);
-
-  const handleSave = () => {
-    setIsDialogOpen(false);
-    setEditingAsset(null);
-    fetchAssets();
-  };
-
-  const handleOpenDialog = (asset = null) => {
-    setEditingAsset(asset);
-    setIsDialogOpen(true);
-  };
-
-  const handleDelete = async (assetId) => {
-    if (window.confirm('¿Estás seguro de que quieres eliminar este activo?')) {
-      const { error } = await supabase.from('defi_assets').delete().eq('id', assetId);
-      if (error) {
-        toast({ title: 'Error', description: error.message, variant: 'destructive' });
-      } else {
-        toast({ title: 'Éxito', description: 'Activo eliminado.' });
+      useEffect(() => {
         fetchAssets();
-      }
-    }
-  };
+      }, []);
 
-  return (
-    <Card>
-      <CardHeader>
-        <div className="flex justify-between items-start">
-          <div>
-            <CardTitle>Gestionar Activos DeFi</CardTitle>
-            <CardDescription>Crear, ver y gestionar activos del ecosistema DeFi.</CardDescription>
-          </div>
-          <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) setEditingAsset(null); }}>
-            <DialogTrigger asChild>
-              <Button onClick={() => handleOpenDialog()}><PlusCircle className="mr-2 h-4 w-4" /> Crear Activo DeFi</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{editingAsset ? 'Editar' : 'Crear'} Activo DeFi</DialogTitle>
-                <DialogDescription>Completa los detalles de tu activo DeFi.</DialogDescription>
-              </DialogHeader>
-              <DeFiAssetForm asset={editingAsset} onSave={handleSave} onCancel={() => setIsDialogOpen(false)} />
-            </DialogContent>
-          </Dialog>
-        </div>
-        <div className="relative mt-4">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Buscar por nombre, símbolo o categoría..."
-            className="pl-8 w-full"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nombre</TableHead>
-              <TableHead>Categoría</TableHead>
-              <TableHead>APY</TableHead>
-              <TableHead>TVL</TableHead>
-              <TableHead>Estado</TableHead>
-              <TableHead className="text-right">Acciones</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {loading ? (
-              <TableRow><TableCell colSpan="6" className="text-center h-24"><Loader2 className="h-6 w-6 animate-spin mx-auto" /></TableCell></TableRow>
-            ) : filteredAssets.length > 0 ? (
-              filteredAssets.map(asset => (
-                <TableRow key={asset.id}>
-                  <TableCell className="font-medium">{asset.name} ({asset.symbol})</TableCell>
-                  <TableCell><Badge variant="secondary">{asset.category.replace(/_/g, ' ')}</Badge></TableCell>
-                  <TableCell>{asset.apy ? `${asset.apy}%` : 'N/A'}</TableCell>
-                  <TableCell>{asset.tvl ? `$${Number(asset.tvl).toLocaleString()}` : 'N/A'}</TableCell>
-                  <TableCell>
-                    <Badge variant={asset.is_active ? 'default' : 'destructive'}>
-                      {asset.is_active ? 'Activo' : 'Inactivo'}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(asset)}><Edit className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="icon" onClick={() => handleDelete(asset.id)}><Trash2 className="h-4 w-4 text-red-500" /></Button>
-                  </TableCell>
+      useEffect(() => {
+        const results = assets.filter(asset =>
+          asset.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          asset.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          asset.category.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredAssets(results);
+      }, [searchTerm, assets]);
+
+      const handleSave = () => {
+        setIsDialogOpen(false);
+        setEditingAsset(null);
+        fetchAssets();
+      };
+
+      const handleOpenDialog = (asset = null) => {
+        setEditingAsset(asset);
+        setIsDialogOpen(true);
+      };
+
+      const handleDelete = async (assetId) => {
+        if (window.confirm('¿Estás seguro de que quieres eliminar este activo?')) {
+          const { error } = await supabase.from('defi_assets').delete().eq('id', assetId);
+          if (error) {
+            toast({ title: 'Error', description: error.message, variant: 'destructive' });
+          } else {
+            toast({ title: 'Éxito', description: 'Activo eliminado.' });
+            fetchAssets();
+          }
+        }
+      };
+
+      return (
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-start">
+              <div>
+                <CardTitle>Gestionar Activos DeFi</CardTitle>
+                <CardDescription>Crear, ver y gestionar activos del ecosistema DeFi.</CardDescription>
+              </div>
+              <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) setEditingAsset(null); }}>
+                <DialogTrigger asChild>
+                  <Button onClick={() => handleOpenDialog()}><PlusCircle className="mr-2 h-4 w-4" /> Crear Activo DeFi</Button>
+                </DialogTrigger>
+                <DialogContent className="max-h-[90vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>{editingAsset ? 'Editar' : 'Crear'} Activo DeFi</DialogTitle>
+                    <DialogDescription>Completa los detalles de tu activo DeFi.</DialogDescription>
+                  </DialogHeader>
+                  <DeFiAssetForm asset={editingAsset} onSave={handleSave} onCancel={() => setIsDialogOpen(false)} />
+                </DialogContent>
+              </Dialog>
+            </div>
+            <div className="relative mt-4">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Buscar por nombre, símbolo o categoría..."
+                className="pl-8 w-full"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Nombre</TableHead>
+                  <TableHead>Red</TableHead>
+                  <TableHead>Portafolio</TableHead>
+                  <TableHead>APY</TableHead>
+                  <TableHead>TVL</TableHead>
+                  <TableHead>Estado</TableHead>
+                  <TableHead className="text-right">Acciones</TableHead>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow><TableCell colSpan="6" className="text-center h-24">No se encontraron activos.</TableCell></TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
-  );
-};
+              </TableHeader>
+              <TableBody>
+                {loading ? (
+                  <TableRow><TableCell colSpan={7} className="text-center h-24"><Loader2 className="h-6 w-6 animate-spin mx-auto" /></TableCell></TableRow>
+                ) : filteredAssets.length > 0 ? (
+                  filteredAssets.map(asset => (
+                    <TableRow key={asset.id}>
+                      <TableCell className="font-medium">
+                        <div className="flex items-center gap-3">
+                          <Avatar>
+                            <AvatarImage src={asset.image_url} alt={asset.name} />
+                            <AvatarFallback>{asset.symbol.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                          {asset.name} ({asset.symbol})
+                        </div>
+                      </TableCell>
+                      <TableCell>{asset.network}</TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap gap-1">
+                          {asset.portfolio_assets?.map(pa => (
+                            <Badge key={pa} variant="outline">{pa}</Badge>
+                          ))}
+                        </div>
+                      </TableCell>
+                      <TableCell>{asset.apy ? `${asset.apy}%` : 'N/A'}</TableCell>
+                      <TableCell>{asset.tvl ? `$${Number(asset.tvl).toLocaleString()}` : 'N/A'}</TableCell>
+                      <TableCell>
+                        <Badge variant={asset.is_active ? 'default' : 'destructive'}>
+                          {asset.is_active ? 'Activo' : 'Inactivo'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(asset)}><Edit className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="icon" onClick={() => handleDelete(asset.id)}><Trash2 className="h-4 w-4 text-red-500" /></Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow><TableCell colSpan={7} className="text-center h-24">No se encontraron activos.</TableCell></TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      );
+    };
 
-export default ManageDeFiAssets;
+    export default ManageDeFiAssets;

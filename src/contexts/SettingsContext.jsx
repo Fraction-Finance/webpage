@@ -13,6 +13,7 @@ import React, { createContext, useContext, useState, useEffect, useMemo, useCall
         show_home_defi: true,
         show_home_tradfi: true,
         show_home_real_assets: true,
+        show_markets_portfolio: true,
       });
       const [homeContent, setHomeContent] = useState({});
       const [loading, setLoading] = useState(true);
