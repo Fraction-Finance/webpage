@@ -72,9 +72,7 @@ const About = () => {
                 <br />
                 <span className="gradient-text">de los Mercados de Capitales</span>
               </h1>
-              <p className="text-xl text-gray-700 max-w-3xl mx-auto mt-4">
-                Somos un equipo de expertos financieros, tecnólogos e innovadores dedicados a crear un sistema financiero global más abierto, eficiente y accesible.
-              </p>
+              <p className="text-xl text-gray-700 max-w-3xl mx-auto mt-4">Somos un equipo dedicados a crear un sistema financiero global más abierto, eficiente y accesible.</p>
             </motion.div>
           </div>
         </section>

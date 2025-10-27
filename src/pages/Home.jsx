@@ -1,14 +1,14 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { Shield, Zap, Globe, TrendingUp, Users, Lock, Loader2, Package, ArrowRight } from 'lucide-react';
+import { Shield, Zap, Globe, TrendingUp, Users, Lock, Loader2, ArrowRight, Activity, Landmark, FileText, Briefcase, Factory, Banknote, Rocket } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSettings } from '@/contexts/SettingsContext';
 const Home = () => {
   const {
     settings,
-    homeContent,
     loading
   } = useSettings();
   const features = [{
@@ -36,58 +36,26 @@ const Home = () => {
     title: 'Innovación y Sostenibilidad',
     description: 'Foco en activos verdes y sostenibles. Impulsa la inversión responsable con impacto real en la economía y el medio ambiente.'
   }];
+  const tokenizedAssets = [{
+    icon: Rocket,
+    name: 'Fondos Crypto'
+  }, {
+    icon: FileText,
+    name: 'Bonos'
+  }, {
+    icon: Landmark,
+    name: 'Deuda Privada'
+  }, {
+    icon: TrendingUp,
+    name: 'Renta Fija'
+  }, {
+    icon: Briefcase,
+    name: 'Capital de Trabajo'
+  }, {
+    icon: Factory,
+    name: 'Fondos de Inversión'
+  }];
   const showAssetTypesSection = !loading && (settings.show_home_defi || settings.show_home_tradfi || settings.show_home_real_assets);
-  const AssetCard = ({
-    content,
-    delay,
-    icon: Icon,
-    linkTo
-  }) => {
-    if (!content) return null;
-    const title = content.title === 'DeFi' ? 'Mercado DeFi' : content.title === 'Fondos' ? 'Fondos Tokenizados' : content.title;
-    return <motion.div initial={{
-      opacity: 0,
-      y: 50
-    }} whileInView={{
-      opacity: 1,
-      y: 0
-    }} transition={{
-      duration: 0.5,
-      delay
-    }} viewport={{
-      once: true
-    }} className="group relative rounded-2xl overflow-hidden">
-        <motion.div whileHover={{
-        scale: 1.03,
-        rotateX: 5,
-        rotateY: -5
-      }} transition={{
-        type: 'spring',
-        stiffness: 300,
-        damping: 20
-      }} className="relative p-8 h-64 flex flex-col justify-between items-start bg-card/80 backdrop-blur-sm border border-white/10 rounded-2xl shadow-2xl shadow-primary/5">
-          <div className="absolute inset-0 bg-grid-pattern opacity-5 group-hover:opacity-10 transition-opacity duration-300"></div>
-          <div className="absolute inset-0 group-hover:bg-gradient-to-br from-primary/10 to-transparent transition-all duration-500"></div>
-          
-          <div className="relative z-10">
-            <div className="p-3 rounded-xl bg-primary/10 mb-4 transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary/20">
-              {Icon && <Icon className="h-8 w-8 text-primary transition-transform duration-300 group-hover:scale-105" />}
-            </div>
-            <h3 className="text-2xl font-bold text-foreground">{title}</h3>
-          </div>
-
-          <Link to={linkTo} className="relative z-10">
-            <Button variant="outline" className="glass-effect-light group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all duration-300">
-              Explorar <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </Button>
-          </Link>
-
-          <div className="absolute -bottom-1 -right-1 w-1/2 h-1/2 bg-gradient-to-tr from-primary/20 to-transparent rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-          
-          <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-primary/50 transition-all duration-300 pointer-events-none"></div>
-        </motion.div>
-      </motion.div>;
-  };
   return <>
       <Helmet>
         <title>Fraction Finance - Revolucionaria Plataforma de Tokenización de Activos Digitales</title>
@@ -124,39 +92,22 @@ const Home = () => {
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter mt-4">
                 <span className="gradient-text">Redefiniendo la inversión digital</span>
               </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mt-4">"Tu acceso a inversiones DeFi y fondos tokenizados"</p>
+              <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mt-4">"Facilitamos las inversiones en fondos tokenizados."</p>
             </motion.div>
           </div>
         </section>
 
-        {loading ? <div className="py-20 flex justify-center items-center"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div> : showAssetTypesSection && <section className="py-24">
+        {loading ? <div className="py-20 flex justify-center items-center"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div> : showAssetTypesSection && <section className="py-40">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="grid md:grid-cols-2 gap-12 items-center">
-                <motion.div initial={{
-              opacity: 0,
-              x: -50
-            }} whileInView={{
-              opacity: 1,
-              x: 0
-            }} viewport={{
-              once: true
-            }} transition={{
-              duration: 0.8
-            }}>
-                  <h2 className="text-3xl md:text-5xl font-bold mb-6 mt-12 tracking-tight">
+              <div className="text-center mb-16">
+                  <h2 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">
                     <span className="gradient-text">Invierte en Activos Digitales</span>
                   </h2>
-                  
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8">
-                    {settings.show_home_defi && <AssetCard content={homeContent.defi} delay={0.2} icon={TrendingUp} linkTo="/mercados" />}
-                    {settings.show_home_tradfi && <AssetCard content={homeContent.tradfi} delay={0.4} icon={Package} linkTo="/mercados" />}
-                  </div>
-
-                  <div className="glass-effect p-6 rounded-2xl">
-                    <h3 className="text-xl font-bold text-foreground mb-2">📌 Nuestra Ventaja</h3>
-                    <p className="text-muted-foreground leading-relaxed">Transformamos fondos tradicionales en activos tokenizados, brindando acceso directo al mercado DeFi y a nuevas oportunidades</p>
-                  </div>
-                </motion.div>
+                  <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    Transformamos una amplia gama de instrumentos financieros en activos digitales líquidos, accesibles y eficientes.
+                  </p>
+              </div>
+              <div className="grid md:grid-cols-2 gap-12 items-center">
                 <motion.div initial={{
               opacity: 0,
               scale: 0.9
@@ -169,7 +120,48 @@ const Home = () => {
               duration: 0.8,
               delay: 0.2
             }} className="flex justify-center items-center">
-                  <img className="w-full max-w-xl" alt="Abstract visualization of digital asset tokenization" src="https://horizons-cdn.hostinger.com/f8b5c881-f6e8-4070-abdf-aa8b891ef867/3684509d6da8b68b7fd32a3174f9ed11.png" />
+                  <img src="https://horizons-cdn.hostinger.com/f8b5c881-f6e8-4070-abdf-aa8b891ef867/copia-de-copia-de-engymint-1920-x-1080-px-5-Qk5OJ.png" className="w-full max-w-3xl rounded-3xl border-none" alt="Visualización abstracta de la tokenización de activos digitales" />
+                </motion.div>
+                 <motion.div initial={{
+              opacity: 0,
+              x: 50
+            }} whileInView={{
+              opacity: 1,
+              x: 0
+            }} viewport={{
+              once: true
+            }} transition={{
+              duration: 0.8
+            }}>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        {tokenizedAssets.map((asset, index) => <motion.div key={asset.name} initial={{
+                  opacity: 0,
+                  y: 20
+                }} whileInView={{
+                  opacity: 1,
+                  y: 0
+                }} viewport={{
+                  once: true
+                }} transition={{
+                  duration: 0.5,
+                  delay: index * 0.1
+                }} className="group relative aspect-square flex flex-col justify-center items-center text-center p-4 glass-effect rounded-2xl overflow-hidden">
+                                <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                <div className="relative z-10">
+                                    <div className="p-3 rounded-xl bg-primary/10 w-fit mb-3 mx-auto transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110">
+                                        <asset.icon className="h-8 w-8 text-primary" />
+                                    </div>
+                                    <p className="font-semibold text-foreground">{asset.name}</p>
+                                </div>
+                            </motion.div>)}
+                    </div>
+                     <div className="mt-8 text-center">
+                        <Link to="/mercados">
+                            <Button size="lg" className="group">
+                                Explorar Mercados <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                            </Button>
+                        </Link>
+                    </div>
                 </motion.div>
               </div>
             </div>

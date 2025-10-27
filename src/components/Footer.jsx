@@ -73,7 +73,7 @@ const Footer = memo(() => {
             <Link to="/" className="mb-4">
               <Logo className="h-16 w-auto" />
             </Link>
-            <p className="text-sm text-center md:text-left mb-4">Revolucionando la inversión en activos</p>
+            <p className="text-sm text-center md:text-left mb-4">Facilitamos las inversiones en fondos tokenizados.</p>
             <div className="flex space-x-4">
               {socialLinks.map(link => <a key={link.name} href={link.href} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-primary transition-colors" aria-label={link.name}>
                   <link.icon className="h-6 w-6" />

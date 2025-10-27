@@ -1,22 +1,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet';
-import { Layers, Share2, Award, Banknote, ShieldCheck, Users, Zap, GitBranch, ArrowRight, Building, BarChart, Activity } from 'lucide-react';
+import { Award, Banknote, Users, ArrowRight, Activity, Rocket, FileText, Landmark, TrendingUp, Briefcase, Factory } from 'lucide-react';
 
 const BusinessModel = () => {
-  const businessPillars = [
-    { 
-      icon: Activity, 
-      title: 'Mercado DeFi', 
-      description: 'Accede a un ecosistema financiero abierto y global. Ofrecemos productos para generar rendimientos y optimizar tu capital.',
-      items: ['Stablecoins', 'Earn', 'Yield-bearing tokens']
-    },
-    { 
-      icon: BarChart, 
-      title: 'Tokenización de Fondos', 
-      description: 'Digitalizamos fondos tradicionales para hacerlos más líquidos, accesibles y eficientes para el mercado global.',
-      items: ['Bonos', 'Deuda', 'Renta Fija', 'Fondos de Inversión']
-    },
+  const tokenizedAssets = [
+    { icon: Rocket, name: 'Fondos Crypto' },
+    { icon: FileText, name: 'Bonos' },
+    { icon: Landmark, name: 'Deuda Privada' },
+    { icon: TrendingUp, name: 'Renta Fija' },
+    { icon: Briefcase, name: 'Capital de Trabajo' },
+    { icon: Factory, name: 'Fondos de Inversión' }
   ];
 
   const valuePropositions = [
@@ -24,30 +18,6 @@ const BusinessModel = () => {
     { icon: Banknote, title: 'Flujos de Ingresos', description: 'Generamos ingresos a través de comisiones por tokenización, transacciones en el mercado secundario y servicios de gestión de activos DeFi.' },
     { icon: Users, title: 'Ventajas Competitivas', description: 'Ofrecemos acceso global 24/7, mayor liquidez, costos reducidos y una transparencia radical gracias a la blockchain.' },
   ];
-
-  const PillarCard = ({ icon: Icon, title, description, items, index }) => (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.15 }}
-      className="glass-effect p-8 rounded-3xl flex flex-col text-left h-full border border-border/10"
-    >
-      <div className="p-3 rounded-xl bg-primary/10 w-fit mb-5">
-        <Icon className="h-8 w-8 text-primary" />
-      </div>
-      <h3 className="text-2xl font-bold text-foreground mb-3">{title}</h3>
-      <p className="text-muted-foreground leading-relaxed mb-5 flex-grow">{description}</p>
-      <ul className="space-y-2">
-        {items.map((item, i) => (
-          <li key={i} className="flex items-center text-muted-foreground">
-            <ArrowRight className="w-4 h-4 text-primary mr-3 flex-shrink-0" />
-            <span>{item}</span>
-          </li>
-        ))}
-      </ul>
-    </motion.div>
-  );
 
   return (
     <>
@@ -79,14 +49,51 @@ const BusinessModel = () => {
         <section className="py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold mb-4">Nuestros Pilares de Inversión</h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">Nos especializamos en dos áreas clave para ofrecer un abanico completo de oportunidades de inversión digital.</p>
+              <motion.h2 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="text-3xl md:text-5xl font-bold mb-4"
+              >
+                Tokenización Innovadora de Activos
+              </motion.h2>
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="text-xl text-muted-foreground max-w-4xl mx-auto"
+              >
+                Tokenizamos instrumentos como fondos crypto, bonos, deuda privada, renta fija, capital de trabajo y fondos de inversión para crear un nuevo paradigma de inversión: más líquido, accesible y eficiente.
+              </motion.p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {businessPillars.map((pillar, index) => (
-                <PillarCard {...pillar} index={index} />
+            <motion.div 
+              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              transition={{ staggerChildren: 0.1 }}
+            >
+              {tokenizedAssets.map((asset, index) => (
+                <motion.div 
+                  key={index} 
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 }
+                  }}
+                  className="group relative flex flex-col justify-center items-center text-center p-6 glass-effect rounded-2xl overflow-hidden aspect-square"
+                >
+                  <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="relative z-10">
+                      <div className="p-4 rounded-2xl bg-primary/10 w-fit mb-4 mx-auto transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110">
+                          <asset.icon className="h-10 w-10 text-primary" />
+                      </div>
+                      <p className="font-semibold text-foreground text-lg">{asset.name}</p>
+                  </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
 
@@ -145,7 +152,7 @@ const BusinessModel = () => {
                         transition={{ duration: 0.8, delay: 0.2 }}
                         className="flex justify-center items-center"
                     >
-                        <img class="rounded-3xl shadow-2xl w-full max-w-md" alt="Illustration of physical assets being converted into digital tokens" src="https://horizons-cdn.hostinger.com/f8b5c881-f6e8-4070-abdf-aa8b891ef867/3684509d6da8b68b7fd32a3174f9ed11.png" />
+                        <img class="rounded-3xl border-none w-full max-w-xl" alt="Illustration of physical assets being converted into digital tokens" src="https://horizons-cdn.hostinger.com/f8b5c881-f6e8-4070-abdf-aa8b891ef867/3684509d6da8b68b7fd32a3174f9ed11.png" />
                     </motion.div>
                 </div>
             </div>
