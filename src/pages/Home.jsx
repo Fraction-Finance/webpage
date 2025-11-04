@@ -58,7 +58,7 @@ const Home = () => {
   const showAssetTypesSection = !loading && (settings.show_home_defi || settings.show_home_tradfi || settings.show_home_real_assets);
   return <>
       <Helmet>
-        <title>Fraction Finance - Revolucionaria Plataforma de Tokenización de Activos Digitales</title>
+        <title>Fraction Finance - Financiamiento e inversión en un solo lugar</title>
         <meta name="description" content="Transforma activos tradicionales en tokens basados en blockchain con seguridad de grado institucional. Accede a mercados de liquidez globales y desbloquea el futuro de los mercados de capitales." />
       </Helmet>
 
@@ -90,9 +90,9 @@ const Home = () => {
                 🚀 El Futuro de la Tokenización de Activos está Aquí
               </motion.div>
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter mt-4">
-                <span className="gradient-text">Redefiniendo la inversión digital</span>
+                <span className="gradient-text">Financiamiento e inversión todo en un solo lugar</span>
               </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mt-4">"Facilitamos las inversiones en fondos tokenizados."</p>
+              <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mt-4">"Accede a nuevas oportunidades con fondos tokenizados"</p>
             </motion.div>
           </div>
         </section>
