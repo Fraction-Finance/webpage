@@ -188,9 +188,20 @@ const Navbar = memo(() => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   const navItems = [{
-    name: "Mercados",
-    path: '/mercados',
-    icon: Package
+    name: "Productos",
+    path: '/productos',
+    icon: Package,
+    children: [{
+      title: "Financiamiento",
+      href: "/productos/financiamiento",
+      description: "Soluciones de financiación para activos tokenizados.",
+      icon: Briefcase
+    }, {
+      title: "Inversion",
+      href: "/productos/inversion",
+      description: "Opciones de inversión y exposición a mercados tokenizados.",
+      icon: Target
+    }]
   }, {
     name: "Ecosistema",
     path: '/ecosistema',
